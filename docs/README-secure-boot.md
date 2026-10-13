@@ -2,31 +2,13 @@
 
 Secure boot has the objective of protecting the integrity and authenticity of the operating system components (bootloader, kernel, root filesystem, etc) at boot time.
 
-Secure boot is currently supported on the following SoMs:
-
-- Apalis iMX6
-- Apalis iMX8
-- Aquila AM69
-- Aquila iMX95
-- Colibri iMX6DL
-- Colibri iMX6ULL (1GB eMMC variant only)
-- Colibri iMX7D (1GB eMMC variant only)
-- Colibri iMX8X
-- Lino iMX93
-- OSM iMX93
-- SMARC iMX8MP
-- SMARC iMX95
-- Verdin AM62
-- Verdin AM62P
-- Verdin iMX8MM
-- Verdin iMX8MP
-- Verdin iMX95
+Secure boot is currently implemented for NXP i.MX and TI K3 SoCs. See [hardware-support.md](hardware-support.md) for the support by SoC family and the list of validated devices.
 
 ## Secure boot implementation
 
 The secure boot implementation provided by this layer is based on the verification of digital signatures, where every component of the operating system is signed, and its signature is checked at boot time.
 
-For this, the following features are available (details on the level of support and how to configure might vary depending on the SoM):
+For this, the following features are available (details on the level of support and how to configure might vary depending on the SoC):
 
 - **Bootloader signature checking**: bootloader images are signed at build time and their signature is verified at runtime by the SoC's ROM code.
 - **U-Boot hardening**: a few patches are applied to the U-Boot bootloader to make it harder for an attacker to bypass the secure boot process.
@@ -35,7 +17,7 @@ For this, the following features are available (details on the level of support 
 
 The features actually enabled depend on the class chosen. The options are:
 
-- `hws-signed-verity`: all features listed above are enabled (the level of support might vary depending on the SoM, so check the detailed documentation in the following sessions if you need more details).
+- `hws-signed-verity`: all features listed above are enabled (the level of support might vary depending on the SoC, so check the detailed documentation in the following sessions if you need more details).
 - `hws-signed`: all features are enabled except the "Rootfs signature checking". This class may be more suitable than `hws-signed-verity` if the rootfs protection via `dm-verity` is not desired (for example, because it's not compatible with the used distro or because the rootfs is protected by other means).
 
 To use the selected class, inherit from it globally by adding the following to an OE configuration file (e.g. your `local.conf`):
@@ -56,20 +38,20 @@ The following sessions describe in detail each of these features.
 
 The bootloader signature checking implementation is dependent on the System on Chip (SoC).
 
-For details on the bootloader signature checking implementation for SoMs that use NXP iMX-based platforms (i.e. iMX6/7/8/9x), see the [README-secure-boot-imx.md](README-secure-boot-imx.md) file.
+For details on the bootloader signature checking implementation for NXP i.MX SoCs (i.e. i.MX6/7/8/9x), see the [README-secure-boot-imx.md](README-secure-boot-imx.md) file.
 
-For details on the bootloader signature checking implementation for SoMs that use TI K3-based platforms (i.e. AM62/AM69), see the [README-secure-boot-k3.md](README-secure-boot-k3.md) file.
+For details on the bootloader signature checking implementation for TI K3 SoCs (i.e. AM62x/AM69), see the [README-secure-boot-k3.md](README-secure-boot-k3.md) file.
 
 ## U-Boot hardening
 
-Toradex is implementing various changes to U-Boot (currently as a series of patches) with the purpose of hardening it for secure boot. The hardening includes the following features:
+The U-Boot hardening is a series of patches to U-Boot, originally developed by Toradex, with the purpose of hardening it for secure boot. The hardening includes the following features:
 
 - **Command whitelisting**: this part of the hardening is responsible for limiting the set of commands available to boot scripts once the device is in closed state - by default, only a small set of commands remain available in that state (mostly those strictly required for booting a secure boot image) alongside a few others considered strictly secure and potentially useful for future boot scripts.
 - **Protection against execution of unsigned software by** `bootm`: for securely booting secure boot images the "bootm" command is used in the boot scripts, but this command can also be used insecurely; this part of the hardening tries to ensure only the secure use of the command is possible so that the only possible code path at runtime is that for booting from signed FIT images.
 - **CLI access prevention**: this is an extra safeguard whereby the access to the U-Boot CLI gets disabled once the device is in closed state; this is what happens by default (but can be overridden).
 - **Kernel command-line protection**: normally U-Boot passes the contents of its environment variable `bootargs` directly to the Linux kernel and this variable in turn has its value set in the persistent U-Boot environment or it is dynamically built by the boot scripts (with Torizon OS following the latter approach) - either way, it is a vector of attack; to prevent tampering of `bootargs` the present protection causes the build to store a copy of the "expected" kernel arguments inside the (signed) FIT image and a related patch to U-Boot to check `bootargs` against that copy at runtime, possibly stopping the boot process in case of a mismatch.
 
-For further details, please refer to the article [Security Hardening of U-Boot](https://developer.toradex.com/torizon/security/u-boot-hardening-for-secure-boot/) at the Toradex website.
+For further details, please refer to the article [Security Hardening of U-Boot](https://developer.toradex.com/torizon/security/u-boot-hardening-for-secure-boot/) on the Toradex developer website.
 
 The hardening features are controlled by the variables in the following table plus the ones in the next section related to the whitelist:
 
@@ -98,7 +80,7 @@ For fine-tuning the command whitelisting feature the following variables are ava
 | `HWS_SECBOOT_WL_DENY_CLOSED_CATEG`\* | Command categories to be denied when the device is closed (as a space-separated list). | `""` |
 | `HWS_SECBOOT_WL_NEEDED_CATEG`\* | Command categories to be allowed regardless of the device open/closed state. | `""` |
 
-When a variable is empty, the default value encoded in U-Boot is utilized. The command categories are currently only available as part of a [patch](../recipes-bsp/u-boot/files/0001-toradex-common-add-command-whitelisting-modules.patch) in header `cmd-categories.h`. The default configuration is kept in the U-Boot control FDT which is part of another [patch](../recipes-bsp/u-boot/files/0002-toradex-dts-add-fragment-file-to-configure-secure-bo.patch) in file `tdx-secboot.dtsi`.
+When a variable is empty, the default value encoded in U-Boot is utilized. The command categories are currently only available as part of a [patch](../recipes-bsp/u-boot/files/0001-toradex-common-add-shared-hardening-modules.patch) in header `cmd-categories.h`. The default configuration is kept in the U-Boot control FDT which is part of another [patch](../recipes-bsp/u-boot/files/0002-toradex-dts-add-fragment-file-to-configure-secure-bo.patch) in file `tdx-secboot.dtsi`.
 
 Overall, setting these variables is discouraged (especially the ones with an \*) since they are critical to security. The main use case where some of these variables might be set is when one has a custom boot script requiring commands not present in the Toradex boot scripts. For example, if someone needs to set a GPIO pin in their boot script even when the device is closed they could set (e.g. in their `local.conf` file):
 
@@ -108,8 +90,7 @@ HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG = "CMD_CAT_ALL_SAFE CMD_CAT_GPIO_CONTROL"
 
 ### U-Boot hardening / known issues
 
-- On K3 based platforms (Verdin AM62, Aquila AM69), the hardening does not cover the bootloader running on the R5 processor (the boot master); we have plans to evaluate the need for such a protection and implementing it if actually needed.
-- Aquila AM69 requires some additional work to have out-of-the-box support for U-Boot hardening, so it is currently disabled by default.
+- On TI K3 SoCs (e.g. AM62x, AM69), the hardening does not cover the bootloader running on the R5 processor (the boot master); we have plans to evaluate the need for such a protection and implementing it if actually needed.
 
 ## Configuring FIT image signing
 
@@ -131,7 +112,7 @@ The complete list of variables can be found in the `hws-signed-fit-image.inc` fi
 
 ### Configuring FIT image signing / known issues
 
-- On K3 based platforms (Verdin AM62, Aquila AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `hws-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-hardware-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
+- On TI K3 SoCs (e.g. AM62x, AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `hws-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-hardware-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
 
 ## Configuring rootfs image signing
 
@@ -161,4 +142,4 @@ When `hws-signed-verity` is used to enable secure boot, the rootfs image is gene
 
 Because `dm-verity` is read-only, you might want to create an additional partition in the eMMC to store persistent data.
 
-If that is the case, you can use the `tdx-tezi-data-partition` class. For more information, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).
+If that is the case and you build Toradex Easy Installer images, you can use the `tdx-tezi-data-partition` class. For more information, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).

@@ -421,6 +421,12 @@ when a move brings a clear advantage, decided case by case. The Toradex BSP team
 adding features upstream, so keeping upstream's file layout makes comparing with
 upstream and picking changes easier. Tooling to sync with upstream is deferred.
 
+**Follow-up (2026-10-13): make the generic features usable beyond NXP i.MX and TI K3.**
+Targets are x86-64 (UEFI Secure Boot + UKI), QEMU (`qemuarm64`, `qemux86-64`) and NVIDIA,
+then other SoC families. Known gaps are listed in `docs/hardware-support.md` (kernel and
+U-Boot integration only for i.MX/Toradex recipes, machine allowlists, Toradex defaults);
+they overlap with D13/D14/D-d and are addressed starting in Phase 2.
+
 **Status (2026-10-13): all recommendations below were accepted.** Work happens on branch
 `hws/scarthgap`, created from `scarthgap-7.x.y` @ `29f2e45`. For D13 (c), unvalidated
 machines stay fatal for now.

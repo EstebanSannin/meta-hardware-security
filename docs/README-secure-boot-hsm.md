@@ -4,7 +4,7 @@ This document describes how to use a PKCS#11-compatible HSM to sign secure-boot 
 
 With this workflow, private signing keys do not need to be stored on the build host filesystem. Instead, signing operations are delegated through a PKCS#11 provider to an HSM-backed device or service, such as a hardware token or a CloudHSM offering.
 
-The implementation supports HSM-backed signing for the complete secure boot flow on both i.MX-based and TI K3-based SoMs.
+The implementation supports HSM-backed signing for the complete secure boot flow on both NXP i.MX and TI K3 SoCs.
 
 ## How to use
 
@@ -41,7 +41,7 @@ The following variables are available to configure HSM-backed signing of secure 
 | `HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER` | Native package that provides the PKCS#11 implementation for the HSM. It is added as a dependency to recipes that need to access the token during signing. | `""` |
 | `HWS_SIGNED_HSM_PKCS11_MODULE_PATH` | Path to the PKCS#11 shared library, relative to the recipe native sysroot. | `""` |
 | `HWS_SIGNED_HSM_PKCS11_SOFTHSM_CONF` | Path to the SoftHSM configuration file. This is required when using SoftHSM, a software implementation of a PKCS#11 token commonly used for development and testing. | `${TOPDIR}/keys/softhsm/conf/softhsm2.conf` |
-| `HWS_SIGNED_HSM_K3_BINMAN_KEY_URL` | PKCS#11 URI of the private key used by binman to sign the TI K3 boot container. Only relevant when targeting a TI K3 SoM. | `""` |
+| `HWS_SIGNED_HSM_K3_BINMAN_KEY_URL` | PKCS#11 URI of the private key used by binman to sign the TI K3 boot container. Only relevant when targeting a TI K3 SoC. | `""` |
 | `HWS_SIGNED_HSM_K3_OPENSSL_CONF` | Path to an OpenSSL configuration file activating the `pkcs11` provider, used when signing the TI K3 boot container. If empty, one is generated automatically at build time. | `""` |
 | `HWS_SIGNED_HSM_FIT_TOKEN_URL` | PKCS#11 URI identifying the token that contains the FIT signing key. | `""` |
 | `HWS_SIGNED_HSM_FIT_TOKEN_LABEL` | Label of the private key object used to sign the FIT image. | `""` |
@@ -86,7 +86,7 @@ To use a different PKCS#11 provider, the layer does not usually require code cha
 
 > **Note:** If the provider requires additional environment variables or runtime initialization, the build logic may need to be extended accordingly. For a reference, see `classes/hws-signed-hsm-env.bbclass`.
 
-### Configuring HAB/AHAB signing for NXP i.MX-based SoMs
+### Configuring HAB/AHAB signing for NXP i.MX-based SoCs
 
 When signing boot images for NXP i.MX platforms with HAB or AHAB enabled, CST normally expects the signing certificates to be provided as files on the build host filesystem.
 
@@ -181,7 +181,7 @@ HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 
 ### Final configuration examples
 
-The following example shows a development setup using SoftHSM for image signing on iMX HAB based SoMs:
+The following example shows a development setup using SoftHSM for image signing on iMX HAB based SoCs:
 
 ```
 HWS_SIGNED_HSM = "1"
@@ -197,7 +197,7 @@ HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20projec
 HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 ```
 
-The following example shows the configuration using Yubikey for image signing on iMX AHAB based SoMs:
+The following example shows the configuration using Yubikey for image signing on iMX AHAB based SoCs:
 
 ```
 HWS_SIGNED_HSM = "1"
@@ -212,7 +212,7 @@ HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=YubiKey%20YK5;manufacturer=Yubico%20%28www
 HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"
 ```
 
-The following example shows a development setup using SoftHSM for image signing on TI K3 based SoMs:
+The following example shows a development setup using SoftHSM for image signing on TI K3 based SoCs:
 
 ```
 HWS_SIGNED_HSM = "1"
@@ -226,7 +226,7 @@ HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20projec
 HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 ```
 
-The following example shows the configuration using YubiKey for image signing on TI K3 based SoMs:
+The following example shows the configuration using YubiKey for image signing on TI K3 based SoCs:
 
 ```
 HWS_SIGNED_HSM = "1"

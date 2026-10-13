@@ -1,6 +1,6 @@
 # Bootloader signature checking for NXP iMX-based platforms
 
-This document describes how bootloader signature checking works for System on Modules (SoMs) that use iMX-based System on Chips (SoCs) by NXP Semiconductors.
+This document describes how bootloader signature checking works on devices based on NXP i.MX System on Chips (SoCs).
 
 ## Introduction
 

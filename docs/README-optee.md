@@ -6,22 +6,7 @@ TEE might be a good solution to store and manage secrets (e.g. encryption keys) 
 
 [OP-TEE](https://www.trustedfirmware.org/projects/op-tee/) (Open Portable Trusted Execution Environment) is an open-source TEE designed as a companion to a non-secure Linux kernel running on ARM Cortex-A cores using the TrustZone technology.
 
-This layer provides support for running OP-TEE on the following SoMs:
-
-- Apalis iMX6
-- Aquila AM69
-- Aquila iMX95
-- Colibri iMX6
-- Colibri iMX7D (1GB eMMC variant only)
-- Lino iMX93
-- OSM iMX93
-- SMARC iMX8MP
-- SMARC iMX95
-- Verdin AM62
-- Verdin AM62P
-- Verdin iMX8MP
-- Verdin iMX8MM
-- Verdin iMX95
+This layer provides support for running OP-TEE on NXP i.MX6, i.MX7, i.MX8M and i.MX9x SoCs and on TI K3 SoCs. The build currently stops on machines that are not in the list of validated devices; see [hardware-support.md](hardware-support.md).
 
 ## Enabling OP-TEE
 
@@ -77,7 +62,7 @@ There are currently two secure storage implementations in OP-TEE:
 
 When relying on the normal world file system, OP-TEE will use `/data/tee/` as its secure storage location in the Linux file system (this directory can be changed via the `HWS_OPTEE_FS_PARENT_PATH` variable). All stored data is encrypted using a Hardware Unique Key (HUK), which is supplied by the CAAM driver or EdgeLock Enclave (ELE) on i.MX platforms and the DMSC subsystem on K3-based devices (e.g., AM6X).
 
-To be able to write and persist data, OP-TEE needs a read-write filesystem mounted at `/data`. When rootfs signature checking is enabled via the `hws-signed-verity` class, the rootfs image will be generated using the `dm-verity` kernel feature, which is read-only. In this case, to provide a read-write filesystem to OP-TEE, the `tdx-tezi-data-partition` class will be automatically inherited. This class will create an additional partition in the eMMC and mount it by default at `/data`. For more information on how this class works, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).
+To be able to write and persist data, OP-TEE needs a read-write filesystem mounted at `/data`. When rootfs signature checking is enabled via the `hws-signed-verity` class, the rootfs image will be generated using the `dm-verity` kernel feature, which is read-only. In this case, when building Toradex Easy Installer images, the `tdx-tezi-data-partition` class will be automatically inherited to provide a read-write filesystem to OP-TEE. This class will create an additional partition in the eMMC and mount it by default at `/data`. For more information on how this class works, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).
 
 If your rootfs is read-only and you are not using a Toradex Easy Installer image, ensure that the `/data` directory is mounted on a writable partition. Failing to do so will prevent OP-TEE from functioning properly (in case you are relying on the normal world file system for secure storage).
 
@@ -87,7 +72,7 @@ For further details on how secure storage works in OP-TEE, refer to the [OP-TEE 
 
 ## RPMB support in OP-TEE
 
-RPMB (Replay Protected Memory Block) is a dedicated partition available on some flash-based storage devices (eMMC, UFS, NVMe, etc) that makes it possible to store and retrieve data with integrity and authenticity support. It was introduced in eMMC version 4.4, and it is available and ready to be used on most Toradex modules.
+RPMB (Replay Protected Memory Block) is a dedicated partition available on some flash-based storage devices (eMMC, UFS, NVMe, etc) that makes it possible to store and retrieve data with integrity and authenticity support. It was introduced in eMMC version 4.4, and it is available on most eMMC-based devices (including most Toradex modules).
 
 When using the RPMB partition, a symmetric key is used to authenticate reads and writes. In a nutshell, here is how it works:
 

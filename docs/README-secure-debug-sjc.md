@@ -1,6 +1,6 @@
 # Secure Debug on NXP iMX System JTAG Controller (SJC)
 
-This document describes the Secure Debug backend for SoMs based on NXP iMX6, iMX7, iMX8M, iMX8 and iMX8X SoCs, which uses the NXP System JTAG Controller (SJC). For an overview of the Secure Debug feature and how to enable it, see the [README-secure-debug.md](README-secure-debug.md) file.
+This document describes the Secure Debug backend for devices based on NXP i.MX6, i.MX7, i.MX8M, i.MX8 and i.MX8X SoCs, which uses the NXP System JTAG Controller (SJC). For an overview of the Secure Debug feature and how to enable it, see the [README-secure-debug.md](README-secure-debug.md) file.
 
 ## Secure Debug on iMX6, iMX7 and iMX8M
 

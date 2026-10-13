@@ -1,6 +1,6 @@
 # Bootloader signature checking for TI K3-based platforms
 
-This document describes how bootloader signature checking works for System on Modules (SoMs) that use System on Chips (SoCs) based on the K3 platform by Texas Instruments.
+This document describes how bootloader signature checking works on devices based on System on Chips (SoCs) of the K3 platform by Texas Instruments.
 
 ## Introduction
 
@@ -12,7 +12,7 @@ General Purpose (GP) devices lack several security features and don't support se
 
 High Security (HS) devices have all security features available and support encrypted and authenticated (secure) boot.
 
-**IMPORTANT**: To have access to the secure boot feature on AM6x based SoMs (Verdin AM62, Aquila AM69), make sure you are using an SoC of type HS.
+**IMPORTANT**: To have access to the secure boot feature on AM6x based devices (e.g. Verdin AM62, Aquila AM69), make sure you are using an SoC of type HS.
 
 A High Security (HS) device might be in one of two different states:
 
@@ -23,7 +23,7 @@ For more details on how secure boot works on K3 platforms, it is recommended to 
 
 ## Enabling secure boot on AM6x based devices
 
-There are three major steps to enable secure boot on Verdin AM62:
+There are three major steps to enable secure boot on AM6x based devices:
 
 1. Generate the keys and certificates for signing.
 2. Sign bootloader artifacts when building the image.

@@ -6,22 +6,9 @@ This is especially important for devices that use features such as secure boot a
 
 To mitigate this risk, this layer provides a feature called **Secure Debug**.
 
-Secure Debug is currently supported on the following SoMs:
+Secure Debug is currently supported on NXP i.MX6, i.MX7, i.MX8M, i.MX8, i.MX8X and i.MX95 SoCs. See [hardware-support.md](hardware-support.md) for the list of validated devices.
 
-- Apalis iMX6
-- Apalis iMX8
-- Aquila iMX95
-- Colibri iMX6DL
-- Colibri iMX6ULL (1GB eMMC variant only)
-- Colibri iMX7D (1GB eMMC variant only)
-- Colibri iMX8X
-- SMARC iMX8MP
-- SMARC iMX95
-- Verdin iMX8MM
-- Verdin iMX8MP
-- Verdin iMX95
-
-Support for additional SoMs and SoC families is planned. Since each SoC family may use a different hardware mechanism to restrict debug access, new platforms may introduce additional variables or different provisioning requirements.
+Support for additional SoC families is planned. Since each SoC family may use a different hardware mechanism to restrict debug access, new platforms may introduce additional variables or different provisioning requirements.
 
 ## Overview
 
@@ -31,9 +18,9 @@ The layer therefore exposes a small, policy-oriented interface that stays the sa
 
 When secure debug is enabled, provisioning data is generated at build time. For example, on iMX8-based SoCs the layer generates the required fuse commands and appends them to the `fuse-cmds.txt` and `imx-config.fuse` files already produced by the HAB/AHAB flow. Nothing is programmed by the build itself. The commands are executed later, by the user, on the device.
 
-The SoMs based on NXP iMX6, iMX7, iMX8M, iMX8 and iMX8X SoCs use the System JTAG Controller (SJC) backend. For details on the SJC backend, including its configuration variables, key management and provisioning, see the [README-secure-debug-sjc.md](README-secure-debug-sjc.md) file.
+Devices based on NXP i.MX6, i.MX7, i.MX8M, i.MX8 and i.MX8X SoCs use the System JTAG Controller (SJC) backend. For details on the SJC backend, including its configuration variables, key management and provisioning, see the [README-secure-debug-sjc.md](README-secure-debug-sjc.md) file.
 
-The SoMs based on the NXP iMX9 SoC use the EdgeLock Secure Enclave (ELE) backend. For details on the ELE backend, including its configuration variables, debug credentials and provisioning, see the [README-secure-debug-ele.md](README-secure-debug-ele.md) file.
+Devices based on NXP i.MX9 SoCs use the EdgeLock Secure Enclave (ELE) backend. For details on the ELE backend, including its configuration variables, debug credentials and provisioning, see the [README-secure-debug-ele.md](README-secure-debug-ele.md) file.
 
 ## Enabling Secure Debug
 

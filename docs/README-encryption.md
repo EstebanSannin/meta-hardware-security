@@ -2,25 +2,7 @@
 
 Encryption is the process of encoding information in a format that cannot be read or understood by an eavesdropper, and it might be a required feature for use cases where sensitive data needs to remain confidential and cannot be accessed by unauthorized parties.
 
-Encryption is currently supported on the following SoMs:
-
-- Apalis iMX6
-- Apalis iMX8
-- Aquila AM69
-- Aquila iMX95
-- Colibri iMX6DL
-- Colibri iMX6ULL (1GB eMMC variant only)
-- Colibri iMX7D (1GB eMMC variant only)
-- Colibri iMX8X
-- Lino iMX93
-- OSM iMX93
-- SMARC iMX8MP
-- SMARC iMX95
-- Verdin AM62
-- Verdin AM62P
-- Verdin iMX8MM
-- Verdin iMX8MP
-- Verdin iMX95
+Encryption is currently supported on NXP i.MX and TI K3 SoCs; the TPM and TEE key backends are not SoC-specific. See [hardware-support.md](hardware-support.md) for the support by SoC family and the list of validated devices.
 
 ## Data-at-rest encryption implementation
 
@@ -43,9 +25,9 @@ Trusted Keys require the availability of a Trust Source for greater security. Di
 
 This layer supports using CAAM, TPM or TEE as a source for managing the encryption key.
 
-CAAM is NXP-specific IP, available on most NXP i.MX-based SoMs. One exception is i.MX6ULL, which does not include CAAM. Another exception is the i.MX9x family, such as i.MX93 and i.MX95, which relies on the EdgeLock Enclave (ELE) instead.
+CAAM is NXP-specific IP, available on most NXP i.MX SoCs. One exception is i.MX6ULL, which does not include CAAM. Another exception is the i.MX9x family, such as i.MX93 and i.MX95, which relies on the EdgeLock Enclave (ELE) instead.
 
-On any SoM without CAAM, use the TEE backend (which requires OP-TEE to be enabled, see [README-optee.md](README-optee.md)) or the TPM backend. TPM availability might depend on the selected SoM and carrier board.
+On any SoC without CAAM, use the TEE backend (which requires OP-TEE to be enabled, see [README-optee.md](README-optee.md)) or the TPM backend. TPM availability depends on the hardware (e.g. on the selected module and carrier board).
 
 ## Block device encryption
 
@@ -67,7 +49,7 @@ Also, it is mandatory to set the `HWS_ENC_STORAGE_LOCATION` variable to the disk
 HWS_ENC_STORAGE_LOCATION = "/dev/sdb1"
 ```
 
-The `HWS_ENC_KEY_BACKEND` variable can be used to configure the trust source for managing the encryption key. If you plan to use CAAM (available on most NXP iMX-based SoMs), you don't have to configure this variable, as it is automatically configured with `caam`. If you plan to use a TPM or TEE as the backend, you need to configure it. For example, to use a TPM as the backend (i.e. trust source for the Trusted Keys subsystem):
+The `HWS_ENC_KEY_BACKEND` variable can be used to configure the trust source for managing the encryption key. If you plan to use CAAM (available on most NXP i.MX SoCs), you don't have to configure this variable, as it is automatically configured with `caam`. If you plan to use a TPM or TEE as the backend, you need to configure it. For example, to use a TPM as the backend (i.e. trust source for the Trusted Keys subsystem):
 
 ```
 HWS_ENC_KEY_BACKEND:forcevariable = "tpm"
@@ -79,7 +61,7 @@ A few additional variables are available to customize the behavior of the data-a
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `HWS_ENC_KEY_BACKEND` | Backend used to manage the encryption key. Allowed values: `caam`, `tpm`, `tee` or `cleartext`. If configured with `caam`, it will use Trusted Keys backed by the CAAM device (available on NXP iMX-based SoMs). If configured with `tpm`, it will use Trusted Keys backed by a TPM device (availability depends on the hardware). If configured with `tee`, it will use Trusted Keys backed by a Trusted Execution Environment. If configured with `cleartext`, the encryption key will be stored in clear text in the file system (use `cleartext` only for testing purposes!) | `caam` on iMX6/7/8 based SoMs, empty otherwise |
+| `HWS_ENC_KEY_BACKEND` | Backend used to manage the encryption key. Allowed values: `caam`, `tpm`, `tee` or `cleartext`. If configured with `caam`, it will use Trusted Keys backed by the CAAM device (available on NXP i.MX SoCs). If configured with `tpm`, it will use Trusted Keys backed by a TPM device (availability depends on the hardware). If configured with `tee`, it will use Trusted Keys backed by a Trusted Execution Environment. If configured with `cleartext`, the encryption key will be stored in clear text in the file system (use `cleartext` only for testing purposes!) | `caam` on i.MX6/7/8 SoCs, empty otherwise |
 | `HWS_ENC_CIPHER` | Cipher preset for dm-crypt block device encryption. Allowed values: `aes-cbc` or `aes-xts`. See [Cipher selection](#cipher-selection) for details. | `aes-cbc` |
 | `HWS_ENC_KEY_LOCATION` | Location to store the encryption key blob. Allowed values: `filesystem` or `partition`. If configured with `filesystem`, the encryption key blob will be stored as a file in the filesystem (location defined by the `HWS_ENC_KEY_DIR` variable. If configured with `partition`, the encryption key blob will be stored in a block of the disk outside the dm-crypt partition (useful if the rootfs filesystem is read-only) | `filesystem` |
 | `HWS_ENC_KEY_DIR` | Directory to store the encryption key blob | `/var/local/private/.keys` |
@@ -117,9 +99,9 @@ HWS_ENC_CIPHER = "aes-xts"
 
 > **WARNING**: Do not change `HWS_ENC_CIPHER` on a device that already contains data encrypted with the existing mapping. The new cipher configuration will not decrypt the existing ciphertext correctly. To migrate an existing device, back up the data, remove the existing encrypted state/key material used by this workflow, and allow the partition to be initialized again with the new setting.
 
-The dm-crypt subsystem uses the Linux kernel crypto API, so hardware-backed AES acceleration can be used transparently when the appropriate backend is available and loaded (e.g. CAAM on iMX based SoMs).
+The dm-crypt subsystem uses the Linux kernel crypto API, so hardware-backed AES acceleration can be used transparently when the appropriate backend is available and loaded (e.g. CAAM on i.MX SoCs).
 
-On TI K3-based SoMs, this layer blacklists the `sa2ul` crypto driver, because its hardware offload does not work correctly when mounting a dm-crypt partition. Encryption on those SoMs therefore falls back to the kernel's CPU-based AES implementation.
+On TI K3 SoCs, this layer blacklists the `sa2ul` crypto driver, because its hardware offload does not work correctly when mounting a dm-crypt partition. Encryption on those SoCs therefore falls back to the kernel's CPU-based AES implementation.
 
 ## Notes on using CAAM
 
@@ -165,4 +147,4 @@ You can use this layer to add OP-TEE support on supported hardware platforms. Fo
 
 ## Encrypting a partition in the eMMC
 
-In case you want to create an additional partition in the eMMC to store encrypted data, you can use the `tdx-tezi-data-partition` class. For more information, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).
+In case you build Toradex Easy Installer images and want to create an additional partition in the eMMC to store encrypted data, you can use the `tdx-tezi-data-partition` class. For more information, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).

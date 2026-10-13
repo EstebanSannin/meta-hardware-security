@@ -1,5 +1,7 @@
 # Data partition
 
+> **Toradex-specific:** this feature only works with Toradex Easy Installer (Tezi) images.
+
 Sometimes it is useful (or even required) to have an additional partition to store application data and other software artifacts:
 
 - If the `hws-signed-verity` class is used to enable secure boot, the rootfs partition will be read-only, and an additional partition might be needed to store persistent data.

@@ -1,6 +1,6 @@
 # Secure Debug on NXP iMX EdgeLock Secure Enclave (ELE)
 
-This document describes the Secure Debug backend for SoMs based on the NXP iMX9x SoCs, where debug access is controlled by the EdgeLock Secure Enclave (ELE). For an overview of the Secure Debug feature and how to enable it, see the [README-secure-debug.md](README-secure-debug.md) file.
+This document describes the Secure Debug backend for devices based on NXP i.MX9x SoCs, where debug access is controlled by the EdgeLock Secure Enclave (ELE). For an overview of the Secure Debug feature and how to enable it, see the [README-secure-debug.md](README-secure-debug.md) file.
 
 ## Secure Debug with the ELE
 
