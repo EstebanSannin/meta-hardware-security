@@ -34,8 +34,9 @@ SRC_URI:append:mx8m-generic-bsp = "${HWS_IMX8M_CSF_ARTIFACTS}"
 HWS_UBOOT_HAB_PATCHES_DOWNSTREAM = "\
     file://0001-bootm-don-t-use-HAB-to-authenticate-FIT-image.patch \
 "
-SRC_URI:append:apalis-imx8 = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM}"
-SRC_URI:append:colibri-imx8x = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HAB_PATCHES_DOWNSTREAM_INTERNAL = "${@d.getVar('HWS_UBOOT_HAB_PATCHES_DOWNSTREAM') if d.getVar('HWS_UBOOT_FLAVOR') == 'toradex' else ''}"
+SRC_URI:append:apalis-imx8 = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM_INTERNAL}"
+SRC_URI:append:colibri-imx8x = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM_INTERNAL}"
 
 UBOOT_BINARY_HAB = "${UBOOT_BINARY}"
 UBOOT_BINARY_HAB:mx6dl-generic-bsp = "u-boot-ivt.img"
