@@ -2,4 +2,4 @@
 require ${@ 'recipes-kernel/linux/add-secboot-kargs-overlay.inc' if 'hws-signed' in d.getVar('OVERRIDES').split(':') else ''}
 
 # device tree overlay for OP-TEE
-require ${@ 'recipes-kernel/linux/add-optee-overlay.inc' if d.getVar('TDX_OPTEE_DT_OVERLAY') == '1' else ''}
+require ${@ 'recipes-kernel/linux/add-optee-overlay.inc' if d.getVar('HWS_OPTEE_DT_OVERLAY') == '1' else ''}

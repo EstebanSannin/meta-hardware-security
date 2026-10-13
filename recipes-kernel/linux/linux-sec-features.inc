@@ -7,7 +7,7 @@ require ${@ 'linux-dm-verity.inc' if 'hws-signed-dmverity' in d.getVar('OVERRIDE
 require ${@ 'linux-dm-crypt.inc' if 'hws-encrypted' in d.getVar('OVERRIDES').split(':') else ''}
 
 # op-tee support
-require ${@ 'linux-optee.inc' if d.getVar('TDX_OPTEE_ENABLE') == '1' else ''}
+require ${@ 'linux-optee.inc' if d.getVar('HWS_OPTEE_ENABLE') == '1' else ''}
 
 # FIT image signing using an HSM
 require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'linux-signed-hsm.inc', '', d)}

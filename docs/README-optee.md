@@ -35,21 +35,21 @@ A few variables can be used to customize the behavior of this feature:
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| TDX_OPTEE_DEBUG | Enable OP-TEE debug messages to the serial console (`1` to enable or `0` to disable) | `0` |
-| TDX_OPTEE_INSTALL_TESTS | Enable the installation of OP-TEE test applications (`1` to enable or `0` to disable) | `0` |
-| TDX_OPTEE_FS_PARENT_PATH | Defines the root directory when using the REE (Rich Execution Environment) filesystem for storage | `/data/tee` |
-| TDX_OPTEE_FS_RPMB | Enable support for using the eMMC RPMB partition as a secure storage device (`1` to enable or `0` to disable) | `0` |
-| TDX_OPTEE_FS_RPMB_DEV_ID | Configure the eMMC RPMB partition device node. For example, if configured with `2`, the TEE supplicant will use `/dev/mmcblk2rpmb` to communicate with to the RPMB partition | `0` |
-| TDX_OPTEE_FS_RPMB_MODE | RPMB secure storage operation mode. Valid options are `development` (to be used during development), `factory` (to enroll the RPMB key in a secure provisioning environment) and `production` (to be used in production). For more information on how to configure this variable, see the section [RPMB support in OP-TEE](/docs/README-optee.md#rpmb-support-in-op-tee) | `development` |
-| TDX_OPTEE_FTPM | Enable support for a firmware TPM (fTPM) implementation running as trusted application in OP-TEE (`1` to enable or `0` to disable). For more information on how an fTPM works, see the section [fTPM support in OP-TEE](/docs/README-optee.md#ftpm-support-in-op-tee) | `0` |
-| TDX_OPTEE_PKCS11 | Enable support for PKCS#11 trusted application (`1` to enable or `0` to disable). For more information on how an PKCS#11 works, see the section [PKCS#11 support in OP-TEE](/docs/README-optee.md#pkcs11-support-in-op-tee) | `0` |
+| HWS_OPTEE_DEBUG | Enable OP-TEE debug messages to the serial console (`1` to enable or `0` to disable) | `0` |
+| HWS_OPTEE_INSTALL_TESTS | Enable the installation of OP-TEE test applications (`1` to enable or `0` to disable) | `0` |
+| HWS_OPTEE_FS_PARENT_PATH | Defines the root directory when using the REE (Rich Execution Environment) filesystem for storage | `/data/tee` |
+| HWS_OPTEE_FS_RPMB | Enable support for using the eMMC RPMB partition as a secure storage device (`1` to enable or `0` to disable) | `0` |
+| HWS_OPTEE_FS_RPMB_DEV_ID | Configure the eMMC RPMB partition device node. For example, if configured with `2`, the TEE supplicant will use `/dev/mmcblk2rpmb` to communicate with to the RPMB partition | `0` |
+| HWS_OPTEE_FS_RPMB_MODE | RPMB secure storage operation mode. Valid options are `development` (to be used during development), `factory` (to enroll the RPMB key in a secure provisioning environment) and `production` (to be used in production). For more information on how to configure this variable, see the section [RPMB support in OP-TEE](/docs/README-optee.md#rpmb-support-in-op-tee) | `development` |
+| HWS_OPTEE_FTPM | Enable support for a firmware TPM (fTPM) implementation running as trusted application in OP-TEE (`1` to enable or `0` to disable). For more information on how an fTPM works, see the section [fTPM support in OP-TEE](/docs/README-optee.md#ftpm-support-in-op-tee) | `0` |
+| HWS_OPTEE_PKCS11 | Enable support for PKCS#11 trusted application (`1` to enable or `0` to disable). For more information on how an PKCS#11 works, see the section [PKCS#11 support in OP-TEE](/docs/README-optee.md#pkcs11-support-in-op-tee) | `0` |
 
 ## Testing OP-TEE
 
 OP-TEE can be validated using its test applications, which can be installed in the image by adding the following line to an OE configuration file (e.g. `local.conf`):
 
 ```
-TDX_OPTEE_INSTALL_TESTS += "1"
+HWS_OPTEE_INSTALL_TESTS += "1"
 ```
 
 After building with the test applications, a "hello world" application can be used to test the communication between the Normal World (Linux) and the Secure World (OP-TEE):
@@ -64,7 +64,7 @@ There is also a complete test suite that can be used to validate OP-TEE:
 # xtest
 ```
 
-In case of issues, try enabling debug messages via the `TDX_OPTEE_DEBUG` variable.
+In case of issues, try enabling debug messages via the `HWS_OPTEE_DEBUG` variable.
 
 ## Secure storage for persistent data in OP-TEE
 
@@ -75,7 +75,7 @@ There are currently two secure storage implementations in OP-TEE:
 - The first one relies on the normal world (REE) file system.
 - The second one makes use of the Replay Protected Memory Block (RPMB) partition of an eMMC device.
 
-When relying on the normal world file system, OP-TEE will use `/data/tee/` as its secure storage location in the Linux file system (this directory can be changed via the `TDX_OPTEE_FS_PARENT_PATH` variable). All stored data is encrypted using a Hardware Unique Key (HUK), which is supplied by the CAAM driver or EdgeLock Enclave (ELE) on i.MX platforms and the DMSC subsystem on K3-based devices (e.g., AM6X).
+When relying on the normal world file system, OP-TEE will use `/data/tee/` as its secure storage location in the Linux file system (this directory can be changed via the `HWS_OPTEE_FS_PARENT_PATH` variable). All stored data is encrypted using a Hardware Unique Key (HUK), which is supplied by the CAAM driver or EdgeLock Enclave (ELE) on i.MX platforms and the DMSC subsystem on K3-based devices (e.g., AM6X).
 
 To be able to write and persist data, OP-TEE needs a read-write filesystem mounted at `/data`. When rootfs signature checking is enabled via the `hws-signed-verity` class, the rootfs image will be generated using the `dm-verity` kernel feature, which is read-only. In this case, to provide a read-write filesystem to OP-TEE, the `tdx-tezi-data-partition` class will be automatically inherited. This class will create an additional partition in the eMMC and mount it by default at `/data`. For more information on how this class works, have a look at its documentation ([README-data-partition.md](README-data-partition.md)).
 
@@ -95,11 +95,11 @@ When using the RPMB partition, a symmetric key is used to authenticate reads and
 - When writing to the device, the data is hashed and signed with the authentication key, and the storage device will only accept the write operation after checking the signature (this signature is also called message authentication code, or just MAC).
 - When reading from the device, the data is returned together with the MAC. The host can also calculate the MAC and compare it with the one received to make sure the message is authentic.
 
-OP-TEE can use the RPMB partition as a secure storage solution instead of relying on the Linux filesystem. To enable this feature, set the `TDX_OPTEE_FS_RPMB` variable to `1`.
+OP-TEE can use the RPMB partition as a secure storage solution instead of relying on the Linux filesystem. To enable this feature, set the `HWS_OPTEE_FS_RPMB` variable to `1`.
 
 One significant challenge with RPMB is the requirement to write a private key to the partition before any operations. This key programming can only be done once and must occur in a secure provisioning environment.
 
-To address this, the `TDX_OPTEE_FS_RPMB_MODE` variable is introduced, allowing you to configure the RPMB operation mode. The supported values are: `development`, `factory`, and `production`:
+To address this, the `HWS_OPTEE_FS_RPMB_MODE` variable is introduced, allowing you to configure the RPMB operation mode. The supported values are: `development`, `factory`, and `production`:
 
 - `development`: The RPMB partition is emulated in software by `tee-supplicant`. Be aware that the emulation is done in memory, so the contents of the storage is lost after a reboot or when the `tee-supplicant` daemon is restarted. Suitable option for development.
 - `factory`: The eMMC RPMB partition is used, and OP-TEE is configured to program the RPMB key, derived from the SoC's Hardware Unique Key (HUK) and other device specific information. This mode is intended for secure factory provisioning environments, and it should never be used outside of a trusted, secure factory setup.
@@ -132,7 +132,7 @@ An fTPM (Firmware-based Trusted Platform Module) is a type of TPM that operates 
 Using this layer, fTPM can be enabled by adding the following line to an OE configuration file (e.g. `local.conf`):
 
 ```
-TDX_OPTEE_FTPM = "1"
+HWS_OPTEE_FTPM = "1"
 ```
 
 When fTPM is enabled, you should have a TPM device at `/dev`:
@@ -156,7 +156,7 @@ PKCS#11 (also known as the Cryptoki API) defines a set of standard calls that al
 Using this layer, the PKCS#11 Trusted Application can be enabled by adding the following line to an OE configuration file (e.g. `local.conf`):
 
 ```
-TDX_OPTEE_PKCS11 = "1"
+HWS_OPTEE_PKCS11 = "1"
 ```
 
 To verify that the PKCS#11 Trusted Application is enabled and functioning, you can use the `pkcs11-tool` command-line utility:

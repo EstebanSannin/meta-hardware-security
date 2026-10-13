@@ -3,7 +3,7 @@
 # the KERNEL_BOOTCMD variable, so the OP-TEE firmware is properly loaded
 # into memory and booted before the Linux kernel
 KERNEL_BOOTCMD_OPTEE = "\
-setenv tee_addr_r ${TDX_OPTEE_ADDR_LOAD}; \
+setenv tee_addr_r ${HWS_OPTEE_ADDR_LOAD}; \
 load ${boot_devtype} ${boot_devnum}:${boot_part} ${tee_addr_r} uTee-bin; \
 setenv kernel_addr_r ${tee_addr_r}; \
 bootm"

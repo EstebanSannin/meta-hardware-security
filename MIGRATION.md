@@ -162,3 +162,17 @@ and whether the compatibility shim covers it.
 | `TDX_ENC_STORAGE_MOUNT_ARGS` | `HWS_ENC_STORAGE_MOUNT_ARGS` | variable | yes |
 | `TDX_ENC_PRESERVE_DATA` | `HWS_ENC_PRESERVE_DATA` | variable | yes |
 | `TDX_ENC_BACKUP_STORAGE_PCT` | `HWS_ENC_BACKUP_STORAGE_PCT` | variable | yes |
+| `TDX_OPTEE_ENABLE` | `HWS_OPTEE_ENABLE` | variable | yes |
+| `TDX_OPTEE_FTPM` | `HWS_OPTEE_FTPM` | variable | yes |
+| `TDX_OPTEE_PKCS11` | `HWS_OPTEE_PKCS11` | variable | yes |
+| `TDX_OPTEE_FS_PARENT_PATH` | `HWS_OPTEE_FS_PARENT_PATH` | variable | yes |
+| `TDX_OPTEE_FS_RPMB` | `HWS_OPTEE_FS_RPMB` | variable | yes |
+| `TDX_OPTEE_FS_RPMB_DEV_ID` | `HWS_OPTEE_FS_RPMB_DEV_ID` | variable | yes |
+| `TDX_OPTEE_FS_RPMB_MODE` | `HWS_OPTEE_FS_RPMB_MODE` | variable | yes |
+| `TDX_OPTEE_DEBUG` | `HWS_OPTEE_DEBUG` | variable | yes |
+| `TDX_OPTEE_INSTALL_TESTS` | `HWS_OPTEE_INSTALL_TESTS` | variable | yes |
+| `TDX_OPTEE_PACKAGES_TESTS` | `HWS_OPTEE_PACKAGES_TESTS` | variable | yes |
+| `TDX_OPTEE_ADDR_LOAD` | `HWS_OPTEE_ADDR_LOAD` | variable | yes |
+| `TDX_OPTEE_ADDR_SIZE` | `HWS_OPTEE_ADDR_SIZE` | variable | yes |
+| `TDX_OPTEE_ADD_FIT_NODES` | `HWS_OPTEE_ADD_FIT_NODES` | variable | yes |
+| `TDX_OPTEE_DT_OVERLAY` | `HWS_OPTEE_DT_OVERLAY` | variable | yes |

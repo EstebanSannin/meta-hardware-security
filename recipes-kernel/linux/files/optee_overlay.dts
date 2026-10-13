@@ -13,7 +13,7 @@
 		ranges;
 
 		optee {
-			reg = <@@TDX_OPTEE_ADDR_LOAD@@ @@TDX_OPTEE_ADDR_SIZE@@>;
+			reg = <@@HWS_OPTEE_ADDR_LOAD@@ @@HWS_OPTEE_ADDR_SIZE@@>;
 			no-map;
 		};
 	};

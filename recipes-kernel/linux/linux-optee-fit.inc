@@ -8,8 +8,8 @@ fitimage_emit_section_kernel:append() {
                         arch = "${UBOOT_ARCH}";
                         os = "linux";
                         compression = "none";
-                        load = <${TDX_OPTEE_ADDR_LOAD}>;
-                        entry = <${TDX_OPTEE_ADDR_LOAD}>;
+                        load = <${HWS_OPTEE_ADDR_LOAD}>;
+                        entry = <${HWS_OPTEE_ADDR_LOAD}>;
                         hash-1 {
                                 algo = "${FIT_HASH_ALG}";
                         };

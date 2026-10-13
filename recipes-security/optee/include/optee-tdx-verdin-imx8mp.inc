@@ -5,4 +5,4 @@ OPTEEMACHINE = "imx-mx8mpevk"
 UART_BASE_ADDR = "0x30880000"
 
 # eMMC RPMB partition device node ID
-TDX_OPTEE_FS_RPMB_DEV_ID ?= "2"
+HWS_OPTEE_FS_RPMB_DEV_ID ?= "2"
