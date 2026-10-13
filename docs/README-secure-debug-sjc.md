@@ -54,7 +54,7 @@ For SJC-based SoCs (iMX6, iMX7, iMX8M, iMX8 and iMX8X), the following additional
 Example configuration:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_MODE = "authenticated"
 TDX_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
@@ -63,7 +63,7 @@ TDX_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
 On iMX8 and iMX8X, to also allow authenticated debug of the secure world:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_MODE = "authenticated"
 TDX_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
@@ -75,7 +75,7 @@ On iMX8 and iMX8X, `no-debug` disables the challenge/response for both worlds, s
 To fully disable JTAG on SJC-based SoCs:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_SJC_DISABLE = "1"
 ```

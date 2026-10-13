@@ -47,7 +47,7 @@ For supported ELE-based SoCs, the following additional variables are available:
 Example enabling authenticated debug to generate credential templates for a device with a particular UUID:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_MODE = "authenticated"
 TDX_SECURE_DEBUG_ELE_DC_UUID = "00112233445566778899aabbccddeeff"
@@ -56,7 +56,7 @@ TDX_SECURE_DEBUG_ELE_DC_UUID = "00112233445566778899aabbccddeeff"
 Example to fully disable JTAG:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"
 ```

@@ -37,10 +37,10 @@ The SoMs based on the NXP iMX9 SoC use the EdgeLock Secure Enclave (ELE) backend
 
 ## Enabling Secure Debug
 
-To enable Secure Debug, inherit the `tdx-secure-debug` class in your distro configuration or `local.conf`:
+To enable Secure Debug, inherit the `hws-secure-debug` class in your distro configuration or `local.conf`:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 ```
 
 Secure Debug requires secure boot to be enabled. The build fails if Secure Debug is enabled without secure boot.
@@ -61,7 +61,7 @@ Each backend adds its own variables. For SJC-based SoCs, see [Configuration vari
 To disable security-sensitive debug access instead of using authenticated JTAG:
 
 ```bash
-INHERIT += "tdx-secure-debug"
+INHERIT += "hws-secure-debug"
 
 TDX_SECURE_DEBUG_MODE = "no-debug"
 ```

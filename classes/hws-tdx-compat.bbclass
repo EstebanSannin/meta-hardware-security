@@ -45,6 +45,8 @@ HWS_TDX_COMPAT_OVERRIDES += "\
 
 HWS_TDX_COMPAT_OVERRIDES += "hws-encrypted:tdx-encrypted"
 
+HWS_TDX_COMPAT_OVERRIDES += "hws-secure-debug:tdx-secure-debug"
+
 def hws_tdx_compat_pairs(d):
     pairs = []
     for item in (d.getVar('HWS_TDX_COMPAT_VARS') or '').split():

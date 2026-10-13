@@ -67,3 +67,5 @@ and whether the compatibility shim covers it.
 | `tdx-encrypted` | `hws-encrypted` | class | yes (legacy wrapper class) |
 | `:tdx-encrypted` | `:hws-encrypted` | override | yes (added to `DISTROOVERRIDES` when `hws-encrypted` is inherited) |
 | `tdx-optee` | `hws-optee` | class | yes (legacy wrapper class) |
+| `tdx-secure-debug` | `hws-secure-debug` | class | yes (legacy wrapper class) |
+| `:tdx-secure-debug` | `:hws-secure-debug` | override | yes (added to `DISTROOVERRIDES` when `hws-secure-debug` is inherited) |
