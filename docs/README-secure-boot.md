@@ -35,8 +35,8 @@ For this, the following features are available (details on the level of support 
 
 The features actually enabled depend on the class chosen. The options are:
 
-- `tdxref-signed`: all features listed above are enabled (the level of support might vary depending on the SoM, so check the detailed documentation in the following sessions if you need more details).
-- `tdx-signed`: all features are enabled except the "Rootfs signature checking". This class may be more suitable than `tdxref-signed` if the rootfs protection via `dm-verity` is not desired (for example, because it's not compatible with the used distro or because the rootfs is protected by other means).
+- `hws-signed-verity`: all features listed above are enabled (the level of support might vary depending on the SoM, so check the detailed documentation in the following sessions if you need more details).
+- `hws-signed`: all features are enabled except the "Rootfs signature checking". This class may be more suitable than `hws-signed-verity` if the rootfs protection via `dm-verity` is not desired (for example, because it's not compatible with the used distro or because the rootfs is protected by other means).
 
 To use the selected class, inherit from it globally by adding the following to an OE configuration file (e.g. your `local.conf`):
 
@@ -47,7 +47,7 @@ INHERIT += "<chosen-class>"
 For example, to enable all features, including rootfs signature checking:
 
 ```
-INHERIT += "tdxref-signed"
+INHERIT += "hws-signed-verity"
 ```
 
 The following sessions describe in detail each of these features.
@@ -113,7 +113,7 @@ TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG = "CMD_CAT_ALL_SAFE CMD_CAT_GPIO_CONTROL"
 
 ## Configuring FIT image signing
 
-When the `tdx-signed` or `tdxref-signed` class is inherited, generating and signing a FIT image is enabled by default. Set `UBOOT_SIGN_ENABLE` to `0` to disable it.
+When the `hws-signed` or `hws-signed-verity` class is inherited, generating and signing a FIT image is enabled by default. Set `UBOOT_SIGN_ENABLE` to `0` to disable it.
 
 This feature uses the default FIT image signing support provided by the `uboot-sign` and `kernel-fitimage` classes from OpenEmbedded Core. See the [Yocto Project documentation](https://docs.yoctoproject.org/ref-manual/classes.html#kernel-fitimage) for more details.
 
@@ -135,7 +135,7 @@ The complete list of variables can be found in the `tdx-signed-fit-image.inc` fi
 
 ## Configuring rootfs image signing
 
-When the `tdxref-signed` class is inherited, the rootfs image will be generated using the `dm-verity` kernel feature.
+When the `hws-signed-verity` class is inherited, the rootfs image will be generated using the `dm-verity` kernel feature.
 
 The variable `DM_VERITY_IMAGE` must be configured with the name of the image recipe you are building. For example, if you are building an image recipe called `my-custom-image`:
 
@@ -143,7 +143,7 @@ The variable `DM_VERITY_IMAGE` must be configured with the name of the image rec
 DM_VERITY_IMAGE = "my-custom-image"
 ```
 
-In case you don't want to boot a signed rootfs image, then instead of inheriting `tdxref-signed`, you should inherit `tdx-signed`. When inheriting `tdx-signed` the bootloader and the FIT image will be signed, but the rootfs image signing process with `dm-verity` will be skipped.
+In case you don't want to boot a signed rootfs image, then instead of inheriting `hws-signed-verity`, you should inherit `hws-signed`. When inheriting `hws-signed` the bootloader and the FIT image will be signed, but the rootfs image signing process with `dm-verity` will be skipped.
 
 ## HSM-backed image signing
 
@@ -157,7 +157,7 @@ For the more information on using an HSM to sign secure boot images, including t
 
 ## Additional partition for persistent data
 
-When `tdxref-signed` is used to enable secure boot, the rootfs image is generated using the `dm-verity` kernel feature.
+When `hws-signed-verity` is used to enable secure boot, the rootfs image is generated using the `dm-verity` kernel feature.
 
 Because `dm-verity` is read-only, you might want to create an additional partition in the eMMC to store persistent data.
 

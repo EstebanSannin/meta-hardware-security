@@ -12,7 +12,7 @@ On iMX8, iMX8X and iMX9x, this feature is available and it is called AHAB (Advan
 
 ## Configuring HAB/AHAB support
 
-When the `tdx-signed` class is inherited, signing bootloader images via HAB/AHAB is enabled by default. Set `TDX_IMX_HAB_ENABLE` to `0` to disable it.
+When the `hws-signed` class is inherited, signing bootloader images via HAB/AHAB is enabled by default. Set `TDX_IMX_HAB_ENABLE` to `0` to disable it.
 
 Before using this feature, it is required to:
 

@@ -100,7 +100,7 @@ For production use, this layer supports HSM-backed signing through a PKCS#11 pro
 
 ### Enabling and configuring bootloader signing
 
-When the `tdx-signed` class is inherited, signing bootloader images on K3-based platforms like AM62 is enabled by default.
+When the `hws-signed` class is inherited, signing bootloader images on K3-based platforms like AM62 is enabled by default.
 
 A few variables can be used to configure its behavior:
 

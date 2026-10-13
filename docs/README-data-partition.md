@@ -2,7 +2,7 @@
 
 Sometimes it is useful (or even required) to have an additional partition to store application data and other software artifacts:
 
-- If the `tdxref-signed` class is used to enable secure boot, the rootfs partition will be read-only, and an additional partition might be needed to store persistent data.
+- If the `hws-signed-verity` class is used to enable secure boot, the rootfs partition will be read-only, and an additional partition might be needed to store persistent data.
 - If the `tdx-encrypted` class is used to enable encryption, an additional partition in the eMMC can be used to store the encrypted data.
 
 For these and other use cases, this layer supports creating an additional data partition in the eMMC via the `tdx-tezi-data-partition` class.

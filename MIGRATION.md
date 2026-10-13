@@ -57,3 +57,10 @@ and whether the compatibility shim covers it.
 | Old | New | Type | Compat shim |
 | :-- | :-- | :--- | :---------- |
 | `meta-toradex-security` | `hardware-security` | layer collection (`BBFILE_COLLECTIONS`, `LAYERSERIES_COMPAT_*`, ...) | no (rename `LAYERDEPENDS`/`LAYERRECOMMENDS` entries; the checkout directory name in `BBLAYERS` is up to the user) |
+| `tdx-signed` | `hws-signed` | class | yes (legacy wrapper class) |
+| `tdxref-signed` | `hws-signed-verity` | class | yes (legacy wrapper class) |
+| `tdx-signed-dmverity` | `hws-signed-dmverity` | class | yes (legacy wrapper class) |
+| `tdx-signed-hsm-env` | `hws-signed-hsm-env` | class | yes (legacy wrapper class) |
+| `:tdx-signed` | `:hws-signed` | override | yes (added to `DISTROOVERRIDES` when `hws-signed` is inherited) |
+| `:tdx-signed-dmverity` | `:hws-signed-dmverity` | override | yes (added to `DISTROOVERRIDES` when `hws-signed-dmverity` is inherited) |
+| `TDX_SIGNING_CLASS` value `tdx-signed` / `tdxref-signed` | `hws-signed` / `hws-signed-verity` | variable value | yes (the legacy wrapper classes set the legacy value) |

@@ -84,7 +84,7 @@ To use a different PKCS#11 provider, the layer does not usually require code cha
 - Set `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` to the native recipe that provides the PKCS#11 module.
 - Set `TDX_SIGNED_HSM_PKCS11_MODULE_PATH` to the path of the shared library inside the native sysroot.
 
-> **Note:** If the provider requires additional environment variables or runtime initialization, the build logic may need to be extended accordingly. For a reference, see `classes/tdx-signed-hsm-env.bbclass`.
+> **Note:** If the provider requires additional environment variables or runtime initialization, the build logic may need to be extended accordingly. For a reference, see `classes/hws-signed-hsm-env.bbclass`.
 
 ### Configuring HAB/AHAB signing for NXP i.MX-based SoMs
 

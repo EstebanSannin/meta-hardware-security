@@ -64,7 +64,7 @@ IMAGE_INSTALL:append = "\
 
 # enable data partition if dm-verity and tezi are both enabled, and RPMB is not enabled
 inherit ${@ 'tdx-tezi-data-partition' if 'teziimg' in d.getVar('IMAGE_FSTYPES') and \
-            'tdx-signed-dmverity' in d.getVar('OVERRIDES').split(':') and \
+            'hws-signed-dmverity' in d.getVar('OVERRIDES').split(':') and \
             d.getVar('TDX_OPTEE_FS_RPMB') == '0' else ''}
 
 # machine-specific fixups for OP-TEE

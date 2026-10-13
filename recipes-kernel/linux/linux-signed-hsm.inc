@@ -1,4 +1,4 @@
-inherit tdx-signed-hsm-env
+inherit hws-signed-hsm-env
 
 do_assemble_fitimage_initramfs:prepend() {
     tdx_signed_hsm_vars_export

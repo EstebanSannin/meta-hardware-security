@@ -37,6 +37,12 @@ HWS_TDX_COMPAT_VARS ?= ""
 # LEGACY_OVERRIDE is added to DISTROOVERRIDES when CLASS is inherited.
 HWS_TDX_COMPAT_OVERRIDES ?= ""
 
+# Signing classes and overrides
+HWS_TDX_COMPAT_OVERRIDES += "\
+    hws-signed:tdx-signed \
+    hws-signed-dmverity:tdx-signed-dmverity \
+"
+
 def hws_tdx_compat_pairs(d):
     pairs = []
     for item in (d.getVar('HWS_TDX_COMPAT_VARS') or '').split():

@@ -1,4 +1,4 @@
-inherit tdx-signed-hsm-env
+inherit hws-signed-hsm-env
 
 SRC_URI += "\
     file://0001-binman-x509_cert-support-PKCS-11-URI-in-keyfile-for-.patch \
