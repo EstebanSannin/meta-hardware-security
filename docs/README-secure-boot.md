@@ -131,7 +131,7 @@ The complete list of variables can be found in the `tdx-signed-fit-image.inc` fi
 
 ### Configuring FIT image signing / known issues
 
-- On K3 based platforms (Verdin AM62, Aquila AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `tdx-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-toradex-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
+- On K3 based platforms (Verdin AM62, Aquila AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `tdx-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-hardware-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
 
 ## Configuring rootfs image signing
 
@@ -147,11 +147,11 @@ In case you don't want to boot a signed rootfs image, then instead of inheriting
 
 ## HSM-backed image signing
 
-By default, `meta-toradex-security` performs signing operations using private keys stored as files on the build host filesystem. This is the simplest setup and works well for development, since the signing tools can directly read the key material from the configured paths.
+By default, `meta-hardware-security` performs signing operations using private keys stored as files on the build host filesystem. This is the simplest setup and works well for development, since the signing tools can directly read the key material from the configured paths.
 
 However, this approach also has some drawbacks. Private keys must be present on the machine running the build, which increases the risk of accidental exposure, improper copying, insecure backups, or misuse in shared development and CI environments. It also makes key management more difficult, especially when stronger access control, auditability, or centralized signing infrastructure is required.
 
-To address these limitations, `meta-toradex-security` also supports HSM-backed signing through PKCS#11. With this flow, private key operations are delegated to a PKCS#11-compatible HSM or token instead of using private key files stored on the build host.
+To address these limitations, `meta-hardware-security` also supports HSM-backed signing through PKCS#11. With this flow, private key operations are delegated to a PKCS#11-compatible HSM or token instead of using private key files stored on the build host.
 
 For the more information on using an HSM to sign secure boot images, including the list of supported variables and usage examples, refer to [README-secure-boot-hsm.md](README-secure-boot-hsm.md).
 

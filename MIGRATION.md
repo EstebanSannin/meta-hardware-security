@@ -56,3 +56,4 @@ and whether the compatibility shim covers it.
 
 | Old | New | Type | Compat shim |
 | :-- | :-- | :--- | :---------- |
+| `meta-toradex-security` | `hardware-security` | layer collection (`BBFILE_COLLECTIONS`, `LAYERSERIES_COMPAT_*`, ...) | no (rename `LAYERDEPENDS`/`LAYERRECOMMENDS` entries; the checkout directory name in `BBLAYERS` is up to the user) |

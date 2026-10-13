@@ -1,6 +1,6 @@
 # HSM-backed image signing
 
-This document describes how to use a PKCS#11-compatible HSM to sign secure-boot artifacts with `meta-toradex-security`.
+This document describes how to use a PKCS#11-compatible HSM to sign secure-boot artifacts with `meta-hardware-security`.
 
 With this workflow, private signing keys do not need to be stored on the build host filesystem. Instead, signing operations are delegated through a PKCS#11 provider to an HSM-backed device or service, such as a hardware token or a CloudHSM offering.
 
@@ -57,7 +57,7 @@ Configuring the PKCS#11 provider is one of the first steps when enabling HSM-bac
 
 The most important variables for configuring the PKCS#11 provider are `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` and `TDX_SIGNED_HSM_PKCS11_MODULE_PATH`. The first ensures that the PKCS#11 module is built and installed into the native sysroot, and the second tells the signing tools which shared library to load.
 
-The HSM signing flow in `meta-toradex-security` is designed to be provider-agnostic, as long as the HSM is accessible through a PKCS#11-compatible shared library available in the native sysroot. At the moment, the layer has been validated with the following providers:
+The HSM signing flow in `meta-hardware-security` is designed to be provider-agnostic, as long as the HSM is accessible through a PKCS#11-compatible shared library available in the native sysroot. At the moment, the layer has been validated with the following providers:
 
 - **SoftHSM**, a software implementation of a PKCS#11 token.
 - **YubiKey 5 NFC**, a hardware-backed signing device from [Yubico](https://www.yubico.com/).
