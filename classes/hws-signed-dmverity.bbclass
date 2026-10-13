@@ -20,7 +20,7 @@ IMAGE_CLASSES += "dm-verity-img"
 # include 'security' in DISTROFEATURES. Because of that, a
 # warning message is displayed by meta-security. Avoid that by
 # setting the variable below.
-SKIP_META_SECURITY_SANITY_CHECK = "1"
+SKIP_META_SECURITY_SANITY_CHECK ?= "1"
 
 # Tezi configuration
 TEZI_ROOT_SUFFIX = "ext4.verity"
