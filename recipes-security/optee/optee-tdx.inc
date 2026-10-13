@@ -24,7 +24,7 @@ OPTEE_OS_ENCRYPTION_OPTS:hws-encrypted = "\
 EXTRA_OEMAKE:append:pn-optee-os = "\
     ${@oe.utils.conditional('TDX_OPTEE_PKCS11', '1', 'CFG_PKCS11_TA=y', '', d)} \
     ${@oe.utils.conditional('TDX_OPTEE_DEBUG', '1', '${OPTEE_OS_DEBUG_OPTS}', '', d)} \
-    ${@oe.utils.conditional('TDX_ENC_KEY_BACKEND', 'tee', '${OPTEE_OS_ENCRYPTION_OPTS}', '', d)} \
+    ${@oe.utils.conditional('HWS_ENC_KEY_BACKEND', 'tee', '${OPTEE_OS_ENCRYPTION_OPTS}', '', d)} \
     CFG_UART_BASE=${UART_BASE_ADDR} \
     ${OPTEE_OS_EXTRA_MACHINE_ARGS} \
 "

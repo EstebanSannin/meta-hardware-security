@@ -3,10 +3,10 @@
 # Toradex encryption handler
 
 # backend used to manage the encryption key
-TDX_ENC_KEY_BACKEND="@@TDX_ENC_KEY_BACKEND@@"
+TDX_ENC_KEY_BACKEND="@@HWS_ENC_KEY_BACKEND@@"
 
 # cipher preset
-TDX_ENC_CIPHER="@@TDX_ENC_CIPHER@@"
+TDX_ENC_CIPHER="@@HWS_ENC_CIPHER@@"
 
 # dm-crypt cipher specification (initialized at runtime)
 TDX_ENC_CIPHER_SPEC=""
@@ -15,21 +15,21 @@ TDX_ENC_CIPHER_SPEC=""
 TDX_ENC_KEY_SIZE=""
 
 # encryption key location
-TDX_ENC_KEY_LOCATION="@@TDX_ENC_KEY_LOCATION@@"
+TDX_ENC_KEY_LOCATION="@@HWS_ENC_KEY_LOCATION@@"
 
 # directory to store encrypted key
-TDX_ENC_KEY_DIR="@@TDX_ENC_KEY_DIR@@"
+TDX_ENC_KEY_DIR="@@HWS_ENC_KEY_DIR@@"
 
 # key file name
-TDX_ENC_KEY_FILE="@@TDX_ENC_KEY_FILE@@"
+TDX_ENC_KEY_FILE="@@HWS_ENC_KEY_FILE@@"
 
 # storage location to be encrypted (e.g. partition)
-TDX_ENC_STORAGE_LOCATION="@@TDX_ENC_STORAGE_LOCATION@@"
+TDX_ENC_STORAGE_LOCATION="@@HWS_ENC_STORAGE_LOCATION@@"
 
 # Number of blocks to reserve from the partition to be encrypted
 # Useful in case one needs a storage location to save data in raw
 # mode, outside the dm-drypt partition
-TDX_ENC_STORAGE_RESERVE="@@TDX_ENC_STORAGE_RESERVE@@"
+TDX_ENC_STORAGE_RESERVE="@@HWS_ENC_STORAGE_RESERVE@@"
 
 # number of blocks in the storage to be encrypted by dm-crypt
 # depends on the size of the partition and the number of blocks
@@ -37,25 +37,25 @@ TDX_ENC_STORAGE_RESERVE="@@TDX_ENC_STORAGE_RESERVE@@"
 TDX_ENC_STORAGE_NUM_BLOCKS=""
 
 # directory to mount the encrypted storage
-TDX_ENC_STORAGE_MOUNTPOINT="@@TDX_ENC_STORAGE_MOUNTPOINT@@"
+TDX_ENC_STORAGE_MOUNTPOINT="@@HWS_ENC_STORAGE_MOUNTPOINT@@"
 
 # extra arguments to mkfs; used when running mkfs on the encrypted storage
-TDX_ENC_STORAGE_MKFS_ARGS="@@TDX_ENC_STORAGE_MKFS_ARGS@@"
+TDX_ENC_STORAGE_MKFS_ARGS="@@HWS_ENC_STORAGE_MKFS_ARGS@@"
 
 # extra arguments to mount; used when mounting the fs stored on the encrypted storage
-TDX_ENC_STORAGE_MOUNT_ARGS="@@TDX_ENC_STORAGE_MOUNT_ARGS@@"
+TDX_ENC_STORAGE_MOUNT_ARGS="@@HWS_ENC_STORAGE_MOUNT_ARGS@@"
 
 # dm-crypt device to be created
 TDX_ENC_DM_DEVICE="encdata"
 
 # flag to enable preservation of data on partition before encryption
-TDX_ENC_PRESERVE_DATA=@@TDX_ENC_PRESERVE_DATA@@
+TDX_ENC_PRESERVE_DATA=@@HWS_ENC_PRESERVE_DATA@@
 
 # storage location of data backup file (if needed)
 TDX_ENC_BACKUP_FILE="/tmp/encdata.tar.bz2"
 
 # Configurable RAM use percentage
-TDX_ENC_BACKUP_STORAGE_PCT=@@TDX_ENC_BACKUP_STORAGE_PCT@@
+TDX_ENC_BACKUP_STORAGE_PCT=@@HWS_ENC_BACKUP_STORAGE_PCT@@
 
 # encryption key full path
 TDX_ENC_KEY_FULLPATH="${TDX_ENC_KEY_DIR}/${TDX_ENC_KEY_FILE}"

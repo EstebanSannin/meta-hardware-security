@@ -39,5 +39,5 @@ When the said assumption is true though, having an encrypted data partition woul
 
 ```
 INHERIT += "tdx-tezi-data-partition hws-encrypted"
-TDX_ENC_STORAGE_LOCATION = "/dev/<block-device-for-data-partition>"
+HWS_ENC_STORAGE_LOCATION = "/dev/<block-device-for-data-partition>"
 ```

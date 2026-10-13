@@ -61,16 +61,16 @@ To enable the data-at-rest encryption feature, one needs to globally inherit the
 INHERIT += "hws-encrypted"
 ```
 
-Also, it is mandatory to set the `TDX_ENC_STORAGE_LOCATION` variable to the disk partition you want to encrypt. For example, to encrypt the `/dev/sdb1` partition:
+Also, it is mandatory to set the `HWS_ENC_STORAGE_LOCATION` variable to the disk partition you want to encrypt. For example, to encrypt the `/dev/sdb1` partition:
 
 ```
-TDX_ENC_STORAGE_LOCATION = "/dev/sdb1"
+HWS_ENC_STORAGE_LOCATION = "/dev/sdb1"
 ```
 
-The `TDX_ENC_KEY_BACKEND` variable can be used to configure the trust source for managing the encryption key. If you plan to use CAAM (available on most NXP iMX-based SoMs), you don't have to configure this variable, as it is automatically configured with `caam`. If you plan to use a TPM or TEE as the backend, you need to configure it. For example, to use a TPM as the backend (i.e. trust source for the Trusted Keys subsystem):
+The `HWS_ENC_KEY_BACKEND` variable can be used to configure the trust source for managing the encryption key. If you plan to use CAAM (available on most NXP iMX-based SoMs), you don't have to configure this variable, as it is automatically configured with `caam`. If you plan to use a TPM or TEE as the backend, you need to configure it. For example, to use a TPM as the backend (i.e. trust source for the Trusted Keys subsystem):
 
 ```
-TDX_ENC_KEY_BACKEND:forcevariable = "tpm"
+HWS_ENC_KEY_BACKEND:forcevariable = "tpm"
 ```
 
 Make sure to use the `forcevariable` override, so your configuration takes precedence over the default one.
@@ -79,16 +79,16 @@ A few additional variables are available to customize the behavior of the data-a
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_ENC_KEY_BACKEND` | Backend used to manage the encryption key. Allowed values: `caam`, `tpm`, `tee` or `cleartext`. If configured with `caam`, it will use Trusted Keys backed by the CAAM device (available on NXP iMX-based SoMs). If configured with `tpm`, it will use Trusted Keys backed by a TPM device (availability depends on the hardware). If configured with `tee`, it will use Trusted Keys backed by a Trusted Execution Environment. If configured with `cleartext`, the encryption key will be stored in clear text in the file system (use `cleartext` only for testing purposes!) | `caam` on iMX6/7/8 based SoMs, empty otherwise |
-| `TDX_ENC_CIPHER` | Cipher preset for dm-crypt block device encryption. Allowed values: `aes-cbc` or `aes-xts`. See [Cipher selection](#cipher-selection) for details. | `aes-cbc` |
-| `TDX_ENC_KEY_LOCATION` | Location to store the encryption key blob. Allowed values: `filesystem` or `partition`. If configured with `filesystem`, the encryption key blob will be stored as a file in the filesystem (location defined by the `TDX_ENC_KEY_DIR` variable. If configured with `partition`, the encryption key blob will be stored in a block of the disk outside the dm-crypt partition (useful if the rootfs filesystem is read-only) | `filesystem` |
-| `TDX_ENC_KEY_DIR` | Directory to store the encryption key blob | `/var/local/private/.keys` |
-| `TDX_ENC_KEY_FILE` | File name of the encryption key blob | `tdx-enc-key.blob` |
-| `TDX_ENC_STORAGE_LOCATION` | Partition to be encrypted (e.g. `/dev/sdb1`) | Empty |
-| `TDX_ENC_STORAGE_RESERVE` | Number of blocks to reserve from the partition to be encrypted. Each block is 512-byte in size. Might be useful in case one needs a storage location to save data in raw mode, outside the dm-drypt partition. If `TDX_ENC_KEY_LOCATION` is set to `partition`, then the first reserved block is used to store the encryption key blob. | `0` |
-| `TDX_ENC_STORAGE_MOUNTPOINT` | Directory to mount the encrypted partition | `/run/encdata` |
-| `TDX_ENC_STORAGE_MKFS_ARGS` | Extra arguments to be passed to `mkfs.ext4` when creating the filesystem on the encrypted storage | Empty |
-| `TDX_ENC_STORAGE_MOUNT_ARGS` | Extra arguments to be passed to `mount` when mounting the filesystem on the encrypted storage | Empty |
+| `HWS_ENC_KEY_BACKEND` | Backend used to manage the encryption key. Allowed values: `caam`, `tpm`, `tee` or `cleartext`. If configured with `caam`, it will use Trusted Keys backed by the CAAM device (available on NXP iMX-based SoMs). If configured with `tpm`, it will use Trusted Keys backed by a TPM device (availability depends on the hardware). If configured with `tee`, it will use Trusted Keys backed by a Trusted Execution Environment. If configured with `cleartext`, the encryption key will be stored in clear text in the file system (use `cleartext` only for testing purposes!) | `caam` on iMX6/7/8 based SoMs, empty otherwise |
+| `HWS_ENC_CIPHER` | Cipher preset for dm-crypt block device encryption. Allowed values: `aes-cbc` or `aes-xts`. See [Cipher selection](#cipher-selection) for details. | `aes-cbc` |
+| `HWS_ENC_KEY_LOCATION` | Location to store the encryption key blob. Allowed values: `filesystem` or `partition`. If configured with `filesystem`, the encryption key blob will be stored as a file in the filesystem (location defined by the `HWS_ENC_KEY_DIR` variable. If configured with `partition`, the encryption key blob will be stored in a block of the disk outside the dm-crypt partition (useful if the rootfs filesystem is read-only) | `filesystem` |
+| `HWS_ENC_KEY_DIR` | Directory to store the encryption key blob | `/var/local/private/.keys` |
+| `HWS_ENC_KEY_FILE` | File name of the encryption key blob | `tdx-enc-key.blob` |
+| `HWS_ENC_STORAGE_LOCATION` | Partition to be encrypted (e.g. `/dev/sdb1`) | Empty |
+| `HWS_ENC_STORAGE_RESERVE` | Number of blocks to reserve from the partition to be encrypted. Each block is 512-byte in size. Might be useful in case one needs a storage location to save data in raw mode, outside the dm-drypt partition. If `HWS_ENC_KEY_LOCATION` is set to `partition`, then the first reserved block is used to store the encryption key blob. | `0` |
+| `HWS_ENC_STORAGE_MOUNTPOINT` | Directory to mount the encrypted partition | `/run/encdata` |
+| `HWS_ENC_STORAGE_MKFS_ARGS` | Extra arguments to be passed to `mkfs.ext4` when creating the filesystem on the encrypted storage | Empty |
+| `HWS_ENC_STORAGE_MOUNT_ARGS` | Extra arguments to be passed to `mount` when mounting the filesystem on the encrypted storage | Empty |
 
 IMPORTANT:
 
@@ -98,7 +98,7 @@ IMPORTANT:
 
 ## Cipher selection
 
-The `TDX_ENC_CIPHER` variable selects the dm-crypt cipher preset used when the encrypted mapping is created. 
+The `HWS_ENC_CIPHER` variable selects the dm-crypt cipher preset used when the encrypted mapping is created. 
 
 Two values are currently supported:
 
@@ -112,10 +112,10 @@ Two values are currently supported:
 **`aes-xts` is recommended for all new deployments.** XTS-AES is the industry-standard mode for storage encryption and avoids the pattern-leakage/watermarking weakness of CBC with a plain sector-number IV. To enable it:
 
 ```
-TDX_ENC_CIPHER = "aes-xts"
+HWS_ENC_CIPHER = "aes-xts"
 ```
 
-> **WARNING**: Do not change `TDX_ENC_CIPHER` on a device that already contains data encrypted with the existing mapping. The new cipher configuration will not decrypt the existing ciphertext correctly. To migrate an existing device, back up the data, remove the existing encrypted state/key material used by this workflow, and allow the partition to be initialized again with the new setting.
+> **WARNING**: Do not change `HWS_ENC_CIPHER` on a device that already contains data encrypted with the existing mapping. The new cipher configuration will not decrypt the existing ciphertext correctly. To migrate an existing device, back up the data, remove the existing encrypted state/key material used by this workflow, and allow the partition to be initialized again with the new setting.
 
 The dm-crypt subsystem uses the Linux kernel crypto API, so hardware-backed AES acceleration can be used transparently when the appropriate backend is available and loaded (e.g. CAAM on iMX based SoMs).
 
