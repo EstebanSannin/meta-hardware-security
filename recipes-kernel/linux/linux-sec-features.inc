@@ -1,13 +1,3 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
-
-# dm-verity support
-require ${@ 'linux-dm-verity.inc' if 'hws-signed-dmverity' in d.getVar('OVERRIDES').split(':') else ''}
-
-# dm-crypt support
-require ${@ 'linux-dm-crypt.inc' if 'hws-encrypted' in d.getVar('OVERRIDES').split(':') else ''}
-
-# op-tee support
-require ${@ 'linux-optee.inc' if d.getVar('HWS_OPTEE_ENABLE') == '1' else ''}
-
-# FIT image signing using an HSM
-require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'linux-signed-hsm.inc', '', d)}
+# Kept for the kernel bbappends that require it; the features are in the
+# hws-kernel class (inheriting it more than once is harmless).
+inherit hws-kernel

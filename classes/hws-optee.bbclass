@@ -103,3 +103,6 @@ python validate_optee_support() {
                 "secure factory provisioning environments, and it should " \
                 "never be used outside of a trusted, secure factory setup!")
 }
+
+# settings shared by the feature classes of this layer
+inherit hws-common

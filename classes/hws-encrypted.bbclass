@@ -88,3 +88,6 @@ python validate_enc_parameters() {
     if cipher not in supported_ciphers:
         bb.fatal("'%s' is invalid. Please set a valid cipher algorithm via HWS_ENC_CIPHER. Supported: %s" % (cipher, ', '.join(supported_ciphers)))
 }
+
+# settings shared by the feature classes of this layer
+inherit hws-common

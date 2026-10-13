@@ -25,3 +25,6 @@ include include/signed/machine/${MACHINE}.inc
 # signing class name (informational, may be displayed to users);
 # derived classes should override this
 HWS_SIGNING_CLASS = "hws-signed"
+
+# settings shared by the feature classes of this layer
+inherit hws-common

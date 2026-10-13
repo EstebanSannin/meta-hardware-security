@@ -54,3 +54,6 @@ verity_setup:append() {
 
 # fix cyclic dependency when inheriting image_type_tezi.bbclass
 require ${@ 'include/signed/tdx-signed-dmverity-tezi.inc' if 'teziimg' in d.getVar('IMAGE_FSTYPES') else ''}
+
+# settings shared by the feature classes of this layer
+inherit hws-common

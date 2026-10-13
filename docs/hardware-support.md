@@ -44,10 +44,13 @@ first boot stage and SoC capability settings, reusing the generic parts.
 These are the main reasons the generic parts don't work out of the box on other
 hardware yet; they are tracked as follow-up work:
 
-- **Kernel integration**: the kernel configuration fragments for dm-verity, dm-crypt,
-  Trusted Keys and OP-TEE are only attached to `linux-imx` and to the Toradex kernel
-  recipes (`linux-toradex*`). Other kernels (e.g. `linux-yocto` used by QEMU machines)
-  need the fragments added manually.
+- **Kernel integration** (addressed): the kernel side of the features (configuration
+  fragments for dm-verity, dm-crypt, Trusted Keys and OP-TEE, HSM-backed FIT signing)
+  is in the `hws-kernel` class, which the feature classes add to `KERNEL_CLASSES`, so it
+  reaches every kernel recipe that inherits `kernel.bbclass`. The fragments need a
+  kernel recipe that merges `.cfg` fragments from `SRC_URI` (e.g. `linux-yocto`); this
+  is not yet validated on a non-NXP kernel. Some fragments are SoC-specific (e.g. the
+  `caam` key backend) and only make sense on the matching SoC.
 - **U-Boot integration**: the U-Boot changes (FIT signature enforcement, hardening,
   bootloader signing) are only attached to `u-boot-imx` and the Toradex U-Boot recipes.
   The OpenEmbedded Core `u-boot` recipe is not covered.
