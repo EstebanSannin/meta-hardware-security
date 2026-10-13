@@ -5,7 +5,7 @@ DEPENDS:append = "\
     ${HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER} \
 "
 
-tdx_signed_hsm_vars_export_common() {
+hws_signed_hsm_vars_export_common() {
     # HSM token PIN
     if [ -z "${HWS_SIGNED_HSM_TOKEN_PIN}" ]; then
         bbfatal "Missing PIN to access the HSM. Please configure it via HWS_SIGNED_HSM_TOKEN_PIN variable."
@@ -18,9 +18,9 @@ tdx_signed_hsm_vars_export_common() {
     fi
 }
 
-tdx_signed_hsm_vars_export() {
+hws_signed_hsm_vars_export() {
     # common configuration
-    tdx_signed_hsm_vars_export_common
+    hws_signed_hsm_vars_export_common
 
     # OpenSSL engines directory
     for d in \
@@ -43,9 +43,9 @@ tdx_signed_hsm_vars_export() {
 }
 
 # Set up the environment so binman can sign TI K3 boot containers via a key stored in an HSM
-tdx_signed_hsm_vars_export_k3_binman() {
+hws_signed_hsm_vars_export_k3_binman() {
     # common configuration
-    tdx_signed_hsm_vars_export_common
+    hws_signed_hsm_vars_export_common
 
     # binman x509_cert key URI
     if [ -z "${HWS_SIGNED_HSM_K3_BINMAN_KEY_URL}" ]; then

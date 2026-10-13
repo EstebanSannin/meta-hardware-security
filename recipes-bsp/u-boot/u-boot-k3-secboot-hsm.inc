@@ -5,5 +5,5 @@ SRC_URI += "\
 "
 
 do_compile:prepend() {
-    tdx_signed_hsm_vars_export_k3_binman
+    hws_signed_hsm_vars_export_k3_binman
 }

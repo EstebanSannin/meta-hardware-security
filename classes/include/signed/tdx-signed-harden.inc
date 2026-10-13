@@ -12,7 +12,7 @@
 # Because of the above, we enable the hardening only when HWS_IMX_HAB_ENABLE and
 # UBOOT_SIGN_ENABLE are set, by default.
 #
-def default_tdx_uboot_hardening_enable(d):
+def default_hws_uboot_hardening_enable(d):
     unsupported_machines = []
     for machine in unsupported_machines:
         if (machine in d.getVar('OVERRIDES').split(':')):
@@ -30,7 +30,7 @@ def default_tdx_uboot_hardening_enable(d):
         return True
     return False
 
-HWS_UBOOT_HARDENING_ENABLE ?= "${@'1' if default_tdx_uboot_hardening_enable(d) else '0'}"
+HWS_UBOOT_HARDENING_ENABLE ?= "${@'1' if default_hws_uboot_hardening_enable(d) else '0'}"
 HWS_UBOOT_HARDENING_ENABLE:k3r5 = "0"
 HWS_UBOOT_HARDENING_ENABLE_DBG ?= "0"
 HWS_UBOOT_HARDENING_ENABLE_CP_PROT ?= "0"

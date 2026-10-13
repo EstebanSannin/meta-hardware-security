@@ -194,3 +194,10 @@ and whether the compatibility shim covers it.
 | `TDX_SECURE_DEBUG_ELE_DCK_KEY` | `HWS_SECURE_DEBUG_ELE_DCK_KEY` | variable | yes |
 | `TDX_SECURE_DEBUG_ELE_JTAG_DISABLE` | `HWS_SECURE_DEBUG_ELE_JTAG_DISABLE` | variable | yes |
 | `TDX_SECURE_DEBUG_ELE_AUTH_INTERNAL` | `HWS_SECURE_DEBUG_ELE_AUTH_INTERNAL` | variable | yes |
+| `default_tdx_uboot_hardening_enable` | `default_hws_uboot_hardening_enable` | function | no |
+| `show_tdx_signed_warnings` | `show_hws_signed_warnings` | function | no |
+| `tdx_secure_debug_check_key_file` | `hws_secure_debug_check_key_file` | function | no |
+| `tdx_secure_debug_srk_signer` | `hws_secure_debug_srk_signer` | function | no |
+| `tdx_signed_hsm_vars_export_k3_binman` | `hws_signed_hsm_vars_export_k3_binman` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |
+| `tdx_signed_hsm_vars_export_common` | `hws_signed_hsm_vars_export_common` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |
+| `tdx_signed_hsm_vars_export` | `hws_signed_hsm_vars_export` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |

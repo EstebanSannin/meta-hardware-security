@@ -35,9 +35,9 @@ python validate_k3_secboot_variables() {
 }
 
 # Informational messages:
-addhandler show_tdx_signed_warnings
-show_tdx_signed_warnings[eventmask] = "bb.event.BuildCompleted"
-python show_tdx_signed_warnings() {
+addhandler show_hws_signed_warnings
+show_hws_signed_warnings[eventmask] = "bb.event.BuildCompleted"
+python show_hws_signed_warnings() {
     if not bb.utils.to_boolean(e.data.getVar('HWS_K3_SUPPRESS_HSSE_WARNINGS')):
         if bb.utils.to_boolean(e.data.getVar('HWS_K3_SECBOOT_TARGET_HSSE_DEVICE')):
             bb.warnonce(

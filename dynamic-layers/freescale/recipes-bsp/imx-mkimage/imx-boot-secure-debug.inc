@@ -15,7 +15,7 @@ do_compile[file-checksums] += "${@ d.getVar('HWS_SECURE_DEBUG_TZ_KEY_FILE') + ':
 HWS_SECURE_DEBUG_ELE_AUTH_INTERNAL = "${@ '1' if d.getVar('HWS_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('HWS_SECURE_DEBUG_ELE_SPSDK_FAMILY') and d.getVar('HWS_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('HWS_SECURE_DEBUG_ELE_JTAG_DISABLE') != '1' else '0'}"
 
 # return the SRK private key path or the SPSDK PKCS#11 signer (if HSM is enabled)
-def tdx_secure_debug_srk_signer(d):
+def hws_secure_debug_srk_signer(d):
     import os
     import urllib.parse
     if d.getVar('HWS_SIGNED_HSM') != '1':
@@ -63,7 +63,7 @@ python secure_debug_ele_templates() {
         'CC_SOCU': quote('0x%08X' % int(d.getVar('HWS_SECURE_DEBUG_ELE_DC_CC_SOCU'), 16)),
         'UUID': quote(uuid or 'REPLACE_WITH_DEVICE_UUID'),
         'DCK_KEY': quote(d.getVar('HWS_SECURE_DEBUG_ELE_DCK_KEY')),
-        'SRK_SIGNER': quote(tdx_secure_debug_srk_signer(d)),
+        'SRK_SIGNER': quote(hws_secure_debug_srk_signer(d)),
         'SRK_ID': str(int(d.getVar('HWS_IMX_HAB_CST_SRK_INDEX')) - 1),
         'SRK_CA': 'true' if d.getVar('HWS_IMX_HAB_CST_SRK_CA') == '1' else 'false',
     }

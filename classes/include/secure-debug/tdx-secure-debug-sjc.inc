@@ -71,7 +71,7 @@ HWS_SECURE_DEBUG_KEY_FILE ?= "${TOPDIR}/keys/secure-debug/key.txt"
 HWS_SECURE_DEBUG_TZ_KEY_FILE ?= ""
 
 # Check that the key file in variable 'var' is valid
-def tdx_secure_debug_check_key_file(d, var, key_len):
+def hws_secure_debug_check_key_file(d, var, key_len):
     key_file = d.getVar(var)
     if not key_file:
         bb.fatal("%s must be set when HWS_SECURE_DEBUG_MODE='authenticated'." % var)
@@ -117,8 +117,8 @@ python validate_secure_debug_sjc() {
                      "disable JTAG.")
 
         imx8 = 'mx8qm-generic-bsp' in overrides or 'mx8qxp-generic-bsp' in overrides
-        tdx_secure_debug_check_key_file(e.data, 'HWS_SECURE_DEBUG_KEY_FILE',
+        hws_secure_debug_check_key_file(e.data, 'HWS_SECURE_DEBUG_KEY_FILE',
                                         32 if imx8 else 14)
         if imx8 and e.data.getVar('HWS_SECURE_DEBUG_TZ_KEY_FILE'):
-            tdx_secure_debug_check_key_file(e.data, 'HWS_SECURE_DEBUG_TZ_KEY_FILE', 32)
+            hws_secure_debug_check_key_file(e.data, 'HWS_SECURE_DEBUG_TZ_KEY_FILE', 32)
 }
