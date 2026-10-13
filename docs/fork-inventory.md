@@ -411,6 +411,11 @@ stays buildable for Torizon (see D10).
 
 ## 10. Decisions
 
+**Update (2026-10-13): no separate Toradex sublayer for now.** Toradex-only content
+(categories C1–C10) stays in this layer; where this document says "move to the
+`meta-hardware-security-toradex` sublayer", read "keep in this layer, grouped and clearly
+marked as Toradex-specific". Whether to split it out is decided later.
+
 **Status (2026-10-13): all recommendations below were accepted.** Work happens on branch
 `hws/scarthgap`, created from `scarthgap-7.x.y` @ `29f2e45`. For D13 (c), unvalidated
 machines stay fatal for now.
