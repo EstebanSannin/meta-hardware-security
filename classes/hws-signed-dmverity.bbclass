@@ -8,13 +8,23 @@ INITRAMFS_IMAGE_BUNDLE ?= "0"
 # use the FIT image with the ramdisk
 KERNEL_IMAGE_NAME:prepend = "${INITRAMFS_IMAGE_NAME}-"
 
-# rootfs image that will be used to create dm-verity image
-# override it when building a different image recipe
-DM_VERITY_IMAGE ?= "tdx-reference-minimal-image"
+# rootfs image that will be used to create dm-verity image; it must be set
+# to the image recipe being built. It defaults to the Toradex reference
+# image only when the Toradex BSP layers are present.
+DM_VERITY_IMAGE ?= "${@'tdx-reference-minimal-image' if 'toradex-bsp-common-layer' in (d.getVar('BBFILE_COLLECTIONS') or '').split() else ''}"
 DM_VERITY_IMAGE_TYPE ?= "ext4"
 
 # enable creation of dm-verity image
 IMAGE_CLASSES += "dm-verity-img"
+
+# the image protected by dm-verity must be known
+addhandler validate_dm_verity_image
+validate_dm_verity_image[eventmask] = "bb.event.SanityCheck"
+python validate_dm_verity_image() {
+    if not e.data.getVar('DM_VERITY_IMAGE'):
+        bb.fatal("hws-signed-dmverity: set DM_VERITY_IMAGE to the image recipe whose "
+                 "root filesystem is protected by dm-verity (e.g. DM_VERITY_IMAGE = \"my-image\").")
+}
 
 # we don't need all features from meta-security, so we don't
 # include 'security' in DISTROFEATURES. Because of that, a
