@@ -1,5 +1,12 @@
 # OpenEmbedded layer with security-related metadata for Toradex SoMs
 
+> **Fork notice:** `meta-hardware-security` is a fork of
+> [toradex/meta-toradex-security](https://github.com/toradex/meta-toradex-security)
+> (branch `scarthgap-7.x.y`). Its goal is a hardware-agnostic Yocto security layer;
+> the original copyright notices and the MIT license (`COPYING.MIT`) are kept.
+> Names are being migrated from `tdx`/`TDX_` to `hws`/`HWS_`; see
+> [MIGRATION.md](MIGRATION.md) and [docs/fork-inventory.md](docs/fork-inventory.md).
+
 This layer contains metadata to enable security features when building a Linux system for Toradex SoMs.
 
 For more information on available Toradex SoMs, please visit:
