@@ -65,10 +65,10 @@ TDX_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"
 
 In authenticated mode, no debug secret is programmed into the device, and the build does not create any credential. It generates two configuration templates for the NXP SPSDK tools (version 3.x) in the deploy directory, under `secure-debug/`:
 
-- `dc.yaml`, used to create the debug credential. It references the SRK certificate and private key of the secure boot PKI (`TDX_IMX_HAB_CST_DIR`, `TDX_IMX_HAB_CST_SRK_INDEX`), the DCK set in `TDX_SECURE_DEBUG_ELE_DCK_KEY`, the debug domains and the device UUID.
+- `dc.yaml`, used to create the debug credential. It references the SRK certificate and private key of the secure boot PKI (`HWS_IMX_HAB_CST_DIR`, `HWS_IMX_HAB_CST_SRK_INDEX`), the DCK set in `TDX_SECURE_DEBUG_ELE_DCK_KEY`, the debug domains and the device UUID.
 - `dat.yaml`, used to authenticate a debug session with that credential. It references the DCK and the SRK table of the secure boot PKI.
 
-The templates contain paths, not keys. When the secure boot keys are stored in an HSM (`HWS_SIGNED_HSM = "1"`), `dc.yaml` accesses the SRK private key through the SPSDK PKCS#11 plugin instead, using the token and object of `TDX_IMX_HAB_CST_SRK_CERT` and the module set in `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`. See [Creating the credential with an HSM](#creating-the-credential-with-an-hsm).
+The templates contain paths, not keys. When the secure boot keys are stored in an HSM (`HWS_SIGNED_HSM = "1"`), `dc.yaml` accesses the SRK private key through the SPSDK PKCS#11 plugin instead, using the token and object of `HWS_IMX_HAB_CST_SRK_CERT` and the module set in `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`. See [Creating the credential with an HSM](#creating-the-credential-with-an-hsm).
 
 Authenticated debug on the iMX95 requires a secure boot PKI with **ECC keys and without the CA flag** on the SRKs (for example, created with `ahab_pki_tree.sh -kt ecc -kl p384 -da sha384 -srk-ca n`), and a DCK of the **same key type** as the SRKs. See [Limitations](#limitations).
 
@@ -106,9 +106,9 @@ nxpdebugmbox dat dc export -c dc.yaml -o dc.bin
 
 The PIN is read from the environment so that it does not appear in the generated templates.
 
-The SRK private key can be selected in `TDX_IMX_HAB_CST_SRK_CERT` either by label (`object=`) or by ID (`id=`).
+The SRK private key can be selected in `HWS_IMX_HAB_CST_SRK_CERT` either by label (`object=`) or by ID (`id=`).
 
-Even with an HSM, `dat.yaml` references the four SRK certificates as files in `TDX_IMX_HAB_CST_CERTS_DIR`, named after `TDX_IMX_HAB_CST_CRYPTO`, `TDX_IMX_HAB_CST_KEY_SIZE`, `TDX_IMX_HAB_CST_DIG_ALGO` and `TDX_IMX_HAB_CST_SRK_CA`, and takes the CA flag of the SRK table from `TDX_IMX_HAB_CST_SRK_CA`. Copy the SRK certificates to that directory and set these variables to describe the PKI stored in the HSM, or edit `dat.yaml` accordingly.
+Even with an HSM, `dat.yaml` references the four SRK certificates as files in `HWS_IMX_HAB_CST_CERTS_DIR`, named after `HWS_IMX_HAB_CST_CRYPTO`, `HWS_IMX_HAB_CST_KEY_SIZE`, `HWS_IMX_HAB_CST_DIG_ALGO` and `HWS_IMX_HAB_CST_SRK_CA`, and takes the CA flag of the SRK table from `HWS_IMX_HAB_CST_SRK_CA`. Copy the SRK certificates to that directory and set these variables to describe the PKI stored in the HSM, or edit `dat.yaml` accordingly.
 
 ## Provisioning in `no-debug` mode
 

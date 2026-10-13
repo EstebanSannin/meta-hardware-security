@@ -10,32 +10,32 @@ DEPENDS += "xxd-native dtc-native"
 DEPENDS += "libfaketime-native"
 
 # build CST binary from sources
-DEPENDS += "${@ 'imx-code-signing-tool-native' if d.getVar('TDX_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' else '' }"
+DEPENDS += "${@ 'imx-code-signing-tool-native' if d.getVar('HWS_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' else '' }"
 
 SRC_URI:append = "\
     file://u-boot-hab.cfg \
 "
 
-TDX_IMX6_IMX7_CSF_ARTIFACTS = "\
+HWS_IMX6_IMX7_CSF_ARTIFACTS = "\
     file://imx6_imx7_create_csf.sh \
     file://imx6_template.csf \
     file://imx6ull_template.csf \
     file://imx7_template.csf \
 "
-SRC_URI:append:mx6-generic-bsp = "${TDX_IMX6_IMX7_CSF_ARTIFACTS}"
-SRC_URI:append:mx7-generic-bsp = "${TDX_IMX6_IMX7_CSF_ARTIFACTS}"
+SRC_URI:append:mx6-generic-bsp = "${HWS_IMX6_IMX7_CSF_ARTIFACTS}"
+SRC_URI:append:mx7-generic-bsp = "${HWS_IMX6_IMX7_CSF_ARTIFACTS}"
 
-TDX_IMX8M_CSF_ARTIFACTS = "\
+HWS_IMX8M_CSF_ARTIFACTS = "\
     file://imx8m_sign.sh \
     file://imx8m_template.csf \
 "
-SRC_URI:append:mx8m-generic-bsp = "${TDX_IMX8M_CSF_ARTIFACTS}"
+SRC_URI:append:mx8m-generic-bsp = "${HWS_IMX8M_CSF_ARTIFACTS}"
 
-TDX_UBOOT_HAB_PATCHES_DOWNSTREAM = "\
+HWS_UBOOT_HAB_PATCHES_DOWNSTREAM = "\
     file://0001-bootm-don-t-use-HAB-to-authenticate-FIT-image.patch \
 "
-SRC_URI:append:apalis-imx8 = "${TDX_UBOOT_HAB_PATCHES_DOWNSTREAM}"
-SRC_URI:append:colibri-imx8x = "${TDX_UBOOT_HAB_PATCHES_DOWNSTREAM}"
+SRC_URI:append:apalis-imx8 = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM}"
+SRC_URI:append:colibri-imx8x = "${HWS_UBOOT_HAB_PATCHES_DOWNSTREAM}"
 
 UBOOT_BINARY_HAB = "${UBOOT_BINARY}"
 UBOOT_BINARY_HAB:mx6dl-generic-bsp = "u-boot-ivt.img"
@@ -53,7 +53,7 @@ do_uboot_assemble_fitimage[file-checksums] += "${@ d.getVar('TDX_SECURE_DEBUG_KE
 create_fuse_cmds_helper() {
     local soc="$1"
 
-    TDX_IMX_HAB_CST_SRK_FUSE="${TDX_IMX_HAB_CST_SRK_FUSE}" \
+    HWS_IMX_HAB_CST_SRK_FUSE="${HWS_IMX_HAB_CST_SRK_FUSE}" \
     TDX_SECURE_DEBUG_ENABLE="${TDX_SECURE_DEBUG_ENABLE_INTERNAL}" \
     TDX_SECURE_DEBUG_MODE="${TDX_SECURE_DEBUG_MODE}" \
     TDX_SECURE_DEBUG_KEY_FILE="${TDX_SECURE_DEBUG_KEY_FILE}" \
@@ -67,13 +67,13 @@ create_fuse_cmds_helper() {
 }
 
 python __anonymous() {
-    scfgs = (d.getVar('TDX_IMX_HAB_SDP_CONFIGS_INTERNAL') or "").split()
+    scfgs = (d.getVar('HWS_IMX_HAB_SDP_CONFIGS_INTERNAL') or "").split()
     ucfgs = (d.getVar('UBOOT_CONFIG') or "").split()
     if not ucfgs:
         for _scfg in scfgs:
             if _scfg != "*":
                 bb.warnonce(
-                    'UBOOT_CONFIG is not in use; TDX_IMX_HAB_SDP_CONFIGS should '
+                    'UBOOT_CONFIG is not in use; HWS_IMX_HAB_SDP_CONFIGS should '
                     'be either empty or set to "*", but it instead contains a '
                     f'configuration named "{_scfg}"; bootloader will not be '
                     'built for SDP loading.')
@@ -85,7 +85,7 @@ python __anonymous() {
             continue
         if _scfg not in ucfgs:
             bb.warnonce(
-                f'Configuration named "{_scfg}" in TDX_IMX_HAB_SDP_CONFIGS '
+                f'Configuration named "{_scfg}" in HWS_IMX_HAB_SDP_CONFIGS '
                 'is not listed in UBOOT_CONFIG and will be ignored; your '
                 'bootloader may not be built for SDP loading.')
 }
@@ -97,8 +97,8 @@ imx6_imx7_sign_habv4() {
     local type="$2"
     local binary="$3"
 
-    if [ ! -e "${TDX_IMX_HAB_CST_BIN}" ]; then
-        bbfatal "Could not find CST binary at ${TDX_IMX_HAB_CST_BIN}."
+    if [ ! -e "${HWS_IMX_HAB_CST_BIN}" ]; then
+        bbfatal "Could not find CST binary at ${HWS_IMX_HAB_CST_BIN}."
     fi
 
     binary_to_sign="${UBOOT_BINARY_HAB}"
@@ -106,10 +106,10 @@ imx6_imx7_sign_habv4() {
 
     csf_inc_dcd="0"
     # Run loop in a subshell with set -f to avoid expansion of "*", which
-    # variable TDX_IMX_HAB_SDP_CONFIGS (and the internal one) may contain.
+    # variable HWS_IMX_HAB_SDP_CONFIGS (and the internal one) may contain.
     (
 	set -f
-	for _config in ${TDX_IMX_HAB_SDP_CONFIGS_INTERNAL}; do
+	for _config in ${HWS_IMX_HAB_SDP_CONFIGS_INTERNAL}; do
             if [ "${_config}" = "${type}" ] || [ "${_config}" = "*" ]; then
 		exit 0
             fi
@@ -140,12 +140,12 @@ imx6_imx7_sign_habv4() {
     bbdebug 1 "Generating CSF from U-Boot binary '${binary_to_mkcsf}' (type='${type}')"
     # Generate CSF file:
     LIBFAKETIME_PATH="${STAGING_LIBDIR_NATIVE}/faketime/libfaketime.so.1" \
-    TDX_IMX_HAB_CST_SRK="${TDX_IMX_HAB_CST_SRK}" \
-    TDX_IMX_HAB_CST_SRK_CERT="${TDX_IMX_HAB_CST_SRK_CERT}" \
-    TDX_IMX_HAB_CST_CSF_CERT="${TDX_IMX_HAB_CST_CSF_CERT}" \
-    TDX_IMX_HAB_CST_IMG_CERT="${TDX_IMX_HAB_CST_IMG_CERT}" \
-    TDX_IMX_HAB_CST_BIN="${TDX_IMX_HAB_CST_BIN}" \
-    TDX_IMX_HAB_CST_ARGS="${TDX_IMX_HAB_CST_ARGS}" \
+    HWS_IMX_HAB_CST_SRK="${HWS_IMX_HAB_CST_SRK}" \
+    HWS_IMX_HAB_CST_SRK_CERT="${HWS_IMX_HAB_CST_SRK_CERT}" \
+    HWS_IMX_HAB_CST_CSF_CERT="${HWS_IMX_HAB_CST_CSF_CERT}" \
+    HWS_IMX_HAB_CST_IMG_CERT="${HWS_IMX_HAB_CST_IMG_CERT}" \
+    HWS_IMX_HAB_CST_BIN="${HWS_IMX_HAB_CST_BIN}" \
+    HWS_IMX_HAB_CST_ARGS="${HWS_IMX_HAB_CST_ARGS}" \
     CSF_INC_DCD="${csf_inc_dcd}" \
     IMXBOOT="${binary_to_mkcsf}" \
     HAB_LOG="${binary_to_mkcsf}.log" \
@@ -165,12 +165,12 @@ imx6_imx7_sign_habv4() {
     if [ -n "${SPL_BINARY}" ]; then
         bbdebug 1 "Generating CSF for the U-Boot SPL"
         LIBFAKETIME_PATH="${STAGING_LIBDIR_NATIVE}/faketime/libfaketime.so.1" \
-        TDX_IMX_HAB_CST_SRK="${TDX_IMX_HAB_CST_SRK}" \
-        TDX_IMX_HAB_CST_SRK_CERT="${TDX_IMX_HAB_CST_SRK_CERT}" \
-        TDX_IMX_HAB_CST_CSF_CERT="${TDX_IMX_HAB_CST_CSF_CERT}" \
-        TDX_IMX_HAB_CST_IMG_CERT="${TDX_IMX_HAB_CST_IMG_CERT}" \
-        TDX_IMX_HAB_CST_BIN="${TDX_IMX_HAB_CST_BIN}" \
-        TDX_IMX_HAB_CST_ARGS="${TDX_IMX_HAB_CST_ARGS}" \
+        HWS_IMX_HAB_CST_SRK="${HWS_IMX_HAB_CST_SRK}" \
+        HWS_IMX_HAB_CST_SRK_CERT="${HWS_IMX_HAB_CST_SRK_CERT}" \
+        HWS_IMX_HAB_CST_CSF_CERT="${HWS_IMX_HAB_CST_CSF_CERT}" \
+        HWS_IMX_HAB_CST_IMG_CERT="${HWS_IMX_HAB_CST_IMG_CERT}" \
+        HWS_IMX_HAB_CST_BIN="${HWS_IMX_HAB_CST_BIN}" \
+        HWS_IMX_HAB_CST_ARGS="${HWS_IMX_HAB_CST_ARGS}" \
         IMXBOOT="${SPL_BINARY}" \
         HAB_LOG="${SPL_BINARY}.log" \
         ${WORKDIR}/imx6_imx7_create_csf.sh -m "${soc}" -c "csf_SPL"
@@ -194,8 +194,8 @@ imx8m_sign_habv4() {
     local type="$2"
     local binary="$3"
 
-    if [ ! -e "${TDX_IMX_HAB_CST_BIN}" ]; then
-        bbfatal "Could not find CST binary at ${TDX_IMX_HAB_CST_BIN}."
+    if [ ! -e "${HWS_IMX_HAB_CST_BIN}" ]; then
+        bbfatal "Could not find CST binary at ${HWS_IMX_HAB_CST_BIN}."
     fi
 
     # Save unsigned image
@@ -203,15 +203,15 @@ imx8m_sign_habv4() {
 
     # Sign the bootloader container (in-place)
     LIBFAKETIME_PATH="${STAGING_LIBDIR_NATIVE}/faketime/libfaketime.so.1" \
-    TDX_IMX_HAB_CST_SRK="${TDX_IMX_HAB_CST_SRK}" \
-    TDX_IMX_HAB_CST_SRK_CERT="${TDX_IMX_HAB_CST_SRK_CERT}" \
-    TDX_IMX_HAB_CST_CSF_CERT="${TDX_IMX_HAB_CST_CSF_CERT}" \
-    TDX_IMX_HAB_CST_IMG_CERT="${TDX_IMX_HAB_CST_IMG_CERT}" \
-    TDX_IMX_HAB_CST_BIN="${TDX_IMX_HAB_CST_BIN}" \
-    TDX_IMX_HAB_CST_ARGS="${TDX_IMX_HAB_CST_ARGS}" \
-    TDX_IMX_HAB_CST_HSM="${HWS_SIGNED_HSM}" \
-    TDX_IMX_HAB_CST_SRK_CA="${TDX_IMX_HAB_CST_SRK_CA}" \
-    TDX_IMX_HAB_CST_SRK_INDEX="${TDX_IMX_HAB_CST_SRK_INDEX}" \
+    HWS_IMX_HAB_CST_SRK="${HWS_IMX_HAB_CST_SRK}" \
+    HWS_IMX_HAB_CST_SRK_CERT="${HWS_IMX_HAB_CST_SRK_CERT}" \
+    HWS_IMX_HAB_CST_CSF_CERT="${HWS_IMX_HAB_CST_CSF_CERT}" \
+    HWS_IMX_HAB_CST_IMG_CERT="${HWS_IMX_HAB_CST_IMG_CERT}" \
+    HWS_IMX_HAB_CST_BIN="${HWS_IMX_HAB_CST_BIN}" \
+    HWS_IMX_HAB_CST_ARGS="${HWS_IMX_HAB_CST_ARGS}" \
+    HWS_IMX_HAB_CST_HSM="${HWS_SIGNED_HSM}" \
+    HWS_IMX_HAB_CST_SRK_CA="${HWS_IMX_HAB_CST_SRK_CA}" \
+    HWS_IMX_HAB_CST_SRK_INDEX="${HWS_IMX_HAB_CST_SRK_INDEX}" \
     ${WORKDIR}/imx8m_sign.sh
 
     # Create fuse commands

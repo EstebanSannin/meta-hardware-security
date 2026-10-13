@@ -23,4 +23,4 @@ EXTRA_OECMAKE:append = "\
 
 inherit cmake native
 
-require ${@oe.utils.conditional('TDX_IMX_HAB_CST_BUILD_WITH_PKCS11', '1', 'imx-code-signing-tool-native-pkcs11.inc', '', d)}
+require ${@oe.utils.conditional('HWS_IMX_HAB_CST_BUILD_WITH_PKCS11', '1', 'imx-code-signing-tool-native-pkcs11.inc', '', d)}

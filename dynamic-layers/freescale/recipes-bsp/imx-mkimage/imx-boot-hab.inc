@@ -6,7 +6,7 @@ inherit imx-hab
 DEPENDS += "imx-fuses-native"
 
 # build CST binary from sources
-DEPENDS += "${@ 'imx-code-signing-tool-native' if d.getVar('TDX_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' else '' }"
+DEPENDS += "${@ 'imx-code-signing-tool-native' if d.getVar('HWS_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' else '' }"
 
 SRC_URI:append = "\
     file://mx8_sign.sh \
@@ -17,19 +17,19 @@ SRC_URI:append = "\
 # The CSF header version selects the AHAB container format (1: legacy,
 # 2: hybrid) and it must match the format of the SRK table, which is chosen
 # when generating it with "srktool --ahab_ver".
-TDX_IMX_HAB_CST_TEMPLATE:mx8-generic-bsp = "ahabv1_template.csf"
-TDX_IMX_HAB_CST_TEMPLATE:mx9-generic-bsp = "ahabv2_template.csf"
+HWS_IMX_HAB_CST_TEMPLATE:mx8-generic-bsp = "ahabv1_template.csf"
+HWS_IMX_HAB_CST_TEMPLATE:mx9-generic-bsp = "ahabv2_template.csf"
 
 # The iMX93 hashes the SRK table with sha256, and srktool only produces such a
 # table in the legacy format (--ahab_ver 1), so this SoC requires the legacy
 # CSF header instead of the one used by the other iMX9x SoCs.
-TDX_IMX_HAB_CST_TEMPLATE:mx93-generic-bsp = "ahabv1_template.csf"
+HWS_IMX_HAB_CST_TEMPLATE:mx93-generic-bsp = "ahabv1_template.csf"
 
 # SoC used to select the fuse map when generating the fusing commands. It
 # defaults to the imx-mkimage SoC target, which happens to name the SoC on most
 # platforms, but not on all of them (e.g. the target used by the iMX93 is "iMX9")
-TDX_IMX_HAB_FUSE_SOC = "${IMX_BOOT_SOC_TARGET}"
-TDX_IMX_HAB_FUSE_SOC:mx93-generic-bsp = "iMX93"
+HWS_IMX_HAB_FUSE_SOC = "${IMX_BOOT_SOC_TARGET}"
+HWS_IMX_HAB_FUSE_SOC:mx93-generic-bsp = "iMX93"
 
 require imx-boot-secure-debug.inc
 
@@ -45,16 +45,16 @@ sign_ahab_image() {
          ${MKIMAGE_EXTRA_ARGS} ${make_target} > ${logfile} 2>&1
 
     # sign image
-    TDX_IMX_HAB_CST_BIN="${TDX_IMX_HAB_CST_BIN}" \
-    TDX_IMX_HAB_CST_ARGS="${TDX_IMX_HAB_CST_ARGS}" \
-    TDX_IMX_HAB_CST_SRK="${TDX_IMX_HAB_CST_SRK}" \
-    TDX_IMX_HAB_CST_SRK_CERT="${TDX_IMX_HAB_CST_SRK_CERT}" \
-    TDX_IMX_HAB_CST_SGK_CERT="${TDX_IMX_HAB_CST_SGK_CERT}" \
-    TDX_IMX_HAB_CST_SGK_SUPP="${TDX_IMX_HAB_CST_SGK_SUPP}" \
-    TDX_IMX_HAB_CST_TEMPLATE="${TDX_IMX_HAB_CST_TEMPLATE}" \
-    TDX_IMX_HAB_CST_HSM="${HWS_SIGNED_HSM}" \
-    TDX_IMX_HAB_CST_SRK_CA="${TDX_IMX_HAB_CST_SRK_CA}" \
-    TDX_IMX_HAB_CST_SRK_INDEX="${TDX_IMX_HAB_CST_SRK_INDEX}" \
+    HWS_IMX_HAB_CST_BIN="${HWS_IMX_HAB_CST_BIN}" \
+    HWS_IMX_HAB_CST_ARGS="${HWS_IMX_HAB_CST_ARGS}" \
+    HWS_IMX_HAB_CST_SRK="${HWS_IMX_HAB_CST_SRK}" \
+    HWS_IMX_HAB_CST_SRK_CERT="${HWS_IMX_HAB_CST_SRK_CERT}" \
+    HWS_IMX_HAB_CST_SGK_CERT="${HWS_IMX_HAB_CST_SGK_CERT}" \
+    HWS_IMX_HAB_CST_SGK_SUPP="${HWS_IMX_HAB_CST_SGK_SUPP}" \
+    HWS_IMX_HAB_CST_TEMPLATE="${HWS_IMX_HAB_CST_TEMPLATE}" \
+    HWS_IMX_HAB_CST_HSM="${HWS_SIGNED_HSM}" \
+    HWS_IMX_HAB_CST_SRK_CA="${HWS_IMX_HAB_CST_SRK_CA}" \
+    HWS_IMX_HAB_CST_SRK_INDEX="${HWS_IMX_HAB_CST_SRK_INDEX}" \
     UNSIGNED_IMAGE="${orig_image}" \
     LOG_MKIMAGE="${logfile}" \
     ${WORKDIR}/mx8_sign.sh -t ${make_target}
@@ -88,7 +88,7 @@ sign_ahab_helper() {
     done
 
     # create fuse commands
-    TDX_IMX_HAB_CST_SRK_FUSE="${TDX_IMX_HAB_CST_SRK_FUSE}" \
+    HWS_IMX_HAB_CST_SRK_FUSE="${HWS_IMX_HAB_CST_SRK_FUSE}" \
     TDX_SECURE_DEBUG_ENABLE="${TDX_SECURE_DEBUG_ENABLE_INTERNAL}" \
     TDX_SECURE_DEBUG_MODE="${TDX_SECURE_DEBUG_MODE}" \
     TDX_SECURE_DEBUG_KEY_FILE="${TDX_SECURE_DEBUG_KEY_FILE}" \
@@ -97,7 +97,7 @@ sign_ahab_helper() {
     TDX_SECURE_DEBUG_ELE_JTAG_DISABLE="${TDX_SECURE_DEBUG_ELE_JTAG_DISABLE}" \
     TDX_SECURE_DEBUG_FUSE_TEMPLATE="${TDX_SECURE_DEBUG_FUSE_TEMPLATE}" \
     ${STAGING_BINDIR_NATIVE}/create_fuse_cmds.sh \
-        "${TDX_IMX_HAB_FUSE_SOC}" \
+        "${HWS_IMX_HAB_FUSE_SOC}" \
         "${WORKDIR}/fuse-cmds.txt" \
         "${RECIPE_SYSROOT_NATIVE}${datadir}/imx-fuses"
 }
@@ -110,27 +110,27 @@ sign_habv4_helper() {
 sign_common() {
     local helper_type="${1?Helper type expected (ahab or habv4)}"
 
-    if [ ! -e "${TDX_IMX_HAB_CST_BIN}" ]; then
-        bberror "Could not find CST binary at ${TDX_IMX_HAB_CST_BIN}."
+    if [ ! -e "${HWS_IMX_HAB_CST_BIN}" ]; then
+        bberror "Could not find CST binary at ${HWS_IMX_HAB_CST_BIN}."
         exit 1
     fi
 
-    if [ ! -e "${TDX_IMX_HAB_CST_SRK_FUSE}" ]; then
-        bberror "Could not find SRK fuse file '${TDX_IMX_HAB_CST_SRK_FUSE}'."
+    if [ ! -e "${HWS_IMX_HAB_CST_SRK_FUSE}" ]; then
+        bberror "Could not find SRK fuse file '${HWS_IMX_HAB_CST_SRK_FUSE}'."
     fi
 
     # show warning if CA flag is enabled but not supported
-    # when an HSM is used, the TDX_IMX_HAB_CST_SRK_CERT is actually a PKCS#11 URI and
+    # when an HSM is used, the HWS_IMX_HAB_CST_SRK_CERT is actually a PKCS#11 URI and
     # cannot be used to check if the CA flag is enabled, so in this case we use the
-    # TDX_IMX_HAB_CST_SRK_CA variable to check if CA is enabled
+    # HWS_IMX_HAB_CST_SRK_CA variable to check if CA is enabled
     local ca_flag_warn=0
     if [ "${HWS_SIGNED_HSM}" = "1" ]; then
-        if [ "${TDX_IMX_HAB_CST_SRK_CA}" = "1" ] && [ "${TDX_IMX_HAB_CST_SGK_SUPP}" = "0" ]; then
+        if [ "${HWS_IMX_HAB_CST_SRK_CA}" = "1" ] && [ "${HWS_IMX_HAB_CST_SGK_SUPP}" = "0" ]; then
             ca_flag_warn=1
         fi
     else
-        local srk_cert=${TDX_IMX_HAB_CST_SRK_CERT}
-        if [ "${srk_cert##*_ca_}" = "crt.pem" ] && [ "${TDX_IMX_HAB_CST_SGK_SUPP}" = "0" ]; then
+        local srk_cert=${HWS_IMX_HAB_CST_SRK_CERT}
+        if [ "${srk_cert##*_ca_}" = "crt.pem" ] && [ "${HWS_IMX_HAB_CST_SGK_SUPP}" = "0" ]; then
             ca_flag_warn=1
         fi
     fi

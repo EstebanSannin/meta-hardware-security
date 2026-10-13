@@ -274,8 +274,8 @@ do_compile:prepend() {
 }
 
 do_compile:prepend:imx-generic-bsp() {
-    if [ "${TDX_IMX_HAB_ENABLE}" = "0" ] && [ "${TDX_UBOOT_HARDENING_ENABLE}" = "1" ]; then
-        bbfatal 'The combination TDX_IMX_HAB_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
+    if [ "${HWS_IMX_HAB_ENABLE}" = "0" ] && [ "${TDX_UBOOT_HARDENING_ENABLE}" = "1" ]; then
+        bbfatal 'The combination HWS_IMX_HAB_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
                 'the whitelisting feature (part of the hardening) currently relies on HAB/AHAB.'
     fi
 }

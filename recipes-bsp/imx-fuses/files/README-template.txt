@@ -31,7 +31,7 @@ Each non-empty line is colon-separated. The first field is a tag:
   H:F:<bank>:<word>:        SRK-hash fuse slot. The trailing field is left
                             empty; create_fuse_cmds.sh fills it at runtime,
                             consuming one 32-bit word at a time from the
-                            SRK fuse binary (TDX_IMX_HAB_CST_SRK_FUSE).
+                            SRK fuse binary (HWS_IMX_HAB_CST_SRK_FUSE).
                             The number of H:F lines must match the size of
                             that binary, in 32-bit words.
 

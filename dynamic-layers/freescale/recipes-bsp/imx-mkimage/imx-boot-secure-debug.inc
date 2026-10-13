@@ -20,12 +20,12 @@ def tdx_secure_debug_srk_signer(d):
     import urllib.parse
     if d.getVar('HWS_SIGNED_HSM') != '1':
         name = os.path.basename(make_srk_cert_name(d, '')).replace('_crt.pem', '_key.pem')
-        return os.path.join(d.getVar('TDX_IMX_HAB_CST_DIR'), 'keys', name)
-    uri = d.getVar('TDX_IMX_HAB_CST_SRK_CERT') or ''
+        return os.path.join(d.getVar('HWS_IMX_HAB_CST_DIR'), 'keys', name)
+    uri = d.getVar('HWS_IMX_HAB_CST_SRK_CERT') or ''
     attrs = dict(a.split('=', 1) for a in uri.split(':', 1)[-1].split(';') if '=' in a)
     if not uri.startswith('pkcs11:') or 'token' not in attrs or \
             ('object' not in attrs and 'id' not in attrs):
-        bb.fatal("TDX_IMX_HAB_CST_SRK_CERT must be a PKCS#11 URI with a 'token' attribute "
+        bb.fatal("HWS_IMX_HAB_CST_SRK_CERT must be a PKCS#11 URI with a 'token' attribute "
                  "and an 'object' or 'id' attribute when HWS_SIGNED_HSM=1 (got '%s')." % uri)
     # the SPSDK PKCS#11 signer selects the key by label or by hexadecimal ID
     if 'object' in attrs:
@@ -55,7 +55,7 @@ python secure_debug_ele_templates() {
 
     uuid = (d.getVar('TDX_SECURE_DEBUG_ELE_DC_UUID') or '').lower()
     uuid = uuid[2:] if uuid.startswith('0x') else uuid
-    srk_cert = make_srk_cert_name(d, d.getVar('TDX_IMX_HAB_CST_CERTS_DIR'))
+    srk_cert = make_srk_cert_name(d, d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))
     srk_cert_suffix = re.sub(r'^SRK[1-4]_', '', os.path.basename(srk_cert))
 
     subst = {
@@ -64,8 +64,8 @@ python secure_debug_ele_templates() {
         'UUID': quote(uuid or 'REPLACE_WITH_DEVICE_UUID'),
         'DCK_KEY': quote(d.getVar('TDX_SECURE_DEBUG_ELE_DCK_KEY')),
         'SRK_SIGNER': quote(tdx_secure_debug_srk_signer(d)),
-        'SRK_ID': str(int(d.getVar('TDX_IMX_HAB_CST_SRK_INDEX')) - 1),
-        'SRK_CA': 'true' if d.getVar('TDX_IMX_HAB_CST_SRK_CA') == '1' else 'false',
+        'SRK_ID': str(int(d.getVar('HWS_IMX_HAB_CST_SRK_INDEX')) - 1),
+        'SRK_CA': 'true' if d.getVar('HWS_IMX_HAB_CST_SRK_CA') == '1' else 'false',
     }
     for i in range(1, 5):
         subst['SRK_CERT_%d' % i] = quote(os.path.join(os.path.dirname(srk_cert),

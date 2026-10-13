@@ -102,7 +102,7 @@ python validate_secure_debug_sjc() {
                  "a Secure Debug fuse map is required for this SoC."
                  % e.data.getVar('MACHINE'))
 
-    if e.data.getVar('TDX_IMX_HAB_ENABLE') != '1':
+    if e.data.getVar('HWS_IMX_HAB_ENABLE') != '1':
         bb.fatal("TDX_SECURE_DEBUG_ENABLE=1 requires secure boot to be enabled")
 
     # check key files used to answer the secure debug challenge/response mechanism

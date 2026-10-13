@@ -42,10 +42,10 @@ concat_dtb:append:mx7-generic-bsp() {
     concat_dtb_post_common "$@"
 }
 
-TDX_IMX8M_FIT_ARTIFACTS = "\
+HWS_IMX8M_FIT_ARTIFACTS = "\
     file://imx8m_copy_signature_node_to_fdts.sh \
 "
-SRC_URI:append:mx8m-generic-bsp = "${TDX_IMX8M_FIT_ARTIFACTS}"
+SRC_URI:append:mx8m-generic-bsp = "${HWS_IMX8M_FIT_ARTIFACTS}"
 
 concat_dtb:append:mx8m-generic-bsp() {
     # The base concat_dtb() doesn't know how to handle a flash.bin and it will

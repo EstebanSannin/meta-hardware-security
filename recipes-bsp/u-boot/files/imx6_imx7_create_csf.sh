@@ -33,16 +33,16 @@ help() {
     echo
     echo " Required Environment Variables:"
     echo
-    echo "    TDX_IMX_HAB_CST_BIN       Path to NXP CST Binary"
+    echo "    HWS_IMX_HAB_CST_BIN       Path to NXP CST Binary"
     echo "                              e.g. cst-3.1.0/release/linux64/bin/cst"
-    echo "    TDX_IMX_HAB_CST_SRK       Path to SRK Table"
+    echo "    HWS_IMX_HAB_CST_SRK       Path to SRK Table"
     echo "                              e.g. SRK_1_2_3_4_table.bin"
-    echo "    TDX_IMX_HAB_CST_SRK_CERT  Path to SRK public key certificate"
+    echo "    HWS_IMX_HAB_CST_SRK_CERT  Path to SRK public key certificate"
     echo "                              e.g. SRK1_sha256_2048_65537_v3_ca_crt.pem (when CA flag is set)"
     echo "                              e.g. SRK1_sha256_2048_65537_v3_usr_crt.pem (when CA flag is not set)"
-    echo "    TDX_IMX_HAB_CST_CSF_CERT  Path to CSF public key certificate (needed only if CA flag is set for SRK)"
+    echo "    HWS_IMX_HAB_CST_CSF_CERT  Path to CSF public key certificate (needed only if CA flag is set for SRK)"
     echo "                              e.g. CSF1_1_sha256_2048_65537_v3_usr_crt.pem"
-    echo "    TDX_IMX_HAB_CST_IMG_CERT  Path to IMG public key certificate (needed only if CA flag is set for SRK)"
+    echo "    HWS_IMX_HAB_CST_IMG_CERT  Path to IMG public key certificate (needed only if CA flag is set for SRK)"
     echo "                              e.g. IMG1_1_sha256_2048_65537_v3_usr_crt.pem"
     echo "    IMXBOOT                   Path to unsigned imx-boot image"
     echo "                              e.g. u-boot.imx"
@@ -50,7 +50,7 @@ help() {
     echo
     echo " Optional Environment Variables:"
     echo
-    echo "    TDX_IMX_HAB_CST_ARGS      Additional parameters to be passed to the CST tool"
+    echo "    HWS_IMX_HAB_CST_ARGS      Additional parameters to be passed to the CST tool"
     echo "    CSF_INC_DCD               Include the DCD Blocks in the Authenticate Data areas of the CSF"
     echo "                              Set to 1 when generating bootloaders aimed at SDP usage (iMX6ULL/7)"
     echo "                              default: 0"
@@ -106,12 +106,12 @@ check_fileref() {
 
 # Verify all relevant environment variables.
 validate_environ() {
-    check_fileref "${TDX_IMX_HAB_CST_BIN}" "TDX_IMX_HAB_CST_BIN"
-    check_fileref "${TDX_IMX_HAB_CST_SRK}" "TDX_IMX_HAB_CST_SRK"
-    check_fileref "${TDX_IMX_HAB_CST_SRK_CERT}" "TDX_IMX_HAB_CST_SRK_CERT"
-    if [ "${TDX_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
-        check_fileref "${TDX_IMX_HAB_CST_CSF_CERT}" "TDX_IMX_HAB_CST_CSF_CERT"
-        check_fileref "${TDX_IMX_HAB_CST_IMG_CERT}" "TDX_IMX_HAB_CST_IMG_CERT"
+    check_fileref "${HWS_IMX_HAB_CST_BIN}" "HWS_IMX_HAB_CST_BIN"
+    check_fileref "${HWS_IMX_HAB_CST_SRK}" "HWS_IMX_HAB_CST_SRK"
+    check_fileref "${HWS_IMX_HAB_CST_SRK_CERT}" "HWS_IMX_HAB_CST_SRK_CERT"
+    if [ "${HWS_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
+        check_fileref "${HWS_IMX_HAB_CST_CSF_CERT}" "HWS_IMX_HAB_CST_CSF_CERT"
+        check_fileref "${HWS_IMX_HAB_CST_IMG_CERT}" "HWS_IMX_HAB_CST_IMG_CERT"
     fi
     check_fileref "${IMXBOOT}" "IMXBOOT"
     check_fileref "${HAB_LOG}" "HAB_LOG"
@@ -144,11 +144,11 @@ generate_csf() {
 
     # Determine key index (use file name):
     local kidx
-    kidx=${TDX_IMX_HAB_CST_SRK_CERT##*/}
+    kidx=${HWS_IMX_HAB_CST_SRK_CERT##*/}
     kidx=${kidx##SRK}
     kidx=${kidx%%_*}
     if [ "${#kidx}" != 1 ]; then
-        echo "Certificate file name (defined by TDX_IMX_HAB_CST_SRK_CERT) does" \
+        echo "Certificate file name (defined by HWS_IMX_HAB_CST_SRK_CERT) does" \
              "not match expected pattern - could not determine SRK key index."
         exit 1
     fi
@@ -156,31 +156,31 @@ generate_csf() {
     if [ "${kidx}" -ge 1 ] && [ "${kidx}" -le 4 ]; then
         echo "Using SRK${kidx} for signing."
     else
-        echo "Bad SRK key index '${kidx}' (inferred from TDX_IMX_HAB_CST_SRK_CERT) - aborting."
+        echo "Bad SRK key index '${kidx}' (inferred from HWS_IMX_HAB_CST_SRK_CERT) - aborting."
         exit 1
     fi
     kidx=$((kidx - 1))
 
     # Determine whether or not the CA flag was set:
     local ca
-    if [ "${TDX_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
+    if [ "${HWS_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
         ca=1
-    elif [ "${TDX_IMX_HAB_CST_SRK_CERT##*_usr_}" = "crt.pem" ]; then
+    elif [ "${HWS_IMX_HAB_CST_SRK_CERT##*_usr_}" = "crt.pem" ]; then
         ca=0
     else
-        echo "Certificate file name (defined by TDX_IMX_HAB_CST_SRK_CERT)" \
+        echo "Certificate file name (defined by HWS_IMX_HAB_CST_SRK_CERT)" \
              "does not match expected pattern - could not determine if CA flag is set."
         exit 1
     fi
 
     # Update "Install SRK" section:
-    sed -i "s|@@CST_SRK@@|${TDX_IMX_HAB_CST_SRK}|g" "${image_csf}"
+    sed -i "s|@@CST_SRK@@|${HWS_IMX_HAB_CST_SRK}|g" "${image_csf}"
     sed -i "s|@@CST_KIDX@@|${kidx}|g" "${image_csf}"
 
     if [ "$ca" = 1 ]; then
         # Keep "Install CSFK" section and update its contents:
         sed -i "/#+START_INSTALL_CSFK_BLOCK/d; /#+END_INSTALL_CSFK_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_CSF_CERT@@|${TDX_IMX_HAB_CST_CSF_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_CSF_CERT@@|${HWS_IMX_HAB_CST_CSF_CERT}|g" "${image_csf}"
         # Delete "Install NOCAK" section:
         sed -i "/#+START_INSTALL_NOCAK_BLOCK/,/#+END_INSTALL_NOCAK_BLOCK/d" "${image_csf}"
     else
@@ -188,7 +188,7 @@ generate_csf() {
         sed -i "/#+START_INSTALL_CSFK_BLOCK/,/#+END_INSTALL_CSFK_BLOCK/d" "${image_csf}"
         # Keep "Install NOCAK" section and update its contents:
         sed -i "/#+START_INSTALL_NOCAK_BLOCK/d; /#+END_INSTALL_NOCAK_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_SRK_CERT@@|${TDX_IMX_HAB_CST_SRK_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_SRK_CERT@@|${HWS_IMX_HAB_CST_SRK_CERT}|g" "${image_csf}"
     fi
 
     # TODO: Consider handling the Unlock section.
@@ -203,7 +203,7 @@ generate_csf() {
     if [ "$ca" = 1 ]; then
         # Keep "Install Key" section and update its contents:
         sed -i "/#+START_INSTALL_KEY_BLOCK/d; /#+END_INSTALL_KEY_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_IMG_CERT@@|${TDX_IMX_HAB_CST_IMG_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_IMG_CERT@@|${HWS_IMX_HAB_CST_IMG_CERT}|g" "${image_csf}"
         # Update part of "Authenticate Data" section:
         # Verification index is 2 (IMGK slot).
         sed -i "s|@@CST_AUTH_KIDX@@|2|g" "${image_csf}"
@@ -238,7 +238,7 @@ generate_csf() {
     if ! env ${LIBFAKETIME_PATH+LD_PRELOAD="${LIBFAKETIME_PATH}"
                                 FAKETIME_FMT="%s"
                                 FAKETIME="@${FAKETIME}"} \
-             "${TDX_IMX_HAB_CST_BIN}" ${TDX_IMX_HAB_CST_ARGS} -i "${image_csf}" -o "${CSF}.bin" > "${CSF}.log" 2>&1
+             "${HWS_IMX_HAB_CST_BIN}" ${HWS_IMX_HAB_CST_ARGS} -i "${image_csf}" -o "${CSF}.bin" > "${CSF}.log" 2>&1
     then
         echo "CST execution log:" >&2
         cat "${CSF}.log" | sed 's@^@|@' >&2

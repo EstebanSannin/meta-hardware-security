@@ -64,18 +64,18 @@ python validate_secure_debug_ele() {
         bb.fatal("TDX_SECURE_DEBUG_ELE_FUSE_TEMPLATE is not set for '%s'; "
                  "a Secure Debug fuse map is required for this SoC." % machine)
 
-    if e.data.getVar('TDX_IMX_HAB_ENABLE') != '1':
+    if e.data.getVar('HWS_IMX_HAB_ENABLE') != '1':
         bb.fatal("TDX_SECURE_DEBUG_ENABLE=1 requires secure boot to be enabled")
 
     if e.data.getVar('TDX_SECURE_DEBUG_MODE') != 'authenticated' or \
             e.data.getVar('TDX_SECURE_DEBUG_ELE_JTAG_DISABLE') == '1':
         return
 
-    crypto = e.data.getVar('TDX_IMX_HAB_CST_CRYPTO')
-    srk_ca = e.data.getVar('TDX_IMX_HAB_CST_SRK_CA')
+    crypto = e.data.getVar('HWS_IMX_HAB_CST_CRYPTO')
+    srk_ca = e.data.getVar('HWS_IMX_HAB_CST_SRK_CA')
     if crypto != 'ecdsa' or srk_ca != '0':
         bb.warn("Authenticated debug may not work with the configured secure boot keys "
-                "(TDX_IMX_HAB_CST_CRYPTO = \"%s\", TDX_IMX_HAB_CST_SRK_CA = \"%s\"). "
+                "(HWS_IMX_HAB_CST_CRYPTO = \"%s\", HWS_IMX_HAB_CST_SRK_CA = \"%s\"). "
                 "See the Limitations section of docs/README-secure-debug-ele.md."
                 % (crypto, srk_ca))
 

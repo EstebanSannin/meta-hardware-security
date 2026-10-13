@@ -11,10 +11,10 @@ TEMPLATES_DIR=${3:-"."}
 FUSE_INFO_FILE="$(dirname "$FUSE_CMDS_FILE")/imx-config.fuse"
 
 # environment variables (TDX_*)
-SRK_FUSE_FILE="${TDX_IMX_HAB_CST_SRK_FUSE}"
+SRK_FUSE_FILE="${HWS_IMX_HAB_CST_SRK_FUSE}"
 
 if [ -z "${SRK_FUSE_FILE}" ]; then
-    echo "Error: TDX_IMX_HAB_CST_SRK_FUSE must be set in the environment!" >&2
+    echo "Error: HWS_IMX_HAB_CST_SRK_FUSE must be set in the environment!" >&2
     exit 1
 fi
 

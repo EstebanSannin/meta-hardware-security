@@ -1,18 +1,18 @@
 # NXP CST Tool root directory
 # Can be downloaded from https://www.nxp.com/webapp/sps/download/license.jsp?colCode=IMX_CST_TOOL_NEW
-TDX_IMX_HAB_CST_DIR ?= "${TOPDIR}/keys/cst"
+HWS_IMX_HAB_CST_DIR ?= "${TOPDIR}/keys/cst"
 
 # The CST binary can be provided by the user (prebuilt) or built from source.
 # If built from source, recipes needing it must depend on imx-code-signing-tool-native
 # so the tool is present in the native sysroot.
-TDX_IMX_HAB_CST_BUILD_FROM_SOURCE ?= "0"
-TDX_IMX_HAB_CST_BUILD_WITH_PKCS11 ?= "0"
-TDX_IMX_HAB_CST_BIN ?= "${@ '${RECIPE_SYSROOT_NATIVE}/usr/bin/cst' \
-                        if d.getVar('TDX_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' \
-                        else '${TDX_IMX_HAB_CST_DIR}/linux64/bin/cst' }"
+HWS_IMX_HAB_CST_BUILD_FROM_SOURCE ?= "0"
+HWS_IMX_HAB_CST_BUILD_WITH_PKCS11 ?= "0"
+HWS_IMX_HAB_CST_BIN ?= "${@ '${RECIPE_SYSROOT_NATIVE}/usr/bin/cst' \
+                        if d.getVar('HWS_IMX_HAB_CST_BUILD_FROM_SOURCE') == '1' \
+                        else '${HWS_IMX_HAB_CST_DIR}/linux64/bin/cst' }"
 
 # additional parameters to be passed to the CST tool
-TDX_IMX_HAB_CST_ARGS ?= ""
+HWS_IMX_HAB_CST_ARGS ?= ""
 
 #
 # Variables that control the automatic certificate names generation; those names
@@ -22,33 +22,33 @@ TDX_IMX_HAB_CST_ARGS ?= ""
 #
 # Explanation:
 #
-# - TDX_IMX_HAB_CST_CRYPTO: Type of cryptographic keys in use; allowed values
+# - HWS_IMX_HAB_CST_CRYPTO: Type of cryptographic keys in use; allowed values
 #   are "rsa" or "ecdsa". One should set this to "ecdsa" only if the option to
 #   use "Elliptic Curve Cryptography" was selected during key generation.
 #
-# - TDX_IMX_HAB_CST_KEY_SIZE: For RSA keys, this would be the key length (in
+# - HWS_IMX_HAB_CST_KEY_SIZE: For RSA keys, this would be the key length (in
 #   bits) as entered into the CST tool. For ECDSA, this would be a string
 #   determined from the generated certificate file name; for example, for a file
 #   named "SRK1_sha256_secp384r1_v3_ca_crt.pem" (found in the certificates
 #   directory) the present variable would be set to "secp384r1".
 #
-# - TDX_IMX_HAB_CST_KEY_EXP: Key exponent for RSA keys (only).
+# - HWS_IMX_HAB_CST_KEY_EXP: Key exponent for RSA keys (only).
 #
-# - TDX_IMX_HAB_CST_DIG_ALGO: Digest algorithm as entered into the CST tool.
+# - HWS_IMX_HAB_CST_DIG_ALGO: Digest algorithm as entered into the CST tool.
 #
-# - TDX_IMX_HAB_CST_SRK_CA: Whether or not the SRK certificates have the CA flag
+# - HWS_IMX_HAB_CST_SRK_CA: Whether or not the SRK certificates have the CA flag
 #   set as entered into the CST tool; allowed values are "0" or "1"
 #
-# - TDX_IMX_HAB_CST_SRK_INDEX: Index of the SRK to be used for signing (1..4).
+# - HWS_IMX_HAB_CST_SRK_INDEX: Index of the SRK to be used for signing (1..4).
 #   This number decremented by one will be used in the CSF file to select the
 #   proper "Source Index" (which is a 0-based index in the range 0..3).
 #
-TDX_IMX_HAB_CST_CRYPTO    ?= "rsa"
-TDX_IMX_HAB_CST_KEY_SIZE  ?= "2048"
-TDX_IMX_HAB_CST_KEY_EXP   ?= "65537"
-TDX_IMX_HAB_CST_DIG_ALGO  ?= "sha256"
-TDX_IMX_HAB_CST_SRK_CA    ?= "1"
-TDX_IMX_HAB_CST_SRK_INDEX ?= "1"
+HWS_IMX_HAB_CST_CRYPTO    ?= "rsa"
+HWS_IMX_HAB_CST_KEY_SIZE  ?= "2048"
+HWS_IMX_HAB_CST_KEY_EXP   ?= "65537"
+HWS_IMX_HAB_CST_DIG_ALGO  ?= "sha256"
+HWS_IMX_HAB_CST_SRK_CA    ?= "1"
+HWS_IMX_HAB_CST_SRK_INDEX ?= "1"
 
 #
 # Helper functions
@@ -59,28 +59,28 @@ def make_srk_cert_name(d, basedir):
     # Check use of old variable:
     if d.getVar('TDX_IMX_HAB_CST_KEY_INDEX'):
         bb.fatal('Variable TDX_IMX_HAB_CST_KEY_INDEX (range: 0..3) was replaced '
-                 'by TDX_IMX_HAB_CST_SRK_INDEX (now in the range 1..4); please '
+                 'by HWS_IMX_HAB_CST_SRK_INDEX (now in the range 1..4); please '
                  'update your configuration.')
 
     res = ""
-    crypto = d.getVar("TDX_IMX_HAB_CST_CRYPTO")
-    kidx = int(d.getVar("TDX_IMX_HAB_CST_SRK_INDEX"))
-    dalgo = d.getVar("TDX_IMX_HAB_CST_DIG_ALGO")
-    ksize = d.getVar("TDX_IMX_HAB_CST_KEY_SIZE")
-    caflg = int(d.getVar("TDX_IMX_HAB_CST_SRK_CA"))
+    crypto = d.getVar("HWS_IMX_HAB_CST_CRYPTO")
+    kidx = int(d.getVar("HWS_IMX_HAB_CST_SRK_INDEX"))
+    dalgo = d.getVar("HWS_IMX_HAB_CST_DIG_ALGO")
+    ksize = d.getVar("HWS_IMX_HAB_CST_KEY_SIZE")
+    caflg = int(d.getVar("HWS_IMX_HAB_CST_SRK_CA"))
     castr = "ca" if caflg != 0 else "usr"
     if kidx < 1 or kidx > 4:
-        bb.fatal("TDX_IMX_HAB_CST_SRK_INDEX must be in the range [1,4]")
+        bb.fatal("HWS_IMX_HAB_CST_SRK_INDEX must be in the range [1,4]")
     if crypto == "rsa":
-        kexp = d.getVar("TDX_IMX_HAB_CST_KEY_EXP")
+        kexp = d.getVar("HWS_IMX_HAB_CST_KEY_EXP")
         res = f"SRK{kidx}_{dalgo}_{ksize}_{kexp}_v3_{castr}_crt.pem"
     elif crypto == "ecdsa":
         if ksize.isdigit():
-            bb.warn("TDX_IMX_HAB_CST_KEY_SIZE is likely not set correctly;"
+            bb.warn("HWS_IMX_HAB_CST_KEY_SIZE is likely not set correctly;"
                     "check the documentation to understand how to set this variable for ECDSA.")
         res = f"SRK{kidx}_{dalgo}_{ksize}_v3_{castr}_crt.pem"
     else:
-        bb.fatal('TDX_IMX_HAB_CST_CRYPTO is not set correctly'
+        bb.fatal('HWS_IMX_HAB_CST_CRYPTO is not set correctly'
                  '(its value must be either "rsa" or "ecdsa")')
     if res:
         res = os.path.join(basedir, res)
@@ -89,26 +89,26 @@ def make_srk_cert_name(d, basedir):
 def make_sub_cert_name(d, prefix, basedir):
     """Generate certificate name related to a subordinate key"""
     res = ""
-    crypto = d.getVar("TDX_IMX_HAB_CST_CRYPTO")
-    kidx = int(d.getVar("TDX_IMX_HAB_CST_SRK_INDEX"))
-    dalgo = d.getVar("TDX_IMX_HAB_CST_DIG_ALGO")
-    ksize = d.getVar("TDX_IMX_HAB_CST_KEY_SIZE")
-    caflg = int(d.getVar("TDX_IMX_HAB_CST_SRK_CA"))
+    crypto = d.getVar("HWS_IMX_HAB_CST_CRYPTO")
+    kidx = int(d.getVar("HWS_IMX_HAB_CST_SRK_INDEX"))
+    dalgo = d.getVar("HWS_IMX_HAB_CST_DIG_ALGO")
+    ksize = d.getVar("HWS_IMX_HAB_CST_KEY_SIZE")
+    caflg = int(d.getVar("HWS_IMX_HAB_CST_SRK_CA"))
     if kidx < 1 or kidx > 4:
-        bb.fatal("TDX_IMX_HAB_CST_SRK_INDEX must be in the range [1,4]")
+        bb.fatal("HWS_IMX_HAB_CST_SRK_INDEX must be in the range [1,4]")
     if caflg == 0:
         # Subordinate keys/certs only exist when the SRK cert has the CA flag set.
         pass
     elif crypto == "rsa":
-        kexp = d.getVar("TDX_IMX_HAB_CST_KEY_EXP")
+        kexp = d.getVar("HWS_IMX_HAB_CST_KEY_EXP")
         res = f"{prefix}{kidx}_1_{dalgo}_{ksize}_{kexp}_v3_usr_crt.pem"
     elif crypto == "ecdsa":
         if ksize.isdigit():
-            bb.warn("TDX_IMX_HAB_CST_KEY_SIZE is likely not set correctly;"
+            bb.warn("HWS_IMX_HAB_CST_KEY_SIZE is likely not set correctly;"
                     "check the documentation to understand how to set this variable for ECDSA.")
         res = f"{prefix}{kidx}_1_{dalgo}_{ksize}_v3_usr_crt.pem"
     else:
-        bb.fatal('TDX_IMX_HAB_CST_CRYPTO is not set correctly'
+        bb.fatal('HWS_IMX_HAB_CST_CRYPTO is not set correctly'
                  '(its value must be either "rsa" or "ecdsa")')
     if res:
         res = os.path.join(basedir, res)
@@ -119,35 +119,35 @@ def make_sub_cert_name(d, prefix, basedir):
 #
 # Explanation:
 #
-# - TDX_IMX_HAB_CST_CERTS_DIR: Path to directory where certificates would be found.
-# - TDX_IMX_HAB_CST_SRK: Path to SRK table file.
-# - TDX_IMX_HAB_CST_SRK_FUSE: Path to SRK fuses file.
-# - TDX_IMX_HAB_CST_SRK_CERT: Path to SRK certificate file; used with HAB and AHAB.
-# - TDX_IMX_HAB_CST_CSF_CERT: Path to CSF certificate file (*); used with HAB only.
-# - TDX_IMX_HAB_CST_IMG_CERT: Path to IMG certificate file (*); used with HAB only.
-# - TDX_IMX_HAB_CST_SGK_CERT: Path to SGK certificate file (*); used with AHAB only.
-# - TDX_IMX_HAB_CST_SGK_SUPP: Whether SGK is supported by the SoC firmware ('1') or not ('0').
+# - HWS_IMX_HAB_CST_CERTS_DIR: Path to directory where certificates would be found.
+# - HWS_IMX_HAB_CST_SRK: Path to SRK table file.
+# - HWS_IMX_HAB_CST_SRK_FUSE: Path to SRK fuses file.
+# - HWS_IMX_HAB_CST_SRK_CERT: Path to SRK certificate file; used with HAB and AHAB.
+# - HWS_IMX_HAB_CST_CSF_CERT: Path to CSF certificate file (*); used with HAB only.
+# - HWS_IMX_HAB_CST_IMG_CERT: Path to IMG certificate file (*); used with HAB only.
+# - HWS_IMX_HAB_CST_SGK_CERT: Path to SGK certificate file (*); used with AHAB only.
+# - HWS_IMX_HAB_CST_SGK_SUPP: Whether SGK is supported by the SoC firmware ('1') or not ('0').
 #
 # (*): Notice that the CSF/IMG/SGK certificates are only ever used when the SRK
 #      certificate has the CA flag set.
 #
-TDX_IMX_HAB_CST_CERTS_DIR ?= "${TDX_IMX_HAB_CST_DIR}/crts"
-TDX_IMX_HAB_CST_SRK       ?= "${TDX_IMX_HAB_CST_CERTS_DIR}/SRK_1_2_3_4_table.bin"
-TDX_IMX_HAB_CST_SRK_FUSE  ?= "${TDX_IMX_HAB_CST_CERTS_DIR}/SRK_1_2_3_4_fuse.bin"
-TDX_IMX_HAB_CST_SRK_CERT  ?= "${@make_srk_cert_name(d, d.getVar('TDX_IMX_HAB_CST_CERTS_DIR'))}"
-TDX_IMX_HAB_CST_CSF_CERT  ?= "${@make_sub_cert_name(d, 'CSF', d.getVar('TDX_IMX_HAB_CST_CERTS_DIR'))}"
-TDX_IMX_HAB_CST_IMG_CERT  ?= "${@make_sub_cert_name(d, 'IMG', d.getVar('TDX_IMX_HAB_CST_CERTS_DIR'))}"
-TDX_IMX_HAB_CST_SGK_CERT  ?= "${@make_sub_cert_name(d, 'SGK', d.getVar('TDX_IMX_HAB_CST_CERTS_DIR'))}"
-TDX_IMX_HAB_CST_SGK_SUPP  ?= "1"
+HWS_IMX_HAB_CST_CERTS_DIR ?= "${HWS_IMX_HAB_CST_DIR}/crts"
+HWS_IMX_HAB_CST_SRK       ?= "${HWS_IMX_HAB_CST_CERTS_DIR}/SRK_1_2_3_4_table.bin"
+HWS_IMX_HAB_CST_SRK_FUSE  ?= "${HWS_IMX_HAB_CST_CERTS_DIR}/SRK_1_2_3_4_fuse.bin"
+HWS_IMX_HAB_CST_SRK_CERT  ?= "${@make_srk_cert_name(d, d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))}"
+HWS_IMX_HAB_CST_CSF_CERT  ?= "${@make_sub_cert_name(d, 'CSF', d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))}"
+HWS_IMX_HAB_CST_IMG_CERT  ?= "${@make_sub_cert_name(d, 'IMG', d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))}"
+HWS_IMX_HAB_CST_SGK_CERT  ?= "${@make_sub_cert_name(d, 'SGK', d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))}"
+HWS_IMX_HAB_CST_SGK_SUPP  ?= "1"
 
 # Only SRK is supported in the current released firmware (April 2025) for iMX9 based SoCs
-TDX_IMX_HAB_CST_SGK_SUPP:mx9-generic-bsp ?= "0"
+HWS_IMX_HAB_CST_SGK_SUPP:mx9-generic-bsp ?= "0"
 
 # List of U-Boot configurations targeting SDP loading; "*" means all;
 # normally this would be a subset of the values in UBOOT_CONFIG
-TDX_IMX_HAB_SDP_CONFIGS ?= ""
+HWS_IMX_HAB_SDP_CONFIGS ?= ""
 
 # Internal version of the above variable making it relevant on specific SoCs
-TDX_IMX_HAB_SDP_CONFIGS_INTERNAL ?= ""
-TDX_IMX_HAB_SDP_CONFIGS_INTERNAL:mx6ull-generic-bsp = "${TDX_IMX_HAB_SDP_CONFIGS}"
-TDX_IMX_HAB_SDP_CONFIGS_INTERNAL:mx7-generic-bsp = "${TDX_IMX_HAB_SDP_CONFIGS}"
+HWS_IMX_HAB_SDP_CONFIGS_INTERNAL ?= ""
+HWS_IMX_HAB_SDP_CONFIGS_INTERNAL:mx6ull-generic-bsp = "${HWS_IMX_HAB_SDP_CONFIGS}"
+HWS_IMX_HAB_SDP_CONFIGS_INTERNAL:mx7-generic-bsp = "${HWS_IMX_HAB_SDP_CONFIGS}"

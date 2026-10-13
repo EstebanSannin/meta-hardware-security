@@ -2,14 +2,14 @@
 #
 # Currently the hardening implementation requires HAB/AHAB (or equivalent
 # technology in TI SoCs) to be enabled so that the combination
-# TDX_IMX_HAB_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not valid.
+# HWS_IMX_HAB_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not valid.
 #
 # Also the hardening itself is supposed to protect the second link of the chain
 # of trust i.e. the link between bootloader and the kernel artifacts. So, the
 # combination UBOOT_SIGN_ENABLE="0" TDX_UBOOT_HARDENING_ENABLE="1" is not very
 # helpful and can prevent the loading of non-FIT images.
 #
-# Because of the above, we enable the hardening only when TDX_IMX_HAB_ENABLE and
+# Because of the above, we enable the hardening only when HWS_IMX_HAB_ENABLE and
 # UBOOT_SIGN_ENABLE are set, by default.
 #
 def default_tdx_uboot_hardening_enable(d):
@@ -21,7 +21,7 @@ def default_tdx_uboot_hardening_enable(d):
                         "it is currently disabled by default." % machine)
             return False
     if ('imx-generic-bsp' in d.getVar('OVERRIDES').split(':') and
-        bb.utils.to_boolean(d.getVar('TDX_IMX_HAB_ENABLE')) and
+        bb.utils.to_boolean(d.getVar('HWS_IMX_HAB_ENABLE')) and
         bb.utils.to_boolean(d.getVar('UBOOT_SIGN_ENABLE'))):
         return True
     if ('k3' in d.getVar('OVERRIDES').split(':') and

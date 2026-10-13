@@ -12,7 +12,7 @@ On iMX8, iMX8X and iMX9x, this feature is available and it is called AHAB (Advan
 
 ## Configuring HAB/AHAB support
 
-When the `hws-signed` class is inherited, signing bootloader images via HAB/AHAB is enabled by default. Set `TDX_IMX_HAB_ENABLE` to `0` to disable it.
+When the `hws-signed` class is inherited, signing bootloader images via HAB/AHAB is enabled by default. Set `HWS_IMX_HAB_ENABLE` to `0` to disable it.
 
 Before using this feature, it is required to:
 
@@ -23,20 +23,20 @@ After that, configure the various variables listed below to match your choices; 
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_IMX_HAB_ENABLE` | Enable/disable HAB/AHAB support; allowed values: `0` or `1`. | `1` |
-| `TDX_IMX_HAB_CST_DIR` | Location of the CST tool. | `${TOPDIR}/keys/cst` |
-| `TDX_IMX_HAB_CST_BUILD_FROM_SOURCE` | Build the CST binary tool from source code. Allowed values are: `0` (disabled) or `1` (enabled). | `1` when `HWS_SIGNED_HSM` is enabled, `0` otherwise |
-| `TDX_IMX_HAB_CST_BUILD_WITH_PKCS11` | Enable PKCS#11 support when building the CST binary from source. This variable is only applicable when `TDX_IMX_HAB_CST_BUILD_FROM_SOURCE` = `1`. Allowed values are: `0` (disabled) or `1` (enabled). | `1` when `HWS_SIGNED_HSM` is enabled, `0` otherwise |
-| `TDX_IMX_HAB_CST_BIN` | Name of the CST binary tool. | `${TDX_IMX_HAB_CST_DIR}/linux64/bin/cst` if using prebuilt binary or `${RECIPE_SYSROOT_NATIVE}/usr/bin/cst` if building from source code |
-| `TDX_IMX_HAB_CST_ARGS` | Additional parameters to be passed to the CST tool | Empty |
-| `TDX_IMX_HAB_CST_CERTS_DIR` | Location of the certificates directory. The associated private keys must be located in a directory called `keys` at the same level as the `crts` directory (this is a requirement for the CST tool to work properly). | `${TDX_IMX_HAB_CST_DIR}/crts` |
-| `TDX_IMX_HAB_CST_CRYPTO` | Type of cryptographic keys in use; allowed values: `rsa` or `ecdsa`. This should be set to `ecdsa` if (and only if) you selected "Elliptic Curve Cryptography" when generating the keys/certificates with the CST tool. | `rsa` |
-| `TDX_IMX_HAB_CST_KEY_SIZE` | For **RSA** keys, this would be the key length (in bits) as entered into the CST tool. For **ECDSA**, this would be a string determined from the generated certificate file name; for example, for a file named `SRK1_sha256_secp384r1_v3_ca_crt.pem` (found in the certificates directory) the present variable would be set to `secp384r1`. | `2048` |
-| `TDX_IMX_HAB_CST_KEY_EXP` | Key exponent for RSA keys (only). | `65537` |
-| `TDX_IMX_HAB_CST_DIG_ALGO` | Digest algorithm as entered into the CST tool. | `sha256` |
-| `TDX_IMX_HAB_CST_SRK_CA` | Whether or not the SRK certificates have the CA flag set as entered into the CST tool; allowed values: `0` or `1`. | `1` |
-| `TDX_IMX_HAB_CST_SRK_INDEX` | Index of the SRK to be used for signing within the SRK table; allowed values: `1`..`4`, corresponding to `SRK1`..`SRK4`, respectively. | `1` |
-| `TDX_IMX_HAB_SDP_CONFIGS` | List of U-Boot configurations targeting SDP loading; `*` means all (relevant mainly to the iMX6ULL and iMX7) | Empty |
+| `HWS_IMX_HAB_ENABLE` | Enable/disable HAB/AHAB support; allowed values: `0` or `1`. | `1` |
+| `HWS_IMX_HAB_CST_DIR` | Location of the CST tool. | `${TOPDIR}/keys/cst` |
+| `HWS_IMX_HAB_CST_BUILD_FROM_SOURCE` | Build the CST binary tool from source code. Allowed values are: `0` (disabled) or `1` (enabled). | `1` when `HWS_SIGNED_HSM` is enabled, `0` otherwise |
+| `HWS_IMX_HAB_CST_BUILD_WITH_PKCS11` | Enable PKCS#11 support when building the CST binary from source. This variable is only applicable when `HWS_IMX_HAB_CST_BUILD_FROM_SOURCE` = `1`. Allowed values are: `0` (disabled) or `1` (enabled). | `1` when `HWS_SIGNED_HSM` is enabled, `0` otherwise |
+| `HWS_IMX_HAB_CST_BIN` | Name of the CST binary tool. | `${HWS_IMX_HAB_CST_DIR}/linux64/bin/cst` if using prebuilt binary or `${RECIPE_SYSROOT_NATIVE}/usr/bin/cst` if building from source code |
+| `HWS_IMX_HAB_CST_ARGS` | Additional parameters to be passed to the CST tool | Empty |
+| `HWS_IMX_HAB_CST_CERTS_DIR` | Location of the certificates directory. The associated private keys must be located in a directory called `keys` at the same level as the `crts` directory (this is a requirement for the CST tool to work properly). | `${HWS_IMX_HAB_CST_DIR}/crts` |
+| `HWS_IMX_HAB_CST_CRYPTO` | Type of cryptographic keys in use; allowed values: `rsa` or `ecdsa`. This should be set to `ecdsa` if (and only if) you selected "Elliptic Curve Cryptography" when generating the keys/certificates with the CST tool. | `rsa` |
+| `HWS_IMX_HAB_CST_KEY_SIZE` | For **RSA** keys, this would be the key length (in bits) as entered into the CST tool. For **ECDSA**, this would be a string determined from the generated certificate file name; for example, for a file named `SRK1_sha256_secp384r1_v3_ca_crt.pem` (found in the certificates directory) the present variable would be set to `secp384r1`. | `2048` |
+| `HWS_IMX_HAB_CST_KEY_EXP` | Key exponent for RSA keys (only). | `65537` |
+| `HWS_IMX_HAB_CST_DIG_ALGO` | Digest algorithm as entered into the CST tool. | `sha256` |
+| `HWS_IMX_HAB_CST_SRK_CA` | Whether or not the SRK certificates have the CA flag set as entered into the CST tool; allowed values: `0` or `1`. | `1` |
+| `HWS_IMX_HAB_CST_SRK_INDEX` | Index of the SRK to be used for signing within the SRK table; allowed values: `1`..`4`, corresponding to `SRK1`..`SRK4`, respectively. | `1` |
+| `HWS_IMX_HAB_SDP_CONFIGS` | List of U-Boot configurations targeting SDP loading; `*` means all (relevant mainly to the iMX6ULL and iMX7) | Empty |
 | `TDX_IMX_HAB_GEN_UBOOT_FUSING_CMD` | Add a function called `prog_secure_boot_fuses` to U-Boot's environment to program the secure boot fuses. Since this is intended mostly for development/tests, the function will only program the fuses but not close the device. If you enable it and run the function inside U-Boot, be aware that it will write to One-Time Programmable e-fuses, and the operation is irreversible! Allowed values are: `0` (disabled) or `1` (enabled). | `0` |
 
 The complete list of variables can be found in the `imx-hab.bbclass` file.
@@ -49,13 +49,13 @@ The complete list of variables can be found in the `imx-hab.bbclass` file.
 
 This section is currently relevant to the iMX6ULL and iMX7 SoCs where a bootloader aiming SDP loading requires a special signing procedure.
 
-The variable `TDX_IMX_HAB_SDP_CONFIGS` can be configured to generate a bootloader suitable for SDP loading and execution.
+The variable `HWS_IMX_HAB_SDP_CONFIGS` can be configured to generate a bootloader suitable for SDP loading and execution.
 
-For builds where multiple U-Boot configurations are specified (e.g., `UBOOT_CONFIG = "config1 config2 config3"`), setting `TDX_IMX_HAB_SDP_CONFIGS = "*"` ensures that all configurations are built with the required modifications for SDP usage.
+For builds where multiple U-Boot configurations are specified (e.g., `UBOOT_CONFIG = "config1 config2 config3"`), setting `HWS_IMX_HAB_SDP_CONFIGS = "*"` ensures that all configurations are built with the required modifications for SDP usage.
 
-Normally though, only specific configurations target SDP loading. For example, with `UBOOT_CONFIG = "nand emmc recovery"`, users can set `TDX_IMX_HAB_SDP_CONFIGS = "recovery"` to limit SDP preparation to the `recovery` build.
+Normally though, only specific configurations target SDP loading. For example, with `UBOOT_CONFIG = "nand emmc recovery"`, users can set `HWS_IMX_HAB_SDP_CONFIGS = "recovery"` to limit SDP preparation to the `recovery` build.
 
-If `UBOOT_CONFIG` is not being used to set up multiple U-Boot configurations and the only (unnamed) configuration being built is aimed at SDP usage, then users should set `TDX_IMX_HAB_SDP_CONFIGS = "*"`.
+If `UBOOT_CONFIG` is not being used to set up multiple U-Boot configurations and the only (unnamed) configuration being built is aimed at SDP usage, then users should set `HWS_IMX_HAB_SDP_CONFIGS = "*"`.
 
 In addition to properly setting up the bootloader signing for SDP, users must provide extra parameters to the SDP `boot` command in UUU when loading the generated binary. Specifically, the options `-cleardcd` and `-dcdaddr` are typically required to ensure proper booting without HAB events. For example:
 

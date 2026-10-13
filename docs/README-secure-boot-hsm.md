@@ -90,7 +90,7 @@ To use a different PKCS#11 provider, the layer does not usually require code cha
 
 When signing boot images for NXP i.MX platforms with HAB or AHAB enabled, CST normally expects the signing certificates to be provided as files on the build host filesystem.
 
-In a traditional filesystem-based setup, variables such as `TDX_IMX_HAB_CST_SRK_CERT`, `TDX_IMX_HAB_CST_CSF_CERT`, `TDX_IMX_HAB_CST_IMG_CERT`, and `TDX_IMX_HAB_CST_SGK_CERT` point to certificate files stored locally. CST then uses those files as inputs during the signing process (see [README-secure-boot-imx.md](README-secure-boot-imx.md) for more information).
+In a traditional filesystem-based setup, variables such as `HWS_IMX_HAB_CST_SRK_CERT`, `HWS_IMX_HAB_CST_CSF_CERT`, `HWS_IMX_HAB_CST_IMG_CERT`, and `HWS_IMX_HAB_CST_SGK_CERT` point to certificate files stored locally. CST then uses those files as inputs during the signing process (see [README-secure-boot-imx.md](README-secure-boot-imx.md) for more information).
 
 With HSM-backed signing, the goal is to avoid depending on locally stored key material and instead let CST access the required objects through the PKCS#11 interface. For this reason, these variables are configured with **PKCS#11 URIs** instead of regular filesystem paths.
 
@@ -101,16 +101,16 @@ This is the key idea behind the HAB/AHAB HSM integration: the signing flow keeps
 For example, in a HAB configuration the certificate variables may be set as follows:
 
 ```
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 ```
 
 In an AHAB configuration, the corresponding variables are typically:
 
 ```
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=.%2FSRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=cst-hsm;object=.%2FSGK1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=.%2FSRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_SGK_CERT = "pkcs11:token=cst-hsm;object=.%2FSGK1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 ```
 
 In these examples:
@@ -189,9 +189,9 @@ HWS_SIGNED_HSM = "1"
 HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
 HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
 
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 
 HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
 HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
@@ -205,8 +205,8 @@ HWS_SIGNED_HSM = "1"
 HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
 HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
 
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%06;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}" 
-TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%07;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+HWS_IMX_HAB_CST_SRK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%06;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}" 
+HWS_IMX_HAB_CST_SGK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%07;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 
 HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=22863375;token=YubiKey%20PIV%20%2322863375;id=%12"
 HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"

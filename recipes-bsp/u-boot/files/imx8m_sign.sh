@@ -10,9 +10,9 @@ UBOOT_DTB_BINARY="${UBOOT_DTB_BINARY:-u-boot.dtb.out}"
 UBOOT_CONTAINER_BINARY="${UBOOT_CONTAINER_BINARY:-flash.bin}"
 CSF_PREFIX="${CSF_PREFIX:-csf-for-}"
 LIBFAKETIME_PATH="${LIBFAKETIME_PATH}"
-TDX_IMX_HAB_CST_HSM="${TDX_IMX_HAB_CST_HSM:-0}"
-TDX_IMX_HAB_CST_SRK_CA="${TDX_IMX_HAB_CST_SRK_CA:-1}"
-TDX_IMX_HAB_CST_SRK_INDEX="${TDX_IMX_HAB_CST_SRK_INDEX:-1}"
+HWS_IMX_HAB_CST_HSM="${HWS_IMX_HAB_CST_HSM:-0}"
+HWS_IMX_HAB_CST_SRK_CA="${HWS_IMX_HAB_CST_SRK_CA:-1}"
+HWS_IMX_HAB_CST_SRK_INDEX="${HWS_IMX_HAB_CST_SRK_INDEX:-1}"
 
 # Timestamp to be used by libfaketime. The date itself isn't important, but this needs
 # to be constant between builds in order to generate deterministic CSF binaries
@@ -39,28 +39,28 @@ help() {
     echo
     echo " Required environment variables:"
     echo
-    echo "    TDX_IMX_HAB_CST_BIN       Path to NXP CST Binary"
+    echo "    HWS_IMX_HAB_CST_BIN       Path to NXP CST Binary"
     echo "                              e.g. cst-3.1.0/release/linux64/bin/cst"
-    echo "    TDX_IMX_HAB_CST_SRK       Path to SRK Table"
+    echo "    HWS_IMX_HAB_CST_SRK       Path to SRK Table"
     echo "                              e.g. SRK_1_2_3_4_table.bin"
-    echo "    TDX_IMX_HAB_CST_SRK_CERT  Path to SRK public key certificate"
+    echo "    HWS_IMX_HAB_CST_SRK_CERT  Path to SRK public key certificate"
     echo "                              e.g. SRK1_sha256_2048_65537_v3_ca_crt.pem (when CA flag is set)"
     echo "                              e.g. SRK1_sha256_2048_65537_v3_usr_crt.pem (when CA flag is not set)"
-    echo "    TDX_IMX_HAB_CST_CSF_CERT  Path to CSF public key certificate (needed only if CA flag is set for SRK)"
+    echo "    HWS_IMX_HAB_CST_CSF_CERT  Path to CSF public key certificate (needed only if CA flag is set for SRK)"
     echo "                              e.g. CSF1_1_sha256_2048_65537_v3_usr_crt.pem"
-    echo "    TDX_IMX_HAB_CST_IMG_CERT  Path to IMG public key certificate (needed only if CA flag is set for SRK)"
+    echo "    HWS_IMX_HAB_CST_IMG_CERT  Path to IMG public key certificate (needed only if CA flag is set for SRK)"
     echo "                              e.g. IMG1_1_sha256_2048_65537_v3_usr_crt.pem"
     echo
     echo " Optional environment variables:"
     echo
-    echo "    TDX_IMX_HAB_CST_ARGS      Additional parameters to be passed to the CST tool"
-    echo "    TDX_IMX_HAB_CST_HSM       Enable usage of HSM (via PKCS11) when set to 1"
+    echo "    HWS_IMX_HAB_CST_ARGS      Additional parameters to be passed to the CST tool"
+    echo "    HWS_IMX_HAB_CST_HSM       Enable usage of HSM (via PKCS11) when set to 1"
     echo "                              default: 0"
-    echo "    TDX_IMX_HAB_CST_SRK_CA    Whether or not the SRK certificates have the CA flag"
-    echo "                              Only used when HSM is enabled (TDX_IMX_HAB_CST_HSM=1)"
+    echo "    HWS_IMX_HAB_CST_SRK_CA    Whether or not the SRK certificates have the CA flag"
+    echo "                              Only used when HSM is enabled (HWS_IMX_HAB_CST_HSM=1)"
     echo "                              default: 1"
-    echo "    TDX_IMX_HAB_CST_SRK_INDEX Index of the SRK to be used for signing (1..4)"
-    echo "                              Only used when HSM is enabled (TDX_IMX_HAB_CST_HSM=1)"
+    echo "    HWS_IMX_HAB_CST_SRK_INDEX Index of the SRK to be used for signing (1..4)"
+    echo "                              Only used when HSM is enabled (HWS_IMX_HAB_CST_HSM=1)"
     echo "                              default: 1"
     echo "    UBOOT_SPL_DDR_BINARY      Name of binary containing SPL plus DDR FW"
     echo "                              default: u-boot-spl-ddr.bin"
@@ -108,16 +108,16 @@ check_fileref() {
 
 # Verify all relevant environment variables.
 validate_environ() {
-    check_fileref "${TDX_IMX_HAB_CST_BIN}" "TDX_IMX_HAB_CST_BIN"
-    check_fileref "${TDX_IMX_HAB_CST_SRK}" "TDX_IMX_HAB_CST_SRK"
+    check_fileref "${HWS_IMX_HAB_CST_BIN}" "HWS_IMX_HAB_CST_BIN"
+    check_fileref "${HWS_IMX_HAB_CST_SRK}" "HWS_IMX_HAB_CST_SRK"
 
     # Only check certificates if HSM is disabled (when HSM is used, these
     # variables are actually PKCS11 URIs)
-    if [ "${TDX_IMX_HAB_CST_HSM}" = 0 ]; then
-        check_fileref "${TDX_IMX_HAB_CST_SRK_CERT}" "TDX_IMX_HAB_CST_SRK_CERT"
-        if [ "${TDX_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
-            check_fileref "${TDX_IMX_HAB_CST_CSF_CERT}" "TDX_IMX_HAB_CST_CSF_CERT"
-            check_fileref "${TDX_IMX_HAB_CST_IMG_CERT}" "TDX_IMX_HAB_CST_IMG_CERT"
+    if [ "${HWS_IMX_HAB_CST_HSM}" = 0 ]; then
+        check_fileref "${HWS_IMX_HAB_CST_SRK_CERT}" "HWS_IMX_HAB_CST_SRK_CERT"
+        if [ "${HWS_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
+            check_fileref "${HWS_IMX_HAB_CST_CSF_CERT}" "HWS_IMX_HAB_CST_CSF_CERT"
+            check_fileref "${HWS_IMX_HAB_CST_IMG_CERT}" "HWS_IMX_HAB_CST_IMG_CERT"
         fi
     fi
 
@@ -126,10 +126,10 @@ validate_environ() {
     check_fileref "${UBOOT_CONTAINER_BINARY}" "UBOOT_CONTAINER_BINARY"
 
     # Add "-b pkcs11" if HSM is enabled and it's not already present
-    if [ "${TDX_IMX_HAB_CST_HSM}" = 1 ]; then
-        case " ${TDX_IMX_HAB_CST_ARGS} " in
+    if [ "${HWS_IMX_HAB_CST_HSM}" = 1 ]; then
+        case " ${HWS_IMX_HAB_CST_ARGS} " in
             *" -b pkcs11 "*) ;;
-            *) TDX_IMX_HAB_CST_ARGS="${TDX_IMX_HAB_CST_ARGS} -b pkcs11" ;;
+            *) HWS_IMX_HAB_CST_ARGS="${HWS_IMX_HAB_CST_ARGS} -b pkcs11" ;;
         esac
     fi
 }
@@ -150,16 +150,16 @@ generate_csf_common() {
 
     # Determine key index
     local kidx
-    if [ "${TDX_IMX_HAB_CST_HSM}" = 1 ]; then
-        kidx=${TDX_IMX_HAB_CST_SRK_INDEX}
+    if [ "${HWS_IMX_HAB_CST_HSM}" = 1 ]; then
+        kidx=${HWS_IMX_HAB_CST_SRK_INDEX}
     else
-        kidx=${TDX_IMX_HAB_CST_SRK_CERT##*/}
+        kidx=${HWS_IMX_HAB_CST_SRK_CERT##*/}
         kidx=${kidx##SRK}
         kidx=${kidx%%_*}
     fi
 
     if [ "${#kidx}" != 1 ]; then
-        echo "Certificate file name (defined by TDX_IMX_HAB_CST_SRK_CERT) does" \
+        echo "Certificate file name (defined by HWS_IMX_HAB_CST_SRK_CERT) does" \
              "not match expected pattern - could not determine SRK key index."
         exit 1
     fi
@@ -167,33 +167,33 @@ generate_csf_common() {
     if [ "${kidx}" -ge 1 ] && [ "${kidx}" -le 4 ]; then
         echo "Using SRK${kidx} for signing."
     else
-        echo "Bad SRK key index '${kidx}' (inferred from TDX_IMX_HAB_CST_SRK_CERT) - aborting."
+        echo "Bad SRK key index '${kidx}' (inferred from HWS_IMX_HAB_CST_SRK_CERT) - aborting."
         exit 1
     fi
     kidx=$((kidx - 1))
 
     # Determine whether or not the CA flag was set:
     local ca
-    if [ "${TDX_IMX_HAB_CST_HSM}" = 1 ]; then
-        ca=${TDX_IMX_HAB_CST_SRK_CA}
-    elif [ "${TDX_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
+    if [ "${HWS_IMX_HAB_CST_HSM}" = 1 ]; then
+        ca=${HWS_IMX_HAB_CST_SRK_CA}
+    elif [ "${HWS_IMX_HAB_CST_SRK_CERT##*_ca_}" = "crt.pem" ]; then
         ca=1
-    elif [ "${TDX_IMX_HAB_CST_SRK_CERT##*_usr_}" = "crt.pem" ]; then
+    elif [ "${HWS_IMX_HAB_CST_SRK_CERT##*_usr_}" = "crt.pem" ]; then
         ca=0
     else
-        echo "Certificate file name (defined by TDX_IMX_HAB_CST_SRK_CERT)" \
+        echo "Certificate file name (defined by HWS_IMX_HAB_CST_SRK_CERT)" \
              "does not match expected pattern - could not determine if CA flag is set."
         exit 1
     fi
 
     # Update "Install SRK" section:
-    sed -i "s|@@CST_SRK@@|${TDX_IMX_HAB_CST_SRK}|g" "${image_csf}"
+    sed -i "s|@@CST_SRK@@|${HWS_IMX_HAB_CST_SRK}|g" "${image_csf}"
     sed -i "s|@@CST_KIDX@@|${kidx}|g" "${image_csf}"
 
     if [ "$ca" = 1 ]; then
         # Keep "Install CSFK" section and update its contents:
         sed -i "/#+START_INSTALL_CSFK_BLOCK/d; /#+END_INSTALL_CSFK_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_CSF_CERT@@|${TDX_IMX_HAB_CST_CSF_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_CSF_CERT@@|${HWS_IMX_HAB_CST_CSF_CERT}|g" "${image_csf}"
         # Delete "Install NOCAK" section:
         sed -i "/#+START_INSTALL_NOCAK_BLOCK/,/#+END_INSTALL_NOCAK_BLOCK/d" "${image_csf}"
     else
@@ -201,7 +201,7 @@ generate_csf_common() {
         sed -i "/#+START_INSTALL_CSFK_BLOCK/,/#+END_INSTALL_CSFK_BLOCK/d" "${image_csf}"
         # Keep "Install NOCAK" section and update its contents:
         sed -i "/#+START_INSTALL_NOCAK_BLOCK/d; /#+END_INSTALL_NOCAK_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_SRK_CERT@@|${TDX_IMX_HAB_CST_SRK_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_SRK_CERT@@|${HWS_IMX_HAB_CST_SRK_CERT}|g" "${image_csf}"
     fi
 
     if [ "$spl" =  1 ]; then
@@ -215,7 +215,7 @@ generate_csf_common() {
     if [ "$ca" = 1 ]; then
         # Keep "Install Key" section and update its contents:
         sed -i "/#+START_INSTALL_KEY_BLOCK/d; /#+END_INSTALL_KEY_BLOCK/d" "${image_csf}"
-        sed -i "s|@@CST_IMG_CERT@@|${TDX_IMX_HAB_CST_IMG_CERT}|g" "${image_csf}"
+        sed -i "s|@@CST_IMG_CERT@@|${HWS_IMX_HAB_CST_IMG_CERT}|g" "${image_csf}"
         # Update part of "Authenticate Data" section:
         # Verification index is 2 (IMGK slot).
         sed -i "s|@@CST_AUTH_KIDX@@|2|g" "${image_csf}"
@@ -252,7 +252,7 @@ generate_spl_csf_and_update_container() {
     if ! env ${LIBFAKETIME_PATH+LD_PRELOAD="${LIBFAKETIME_PATH}"
                                 FAKETIME_FMT="%s"
                                 FAKETIME="@${FAKETIME}"} \
-             "${TDX_IMX_HAB_CST_BIN}" ${TDX_IMX_HAB_CST_ARGS} -i "${CSF_SPL}.csf" -o "${CSF_SPL}.bin" > "${CSF_SPL}.log" 2>&1
+             "${HWS_IMX_HAB_CST_BIN}" ${HWS_IMX_HAB_CST_ARGS} -i "${CSF_SPL}.csf" -o "${CSF_SPL}.bin" > "${CSF_SPL}.log" 2>&1
     then
         echo "CST execution log:" >&2
         cat "${CSF_SPL}.log" | sed 's@^@|@' >&2
@@ -325,7 +325,7 @@ generate_fit_csf_and_update_container() {
     if ! env ${LIBFAKETIME_PATH+LD_PRELOAD="${LIBFAKETIME_PATH}"
                                 FAKETIME_FMT="%s"
                                 FAKETIME="@${FAKETIME}"} \
-             "${TDX_IMX_HAB_CST_BIN}" ${TDX_IMX_HAB_CST_ARGS} -i "${CSF_FIT}.csf" -o "${CSF_FIT}.bin" > "${CSF_FIT}.log" 2>&1
+             "${HWS_IMX_HAB_CST_BIN}" ${HWS_IMX_HAB_CST_ARGS} -i "${CSF_FIT}.csf" -o "${CSF_FIT}.bin" > "${CSF_FIT}.log" 2>&1
     then
         echo "CST execution log:" >&2
         cat "${CSF_FIT}.log" | sed 's@^@|@' >&2
