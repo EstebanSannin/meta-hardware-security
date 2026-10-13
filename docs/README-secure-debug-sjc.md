@@ -44,20 +44,20 @@ For SJC-based SoCs (iMX6, iMX7, iMX8M, iMX8 and iMX8X), the following additional
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_SECURE_DEBUG_KEY_FILE` | Path to the file containing the SJC response key, used when `TDX_SECURE_DEBUG_MODE = "authenticated"`. On iMX8 and iMX8X, this is the OEM (normal world) key. | `${TOPDIR}/keys/secure-debug/key.txt` |
-| `TDX_SECURE_DEBUG_TZ_KEY_FILE` | Path to the file containing the TrustZone (secure world) response key. Optional, used only on iMX8 and iMX8X in `authenticated` mode, and ignored on the other SoCs. When unset, the secure-world challenge/response is disabled. | empty |
-| `TDX_SECURE_DEBUG_SJC_HEO` | Block the HAB software path that can reopen JTAG from trusted boot software without the challenge/response. Only applies in `authenticated` mode, and has no effect on iMX8 and iMX8X. Allowed values: `0` or `1`. | `1` |
-| `TDX_SECURE_DEBUG_SJC_DISABLE` | Fully disable the JTAG interface. When set to `1`, this overrides `TDX_SECURE_DEBUG_MODE` and selects the strongest available full-disable setting for the SoC. Allowed values: `0` or `1`. | `0` |
+| `HWS_SECURE_DEBUG_KEY_FILE` | Path to the file containing the SJC response key, used when `HWS_SECURE_DEBUG_MODE = "authenticated"`. On iMX8 and iMX8X, this is the OEM (normal world) key. | `${TOPDIR}/keys/secure-debug/key.txt` |
+| `HWS_SECURE_DEBUG_TZ_KEY_FILE` | Path to the file containing the TrustZone (secure world) response key. Optional, used only on iMX8 and iMX8X in `authenticated` mode, and ignored on the other SoCs. When unset, the secure-world challenge/response is disabled. | empty |
+| `HWS_SECURE_DEBUG_SJC_HEO` | Block the HAB software path that can reopen JTAG from trusted boot software without the challenge/response. Only applies in `authenticated` mode, and has no effect on iMX8 and iMX8X. Allowed values: `0` or `1`. | `1` |
+| `HWS_SECURE_DEBUG_SJC_DISABLE` | Fully disable the JTAG interface. When set to `1`, this overrides `HWS_SECURE_DEBUG_MODE` and selects the strongest available full-disable setting for the SoC. Allowed values: `0` or `1`. | `0` |
 
-`TDX_SECURE_DEBUG_SJC_HEO` is programmed only in `authenticated` mode. NXP scopes the HAB unlock command to `JTAG_SMODE = Secure` in the SoC security reference manual, so the fuse is not emitted for the other policies.
+`HWS_SECURE_DEBUG_SJC_HEO` is programmed only in `authenticated` mode. NXP scopes the HAB unlock command to `JTAG_SMODE = Secure` in the SoC security reference manual, so the fuse is not emitted for the other policies.
 
 Example configuration:
 
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_MODE = "authenticated"
-TDX_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
+HWS_SECURE_DEBUG_MODE = "authenticated"
+HWS_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
 ```
 
 On iMX8 and iMX8X, to also allow authenticated debug of the secure world:
@@ -65,9 +65,9 @@ On iMX8 and iMX8X, to also allow authenticated debug of the secure world:
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_MODE = "authenticated"
-TDX_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
-TDX_SECURE_DEBUG_TZ_KEY_FILE = "${TOPDIR}/keys/secure-debug/key-tz.txt"
+HWS_SECURE_DEBUG_MODE = "authenticated"
+HWS_SECURE_DEBUG_KEY_FILE = "${TOPDIR}/keys/secure-debug/key.txt"
+HWS_SECURE_DEBUG_TZ_KEY_FILE = "${TOPDIR}/keys/secure-debug/key-tz.txt"
 ```
 
 On iMX8 and iMX8X, `no-debug` disables the challenge/response for both worlds, so debug can then only be enabled with a signed "Enable Debug" message. See [Secure Debug on iMX8 and iMX8X](#secure-debug-on-imx8-and-imx8x).
@@ -77,12 +77,12 @@ To fully disable JTAG on SJC-based SoCs:
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_SJC_DISABLE = "1"
+HWS_SECURE_DEBUG_SJC_DISABLE = "1"
 ```
 
 ## Key management
 
-When `TDX_SECURE_DEBUG_MODE = "authenticated"`, `TDX_SECURE_DEBUG_KEY_FILE` must point to a file containing the SJC response key in hexadecimal format.
+When `HWS_SECURE_DEBUG_MODE = "authenticated"`, `HWS_SECURE_DEBUG_KEY_FILE` must point to a file containing the SJC response key in hexadecimal format.
 
 On iMX6, iMX7 and iMX8M, the key is a 56-bit value represented by exactly 14 hexadecimal characters, without a `0x` prefix. Example:
 
@@ -90,7 +90,7 @@ On iMX6, iMX7 and iMX8M, the key is a 56-bit value represented by exactly 14 hex
 7a73cfcdb180e3
 ```
 
-On iMX8 and iMX8X, the key is a 128-bit value represented by exactly 32 hexadecimal characters. The TrustZone key file set in `TDX_SECURE_DEBUG_TZ_KEY_FILE` uses the same format. Example:
+On iMX8 and iMX8X, the key is a 128-bit value represented by exactly 32 hexadecimal characters. The TrustZone key file set in `HWS_SECURE_DEBUG_TZ_KEY_FILE` uses the same format. Example:
 
 ```text
 abcdefdadeadbeefd00dca11ca11b005
@@ -178,7 +178,7 @@ The ordering of the generated commands is important:
 For a first device, consider deferring two of the generated commands until authenticated debug has actually been demonstrated with your probe:
 
 - the one that locks the response key, so that the programmed key can still be read back for diagnosis; and
-- the one that blocks the HAB software path (`TDX_SECURE_DEBUG_SJC_HEO`), so that path remains available as a recovery route.
+- the one that blocks the HAB software path (`HWS_SECURE_DEBUG_SJC_HEO`), so that path remains available as a recovery route.
 
 Program the remaining fuses first, verify the three cases above, and only then program these two and repeat the verification. Once they are programmed, a device whose response key does not work can no longer be debugged.
 

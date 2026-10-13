@@ -53,8 +53,8 @@ The following generic variables are available:
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_SECURE_DEBUG_ENABLE` | Enable or disable the Secure Debug feature. Allowed values: `0` or `1`. | `1` |
-| `TDX_SECURE_DEBUG_MODE` | Debug policy. Allowed values: `authenticated` or `no-debug`. | `authenticated` |
+| `HWS_SECURE_DEBUG_ENABLE` | Enable or disable the Secure Debug feature. Allowed values: `0` or `1`. | `1` |
+| `HWS_SECURE_DEBUG_MODE` | Debug policy. Allowed values: `authenticated` or `no-debug`. | `authenticated` |
 
 Each backend adds its own variables. For SJC-based SoCs, see [Configuration variables](README-secure-debug-sjc.md#configuration-variables) in the SJC documentation. For ELE-based SoCs, see [Configuration variables](README-secure-debug-ele.md#configuration-variables) in the ELE documentation.
 
@@ -63,7 +63,7 @@ To disable security-sensitive debug access instead of using authenticated JTAG:
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_MODE = "no-debug"
+HWS_SECURE_DEBUG_MODE = "no-debug"
 ```
 
 ## Board-level prerequisites

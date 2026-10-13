@@ -10,7 +10,7 @@ FUSE_CMDS_FILE="$2"
 TEMPLATES_DIR=${3:-"."}
 FUSE_INFO_FILE="$(dirname "$FUSE_CMDS_FILE")/imx-config.fuse"
 
-# environment variables (TDX_*)
+# environment variables (HWS_*)
 SRK_FUSE_FILE="${HWS_IMX_HAB_CST_SRK_FUSE}"
 
 if [ -z "${SRK_FUSE_FILE}" ]; then
@@ -148,12 +148,12 @@ secure_debug_emit_key128() {
 }
 
 secure_debug_append() {
-    if [ -z "${TDX_SECURE_DEBUG_FUSE_TEMPLATE}" ]; then
+    if [ -z "${HWS_SECURE_DEBUG_FUSE_TEMPLATE}" ]; then
         echo "Error: Secure Debug is not supported for SOC=${SOC}!" >&2
         return 1
     fi
 
-    secure_debug_load_template "${TEMPLATES_DIR}/${TDX_SECURE_DEBUG_FUSE_TEMPLATE}"
+    secure_debug_load_template "${TEMPLATES_DIR}/${HWS_SECURE_DEBUG_FUSE_TEMPLATE}"
 
     if [ "$SECURE_DEBUG_PREFIX" = "SJC" ]; then
         secure_debug_append_sjc
@@ -205,7 +205,7 @@ secure_debug_emit_ele_dbg_disable() {
 # override such a credential.
 secure_debug_append_ele() {
     # authenticated mode needs no fuses
-    if [ "${TDX_SECURE_DEBUG_ELE_JTAG_DISABLE}" != "1" ] && [ "${TDX_SECURE_DEBUG_MODE}" = "authenticated" ]; then
+    if [ "${HWS_SECURE_DEBUG_ELE_JTAG_DISABLE}" != "1" ] && [ "${HWS_SECURE_DEBUG_MODE}" = "authenticated" ]; then
         return
     fi
 
@@ -213,13 +213,13 @@ secure_debug_append_ele() {
     echo "${SECTION_SECURE_DEBUG}" >> "$FUSE_CMDS_FILE"
     echo "${WARNING_SECURE_DEBUG_ELE}" >> "$FUSE_CMDS_FILE"
 
-    if [ "${TDX_SECURE_DEBUG_ELE_JTAG_DISABLE}" = "1" ]; then
+    if [ "${HWS_SECURE_DEBUG_ELE_JTAG_DISABLE}" = "1" ]; then
         secure_debug_emit_ele_dbg_disable
         secure_debug_emit JTAG_DISABLE "JTAG_DISABLE = 1 (full JTAG disable)"
-    elif [ "${TDX_SECURE_DEBUG_MODE}" = "no-debug" ]; then
+    elif [ "${HWS_SECURE_DEBUG_MODE}" = "no-debug" ]; then
         secure_debug_emit_ele_dbg_disable
     else
-        echo "Error: invalid TDX_SECURE_DEBUG_MODE='${TDX_SECURE_DEBUG_MODE}'" >&2
+        echo "Error: invalid HWS_SECURE_DEBUG_MODE='${HWS_SECURE_DEBUG_MODE}'" >&2
         return 1
     fi
 }
@@ -244,18 +244,18 @@ secure_debug_append_sjc() {
 # response opens debug, with separate 128-bit keys for the normal world (OEM
 # key) and the secure world (TrustZone key).
 secure_debug_append_sjc_imx8() {
-    if [ "${TDX_SECURE_DEBUG_SJC_DISABLE}" = "1" ]; then
+    if [ "${HWS_SECURE_DEBUG_SJC_DISABLE}" = "1" ]; then
         secure_debug_emit SJC_DISABLE "SJC_DISABLE = 1 (full JTAG disable)"
         return
     fi
 
-    case "${TDX_SECURE_DEBUG_MODE}" in
+    case "${HWS_SECURE_DEBUG_MODE}" in
         "authenticated")
             echo "${WARNING_SECURE_DEBUG_IMX8}" >> "$FUSE_CMDS_FILE"
-            secure_debug_emit_key128 OEM_KEY "${TDX_SECURE_DEBUG_KEY_FILE}"
+            secure_debug_emit_key128 OEM_KEY "${HWS_SECURE_DEBUG_KEY_FILE}"
             secure_debug_emit OEM_KEY_READ_LOCK "OEM_KEY read lock"
-            if [ -n "${TDX_SECURE_DEBUG_TZ_KEY_FILE}" ]; then
-                secure_debug_emit_key128 TZ_KEY "${TDX_SECURE_DEBUG_TZ_KEY_FILE}"
+            if [ -n "${HWS_SECURE_DEBUG_TZ_KEY_FILE}" ]; then
+                secure_debug_emit_key128 TZ_KEY "${HWS_SECURE_DEBUG_TZ_KEY_FILE}"
                 secure_debug_emit TZ_KEY_READ_LOCK "TZ_KEY read lock"
             else
                 secure_debug_emit TZ_CHALLENGE_RESP_DISABLE \
@@ -267,7 +267,7 @@ secure_debug_append_sjc_imx8() {
             secure_debug_emit TZ_CHALLENGE_RESP_DISABLE "OTP_TZ_CHALLENGE_RESP_DISABLE = 1"
             ;;
         *)
-            echo "Error: invalid TDX_SECURE_DEBUG_MODE='${TDX_SECURE_DEBUG_MODE}'" >&2
+            echo "Error: invalid HWS_SECURE_DEBUG_MODE='${HWS_SECURE_DEBUG_MODE}'" >&2
             return 1
             ;;
     esac
@@ -276,20 +276,20 @@ secure_debug_append_sjc_imx8() {
 # i.MX6, i.MX7 and i.MX8M: JTAG_SMODE selects the debug policy, with a single
 # 56-bit response key.
 secure_debug_append_sjc_imx6_imx7_imx8m() {
-    if [ "${TDX_SECURE_DEBUG_SJC_DISABLE}" = "1" ]; then
+    if [ "${HWS_SECURE_DEBUG_SJC_DISABLE}" = "1" ]; then
         secure_debug_emit SJC_DISABLE "SJC_DISABLE = 1 (full JTAG disable)"
     else
-        case "${TDX_SECURE_DEBUG_MODE}" in
+        case "${HWS_SECURE_DEBUG_MODE}" in
             "authenticated")
                 local key
-                key=$(secure_debug_read_key "${TDX_SECURE_DEBUG_KEY_FILE}" 14)
+                key=$(secure_debug_read_key "${HWS_SECURE_DEBUG_KEY_FILE}" 14)
                 local key_lo="0x${key:6:8}"
                 local key_hi="0x00${key:0:6}"
                 secure_debug_emit SJC_RESP_LO "SJC_RESP[31:0]" "$key_lo"
                 secure_debug_emit SJC_RESP_HI "SJC_RESP[55:32]" "$key_hi"
                 secure_debug_emit SJC_RESP_LOCK "SJC_RESP_LOCK"
                 secure_debug_emit JTAG_SMODE_SECURE "JTAG_SMODE = Secure JTAG"
-                if [ "${TDX_SECURE_DEBUG_SJC_HEO}" = "1" ]; then
+                if [ "${HWS_SECURE_DEBUG_SJC_HEO}" = "1" ]; then
                     secure_debug_emit JTAG_HEO "JTAG_HEO = 1 (block HAB software reopen)"
                 fi
                 ;;
@@ -297,7 +297,7 @@ secure_debug_append_sjc_imx6_imx7_imx8m() {
                 secure_debug_emit JTAG_SMODE_NODEBUG "JTAG_SMODE = No Debug"
                 ;;
             *)
-                echo "Error: invalid TDX_SECURE_DEBUG_MODE='${TDX_SECURE_DEBUG_MODE}'" >&2
+                echo "Error: invalid HWS_SECURE_DEBUG_MODE='${HWS_SECURE_DEBUG_MODE}'" >&2
                 return 1
                 ;;
         esac
@@ -342,7 +342,7 @@ create_fuse_cmds() {
         return 1
     fi
 
-    if [ "${TDX_SECURE_DEBUG_ENABLE}" = "1" ]; then
+    if [ "${HWS_SECURE_DEBUG_ENABLE}" = "1" ]; then
         echo "Appending Secure Debug fuses..."
         secure_debug_append
     fi

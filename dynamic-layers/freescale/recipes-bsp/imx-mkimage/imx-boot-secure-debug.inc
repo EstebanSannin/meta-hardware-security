@@ -3,16 +3,16 @@ SRC_URI:append = "\
     file://ele-dat.yaml.in \
 "
 
-# Secure debug is enabled only if both hws-secure-debug class is inherited and TDX_SECURE_DEBUG_ENABLE="1"
-TDX_SECURE_DEBUG_ENABLE_INTERNAL = "0"
-TDX_SECURE_DEBUG_ENABLE_INTERNAL:hws-secure-debug = "${TDX_SECURE_DEBUG_ENABLE}"
+# Secure debug is enabled only if both hws-secure-debug class is inherited and HWS_SECURE_DEBUG_ENABLE="1"
+HWS_SECURE_DEBUG_ENABLE_INTERNAL = "0"
+HWS_SECURE_DEBUG_ENABLE_INTERNAL:hws-secure-debug = "${HWS_SECURE_DEBUG_ENABLE}"
 
 # Make sure fuse-cmds.txt is regenerated if a secure debug authentication key changes
-do_compile[file-checksums] += "${@ d.getVar('TDX_SECURE_DEBUG_KEY_FILE') + ':True' if d.getVar('TDX_SECURE_DEBUG_KEY_FILE') and d.getVar('TDX_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('TDX_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('TDX_SECURE_DEBUG_SJC_DISABLE') != '1' else ''}"
-do_compile[file-checksums] += "${@ d.getVar('TDX_SECURE_DEBUG_TZ_KEY_FILE') + ':True' if d.getVar('TDX_SECURE_DEBUG_TZ_KEY_FILE') and d.getVar('TDX_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('TDX_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('TDX_SECURE_DEBUG_SJC_DISABLE') != '1' else ''}"
+do_compile[file-checksums] += "${@ d.getVar('HWS_SECURE_DEBUG_KEY_FILE') + ':True' if d.getVar('HWS_SECURE_DEBUG_KEY_FILE') and d.getVar('HWS_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('HWS_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('HWS_SECURE_DEBUG_SJC_DISABLE') != '1' else ''}"
+do_compile[file-checksums] += "${@ d.getVar('HWS_SECURE_DEBUG_TZ_KEY_FILE') + ':True' if d.getVar('HWS_SECURE_DEBUG_TZ_KEY_FILE') and d.getVar('HWS_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('HWS_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('HWS_SECURE_DEBUG_SJC_DISABLE') != '1' else ''}"
 
 # Enabled when authenticated debug is used on ELE-based devices
-TDX_SECURE_DEBUG_ELE_AUTH_INTERNAL = "${@ '1' if d.getVar('TDX_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('TDX_SECURE_DEBUG_ELE_SPSDK_FAMILY') and d.getVar('TDX_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('TDX_SECURE_DEBUG_ELE_JTAG_DISABLE') != '1' else '0'}"
+HWS_SECURE_DEBUG_ELE_AUTH_INTERNAL = "${@ '1' if d.getVar('HWS_SECURE_DEBUG_ENABLE_INTERNAL') == '1' and d.getVar('HWS_SECURE_DEBUG_ELE_SPSDK_FAMILY') and d.getVar('HWS_SECURE_DEBUG_MODE') == 'authenticated' and d.getVar('HWS_SECURE_DEBUG_ELE_JTAG_DISABLE') != '1' else '0'}"
 
 # return the SRK private key path or the SPSDK PKCS#11 signer (if HSM is enabled)
 def tdx_secure_debug_srk_signer(d):
@@ -45,7 +45,7 @@ python secure_debug_ele_templates() {
     workdir = d.getVar('WORKDIR')
     outdir = os.path.join(workdir, 'secure-debug')
     shutil.rmtree(outdir, ignore_errors=True)
-    if d.getVar('TDX_SECURE_DEBUG_ELE_AUTH_INTERNAL') != '1':
+    if d.getVar('HWS_SECURE_DEBUG_ELE_AUTH_INTERNAL') != '1':
         return
 
     # paths, PKCS#11 labels and other free-form values are written as
@@ -53,16 +53,16 @@ python secure_debug_ele_templates() {
     def quote(value):
         return "'%s'" % value.replace("'", "''")
 
-    uuid = (d.getVar('TDX_SECURE_DEBUG_ELE_DC_UUID') or '').lower()
+    uuid = (d.getVar('HWS_SECURE_DEBUG_ELE_DC_UUID') or '').lower()
     uuid = uuid[2:] if uuid.startswith('0x') else uuid
     srk_cert = make_srk_cert_name(d, d.getVar('HWS_IMX_HAB_CST_CERTS_DIR'))
     srk_cert_suffix = re.sub(r'^SRK[1-4]_', '', os.path.basename(srk_cert))
 
     subst = {
-        'FAMILY': quote(d.getVar('TDX_SECURE_DEBUG_ELE_SPSDK_FAMILY')),
-        'CC_SOCU': quote('0x%08X' % int(d.getVar('TDX_SECURE_DEBUG_ELE_DC_CC_SOCU'), 16)),
+        'FAMILY': quote(d.getVar('HWS_SECURE_DEBUG_ELE_SPSDK_FAMILY')),
+        'CC_SOCU': quote('0x%08X' % int(d.getVar('HWS_SECURE_DEBUG_ELE_DC_CC_SOCU'), 16)),
         'UUID': quote(uuid or 'REPLACE_WITH_DEVICE_UUID'),
-        'DCK_KEY': quote(d.getVar('TDX_SECURE_DEBUG_ELE_DCK_KEY')),
+        'DCK_KEY': quote(d.getVar('HWS_SECURE_DEBUG_ELE_DCK_KEY')),
         'SRK_SIGNER': quote(tdx_secure_debug_srk_signer(d)),
         'SRK_ID': str(int(d.getVar('HWS_IMX_HAB_CST_SRK_INDEX')) - 1),
         'SRK_CA': 'true' if d.getVar('HWS_IMX_HAB_CST_SRK_CA') == '1' else 'false',

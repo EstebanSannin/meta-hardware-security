@@ -39,18 +39,18 @@ For supported ELE-based SoCs, the following additional variables are available:
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_SECURE_DEBUG_ELE_DC_CC_SOCU` | Debug domains and debug permissions granted by the generated debug credential (`cc_socu` field), as a hexadecimal value with one nibble per debug domain. Only OEM debug domains can be selected. | all OEM domains (`0x00FFFFF0` on iMX95) |
-| `TDX_SECURE_DEBUG_ELE_DC_UUID` | UUID of the device the generated debug credential is bound to, as 32 hexadecimal characters. When empty, the template carries a placeholder to be replaced for each device. | empty |
-| `TDX_SECURE_DEBUG_ELE_DCK_KEY` | Path to the private key of the debug credential key (DCK) pair, referenced by the generated templates. | `${TOPDIR}/keys/secure-debug/dck.pem` |
-| `TDX_SECURE_DEBUG_ELE_JTAG_DISABLE` | Fully disable the JTAG interface, including boundary scan and the authenticated debug flow. When set to `1`, this overrides `TDX_SECURE_DEBUG_MODE`. Allowed values: `0` or `1`. | `0` |
+| `HWS_SECURE_DEBUG_ELE_DC_CC_SOCU` | Debug domains and debug permissions granted by the generated debug credential (`cc_socu` field), as a hexadecimal value with one nibble per debug domain. Only OEM debug domains can be selected. | all OEM domains (`0x00FFFFF0` on iMX95) |
+| `HWS_SECURE_DEBUG_ELE_DC_UUID` | UUID of the device the generated debug credential is bound to, as 32 hexadecimal characters. When empty, the template carries a placeholder to be replaced for each device. | empty |
+| `HWS_SECURE_DEBUG_ELE_DCK_KEY` | Path to the private key of the debug credential key (DCK) pair, referenced by the generated templates. | `${TOPDIR}/keys/secure-debug/dck.pem` |
+| `HWS_SECURE_DEBUG_ELE_JTAG_DISABLE` | Fully disable the JTAG interface, including boundary scan and the authenticated debug flow. When set to `1`, this overrides `HWS_SECURE_DEBUG_MODE`. Allowed values: `0` or `1`. | `0` |
 
 Example enabling authenticated debug to generate credential templates for a device with a particular UUID:
 
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_MODE = "authenticated"
-TDX_SECURE_DEBUG_ELE_DC_UUID = "00112233445566778899aabbccddeeff"
+HWS_SECURE_DEBUG_MODE = "authenticated"
+HWS_SECURE_DEBUG_ELE_DC_UUID = "00112233445566778899aabbccddeeff"
 ```
 
 Example to fully disable JTAG:
@@ -58,14 +58,14 @@ Example to fully disable JTAG:
 ```bash
 INHERIT += "hws-secure-debug"
 
-TDX_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"
+HWS_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"
 ```
 
 ## Debug credentials in authenticated mode
 
 In authenticated mode, no debug secret is programmed into the device, and the build does not create any credential. It generates two configuration templates for the NXP SPSDK tools (version 3.x) in the deploy directory, under `secure-debug/`:
 
-- `dc.yaml`, used to create the debug credential. It references the SRK certificate and private key of the secure boot PKI (`HWS_IMX_HAB_CST_DIR`, `HWS_IMX_HAB_CST_SRK_INDEX`), the DCK set in `TDX_SECURE_DEBUG_ELE_DCK_KEY`, the debug domains and the device UUID.
+- `dc.yaml`, used to create the debug credential. It references the SRK certificate and private key of the secure boot PKI (`HWS_IMX_HAB_CST_DIR`, `HWS_IMX_HAB_CST_SRK_INDEX`), the DCK set in `HWS_SECURE_DEBUG_ELE_DCK_KEY`, the debug domains and the device UUID.
 - `dat.yaml`, used to authenticate a debug session with that credential. It references the DCK and the SRK table of the secure boot PKI.
 
 The templates contain paths, not keys. When the secure boot keys are stored in an HSM (`HWS_SIGNED_HSM = "1"`), `dc.yaml` accesses the SRK private key through the SPSDK PKCS#11 plugin instead, using the token and object of `HWS_IMX_HAB_CST_SRK_CERT` and the module set in `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`. See [Creating the credential with an HSM](#creating-the-credential-with-an-hsm).
@@ -112,7 +112,7 @@ Even with an HSM, `dat.yaml` references the four SRK certificates as files in `H
 
 ## Provisioning in `no-debug` mode
 
-In `no-debug` mode (or when JTAG is disabled via `TDX_SECURE_DEBUG_ELE_JTAG_DISABLE`), the build appends a dedicated section to `fuse-cmds.txt`, between the secure boot SRK hash commands and the command that closes the device.
+In `no-debug` mode (or when JTAG is disabled via `HWS_SECURE_DEBUG_ELE_JTAG_DISABLE`), the build appends a dedicated section to `fuse-cmds.txt`, between the secure boot SRK hash commands and the command that closes the device.
 
 Example for Verdin iMX95:
 
@@ -131,7 +131,7 @@ fuse prog -y 7 1 0x0000000F
 [...]
 ```
 
-With `TDX_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"`, a command to set the JTAG disable fuse is also added to `fuse-cmds.txt`.
+With `HWS_SECURE_DEBUG_ELE_JTAG_DISABLE = "1"`, a command to set the JTAG disable fuse is also added to `fuse-cmds.txt`.
 
 Program the commands manually in U-Boot, exactly in the order shown in `fuse-cmds.txt`.
 
