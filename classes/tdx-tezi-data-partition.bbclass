@@ -15,12 +15,12 @@ TDX_TEZI_DATA_PARTITION_LABEL ?= "DATA"
 #   "1": add entry to fstab with the auto option
 TDX_TEZI_DATA_PARTITION_AUTOMOUNT ?= "${TDX_TEZI_DATA_PARTITION_AUTOMOUNT_DEFAULT}"
 
-# define the default value of above variable based on tdx-encrypted being
+# define the default value of above variable based on hws-encrypted being
 # in use or not; notice TDX_TEZI_DATA_PARTITION_AUTOMOUNT_DEFAULT is for
 # internal usage of the present class and it should not be modified by
 # users (who should only care about TDX_TEZI_DATA_PARTITION_AUTOMOUNT)
 TDX_TEZI_DATA_PARTITION_AUTOMOUNT_DEFAULT = "1"
-TDX_TEZI_DATA_PARTITION_AUTOMOUNT_DEFAULT:tdx-encrypted = "-1"
+TDX_TEZI_DATA_PARTITION_AUTOMOUNT_DEFAULT:hws-encrypted = "-1"
 
 # data partition mount point
 TDX_TEZI_DATA_PARTITION_MOUNTPOINT ?= "/data"

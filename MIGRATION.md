@@ -64,3 +64,5 @@ and whether the compatibility shim covers it.
 | `:tdx-signed` | `:hws-signed` | override | yes (added to `DISTROOVERRIDES` when `hws-signed` is inherited) |
 | `:tdx-signed-dmverity` | `:hws-signed-dmverity` | override | yes (added to `DISTROOVERRIDES` when `hws-signed-dmverity` is inherited) |
 | `TDX_SIGNING_CLASS` value `tdx-signed` / `tdxref-signed` | `hws-signed` / `hws-signed-verity` | variable value | yes (the legacy wrapper classes set the legacy value) |
+| `tdx-encrypted` | `hws-encrypted` | class | yes (legacy wrapper class) |
+| `:tdx-encrypted` | `:hws-encrypted` | override | yes (added to `DISTROOVERRIDES` when `hws-encrypted` is inherited) |

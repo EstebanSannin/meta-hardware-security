@@ -3,7 +3,7 @@
 Sometimes it is useful (or even required) to have an additional partition to store application data and other software artifacts:
 
 - If the `hws-signed-verity` class is used to enable secure boot, the rootfs partition will be read-only, and an additional partition might be needed to store persistent data.
-- If the `tdx-encrypted` class is used to enable encryption, an additional partition in the eMMC can be used to store the encrypted data.
+- If the `hws-encrypted` class is used to enable encryption, an additional partition in the eMMC can be used to store the encrypted data.
 
 For these and other use cases, this layer supports creating an additional data partition in the eMMC via the `tdx-tezi-data-partition` class.
 
@@ -25,7 +25,7 @@ Additional variables can be used to customize the behavior of this feature:
 | `TDX_TEZI_DATA_PARTITION_LABEL` | Label that will be used to format and mount the data partition | `DATA` |
 | `TDX_TEZI_DATA_PARTITION_SIZE_NOMINAL` | Nominal size of the data partition in MB. This is the actual partition size when `TDX_TEZI_DATA_PARTITION_WANT_MAXIMIZED` is set to `0`, or the minimum size when set to `1` | `512` |
 | `TDX_TEZI_DATA_PARTITION_WANT_MAXIMIZED` | Set to `1` to maximize partition size if multiple partitions share this setting distributing remaining space evenly, or `0` to use only the nominal size specified by `TDX_TEZI_DATA_PARTITION_SIZE_NOMINAL` | `1` |
-| `TDX_TEZI_DATA_PARTITION_AUTOMOUNT` | Set to `1` to automatically mount the data partition at boot time, or `0` to disable automouting the partition; when set to `-1` the partition won't even be listed in fstab (it should be mounted by other means) | `-1` if class `tdx-encrypted` is in use or `1` otherwise |
+| `TDX_TEZI_DATA_PARTITION_AUTOMOUNT` | Set to `1` to automatically mount the data partition at boot time, or `0` to disable automouting the partition; when set to `-1` the partition won't even be listed in fstab (it should be mounted by other means) | `-1` if class `hws-encrypted` is in use or `1` otherwise |
 | `TDX_TEZI_DATA_PARTITION_MOUNTPOINT` | Directory where the data partition should be mounted | `/data` |
 | `TDX_TEZI_DATA_PARTITION_MOUNT_FLAGS` | Flags used to mount the data partition. See the `mount` man page for more information on the available mount flags | `rw,nosuid,nodev,noatime, errors=remount-ro` |
 
@@ -33,11 +33,11 @@ Additional variables from the `image_type_tezi` class in the `meta-toradex-bsp-c
 
 ## Encrypting the data partition
 
-The default value of `TDX_TEZI_DATA_PARTITION_AUTOMOUNT` assumes the data partition is going to be encrypted when the class `tdx-encrypted` is also used; this is a common situation but not necessarily true and if not true one must set that variable appropriately for their use case.
+The default value of `TDX_TEZI_DATA_PARTITION_AUTOMOUNT` assumes the data partition is going to be encrypted when the class `hws-encrypted` is also used; this is a common situation but not necessarily true and if not true one must set that variable appropriately for their use case.
 
 When the said assumption is true though, having an encrypted data partition would be achieved by setting (in your `local.conf`, for example):
 
 ```
-INHERIT += "tdx-tezi-data-partition tdx-encrypted"
+INHERIT += "tdx-tezi-data-partition hws-encrypted"
 TDX_ENC_STORAGE_LOCATION = "/dev/<block-device-for-data-partition>"
 ```

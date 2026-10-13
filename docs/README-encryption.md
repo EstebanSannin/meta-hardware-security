@@ -55,10 +55,10 @@ The Linux kernel [dm-crypt](https://docs.kernel.org/admin-guide/device-mapper/dm
 
 ## Enabling and configuring encryption
 
-To enable the data-at-rest encryption feature, one needs to globally inherit the `tdx-encrypted` class by adding the following line to an OE configuration file (e.g. your `local.conf`):
+To enable the data-at-rest encryption feature, one needs to globally inherit the `hws-encrypted` class by adding the following line to an OE configuration file (e.g. your `local.conf`):
 
 ```
-INHERIT += "tdx-encrypted"
+INHERIT += "hws-encrypted"
 ```
 
 Also, it is mandatory to set the `TDX_ENC_STORAGE_LOCATION` variable to the disk partition you want to encrypt. For example, to encrypt the `/dev/sdb1` partition:
@@ -75,7 +75,7 @@ TDX_ENC_KEY_BACKEND:forcevariable = "tpm"
 
 Make sure to use the `forcevariable` override, so your configuration takes precedence over the default one.
 
-A few additional variables are available to customize the behavior of the data-at-rest encryption feature. Here is list of the most important ones (for the full list refer to `tdx-encrypted.bbclass`):
+A few additional variables are available to customize the behavior of the data-at-rest encryption feature. Here is list of the most important ones (for the full list refer to `hws-encrypted.bbclass`):
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |

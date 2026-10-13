@@ -13,7 +13,7 @@ OPTEE_OS_DEBUG_OPTS = "\
 
 # additional make options to support encryption
 OPTEE_OS_ENCRYPTION_OPTS = ""
-OPTEE_OS_ENCRYPTION_OPTS:tdx-encrypted = "\
+OPTEE_OS_ENCRYPTION_OPTS:hws-encrypted = "\
     CFG_IN_TREE_EARLY_TAS=trusted_keys/f04a0fe7-1f5d-4b9b-abf7-619b85b4ce8c \
     CFG_WITH_SOFTWARE_PRNG=n \
     CFG_HWRNG_PTA=y \

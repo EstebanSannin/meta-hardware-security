@@ -43,6 +43,8 @@ HWS_TDX_COMPAT_OVERRIDES += "\
     hws-signed-dmverity:tdx-signed-dmverity \
 "
 
+HWS_TDX_COMPAT_OVERRIDES += "hws-encrypted:tdx-encrypted"
+
 def hws_tdx_compat_pairs(d):
     pairs = []
     for item in (d.getVar('HWS_TDX_COMPAT_VARS') or '').split():
