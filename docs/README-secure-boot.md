@@ -127,11 +127,11 @@ A few variables can be used to configure this feature, including:
 | `UBOOT_SIGN_KEYNAME` | The name of the key used for signing configuration nodes | `dev` |
 | `UBOOT_SIGN_IMG_KEYNAME` | The name of the key used for signing individual images | `dev2` |
 
-The complete list of variables can be found in the `tdx-signed-fit-image.inc` file.
+The complete list of variables can be found in the `hws-signed-fit-image.inc` file.
 
 ### Configuring FIT image signing / known issues
 
-- On K3 based platforms (Verdin AM62, Aquila AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `tdx-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-hardware-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
+- On K3 based platforms (Verdin AM62, Aquila AM69), some of the configuration variables (e.g. `UBOOT_SIGN_KEYDIR`, `UBOOT_SIGN_KEYNAME` (check the complete list in `hws-signed-fit-image.inc`)) are set through override `k3` to ensure the values coming from layer `meta-hardware-security` override those from layer `meta-ti-bsp`. Due to this, the recommended way to set those variables is via override `forcevariable`.
 
 ## Configuring rootfs image signing
 

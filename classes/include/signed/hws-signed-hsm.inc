@@ -30,11 +30,11 @@ UBOOT_MKIMAGE_SIGN_ARGS:append = " -N pkcs11"
 HWS_SIGNED_HSM_PKCS11_SOFTHSM_CONF ?= "${TOPDIR}/keys/softhsm/conf/softhsm2.conf"
 
 # NXP imx-specific HSM configuration
-require ${@ 'tdx-signed-hsm-imx.inc' if 'imx-generic-bsp' in d.getVar('MACHINEOVERRIDES_EXTENDER').split(':') else ''}
+require ${@ 'hws-signed-hsm-imx.inc' if 'imx-generic-bsp' in d.getVar('MACHINEOVERRIDES_EXTENDER').split(':') else ''}
 
 # TI k3-specific HSM configuration
-require ${@ 'tdx-signed-hsm-k3.inc' if 'k3r5' in d.getVar('OVERRIDES').split(':') else ''}
-require ${@ 'tdx-signed-hsm-k3.inc' if 'k3' in d.getVar('OVERRIDES').split(':') else ''}
+require ${@ 'hws-signed-hsm-k3.inc' if 'k3r5' in d.getVar('OVERRIDES').split(':') else ''}
+require ${@ 'hws-signed-hsm-k3.inc' if 'k3' in d.getVar('OVERRIDES').split(':') else ''}
 
 # suppress warning messages from this class
 HWS_SIGNED_HSM_SUPPRESS_WARNINGS ?= "0"

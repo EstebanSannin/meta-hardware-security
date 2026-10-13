@@ -201,3 +201,13 @@ and whether the compatibility shim covers it.
 | `tdx_signed_hsm_vars_export_k3_binman` | `hws_signed_hsm_vars_export_k3_binman` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |
 | `tdx_signed_hsm_vars_export_common` | `hws_signed_hsm_vars_export_common` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |
 | `tdx_signed_hsm_vars_export` | `hws_signed_hsm_vars_export` | function | yes (shell alias in the legacy `tdx-signed-hsm-env` class) |
+| `classes/include/signed/tdx-signed-fit-image.inc` | `classes/include/signed/hws-signed-fit-image.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-harden.inc` | `classes/include/signed/hws-signed-harden.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-hsm.inc` | `classes/include/signed/hws-signed-hsm.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-hsm-imx.inc` | `classes/include/signed/hws-signed-hsm-imx.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-hsm-k3.inc` | `classes/include/signed/hws-signed-hsm-k3.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-imx-hab.inc` | `classes/include/signed/hws-signed-imx-hab.inc` | file | no (internal include) |
+| `classes/include/signed/tdx-signed-k3-secboot.inc` | `classes/include/signed/hws-signed-k3-secboot.inc` | file | no (internal include) |
+| `classes/include/secure-debug/tdx-secure-debug-sjc.inc` | `classes/include/secure-debug/hws-secure-debug-sjc.inc` | file | no (internal include) |
+| `classes/include/secure-debug/tdx-secure-debug-ele.inc` | `classes/include/secure-debug/hws-secure-debug-ele.inc` | file | no (internal include) |
+| `recipes-security/optee/optee-tdx.inc` | `recipes-security/optee/optee-hws.inc` | file | no (internal include) |
