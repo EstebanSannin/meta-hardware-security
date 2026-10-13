@@ -6,7 +6,7 @@ TEE might be a good solution to store and manage secrets (e.g. encryption keys) 
 
 [OP-TEE](https://www.trustedfirmware.org/projects/op-tee/) (Open Portable Trusted Execution Environment) is an open-source TEE designed as a companion to a non-secure Linux kernel running on ARM Cortex-A cores using the TrustZone technology.
 
-This layer provides support for running OP-TEE on NXP i.MX6, i.MX7, i.MX8M and i.MX9x SoCs and on TI K3 SoCs. The build currently stops on machines that are not in the list of validated devices; see [hardware-support.md](hardware-support.md).
+This layer provides support for running OP-TEE on NXP i.MX6, i.MX7, i.MX8M and i.MX9x SoCs and on TI K3 SoCs. The build currently stops on machines that are not in the list of validated devices (variable `HWS_OPTEE_SUPPORTED_MACHINES`); see [hardware-support.md](hardware-support.md). To use OP-TEE on another machine, provide its OP-TEE settings (e.g. `OPTEEMACHINE`, `UART_BASE_ADDR`) in the machine configuration and append the machine to `HWS_OPTEE_SUPPORTED_MACHINES`.
 
 ## Enabling OP-TEE
 

@@ -70,33 +70,41 @@ inherit ${@ 'tdx-tezi-data-partition' if 'teziimg' in d.getVar('IMAGE_FSTYPES') 
 # machine-specific fixups for OP-TEE
 include include/optee/machine/${MACHINE}.inc
 
+# Machines OP-TEE has been validated on; the build stops on other machines.
+# To use OP-TEE on another machine, provide its OP-TEE settings (OPTEEMACHINE,
+# UART_BASE_ADDR, ... in the machine configuration or in an
+# optee-tdx-<machine>.inc include) and append it to this list.
+HWS_OPTEE_SUPPORTED_MACHINES ?= "\
+    apalis-imx6 \
+    aquila-am69 \
+    aquila-imx95 \
+    colibri-imx6 \
+    colibri-imx7-emmc \
+    lino-imx93 \
+    toradex-osm-imx93 \
+    toradex-smarc-imx8mp \
+    toradex-smarc-imx95 \
+    verdin-am62 \
+    verdin-am62p \
+    verdin-imx8mm \
+    verdin-imx8mp \
+    verdin-imx95 \
+"
+
 # validate optee support
 addhandler validate_optee_support
 validate_optee_support[eventmask] = "bb.event.SanityCheck"
 python validate_optee_support() {
-    supported_machines = [
-        'apalis-imx6',
-        'aquila-am69',
-        'aquila-imx95',
-        'colibri-imx6',
-        'colibri-imx7-emmc',
-        'lino-imx93',
-        'toradex-osm-imx93',
-        'toradex-smarc-imx8mp',
-        'toradex-smarc-imx95',
-        'verdin-am62',
-        'verdin-am62p',
-        'verdin-imx8mm',
-        'verdin-imx8mp',
-        'verdin-imx95',
-    ]
+    supported_machines = (e.data.getVar('HWS_OPTEE_SUPPORTED_MACHINES') or '').split()
 
     if e.data.getVar('HWS_OPTEE_ENABLE') == '0':
         return
 
     machine = e.data.getVar('MACHINE')
     if machine not in supported_machines:
-        bb.fatal("OP-TEE is currently not supported on '%s' machine!" % machine)
+        bb.fatal("OP-TEE is currently not supported on '%s' machine! To use it on a new "
+                 "machine, provide its OP-TEE settings (e.g. OPTEEMACHINE, UART_BASE_ADDR) and "
+                 "add it to HWS_OPTEE_SUPPORTED_MACHINES." % machine)
 
     if e.data.getVar('HWS_OPTEE_FS_RPMB') == '1' and e.data.getVar('HWS_OPTEE_FS_RPMB_MODE') == 'factory':
         bb.warn("The factory mode for OP-TEE RPMB support is intended for " \

@@ -1,7 +1,8 @@
 COMPATIBLE_MACHINE = "${MACHINE}"
 
-# include machine specific configuration
-require include/optee-tdx-${MACHINE}.inc
+# include machine specific configuration (provided here for the validated
+# machines; other machines can set it in their machine configuration)
+include include/optee-tdx-${MACHINE}.inc
 
 # make options to enable debug messages
 OPTEE_OS_DEBUG_OPTS = "\

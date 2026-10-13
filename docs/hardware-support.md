@@ -55,7 +55,9 @@ hardware yet; they are tracked as follow-up work:
   bootloader signing) are only attached to `u-boot-imx` and the Toradex U-Boot recipes.
   The OpenEmbedded Core `u-boot` recipe is not covered.
 - **Machine allowlists**: OP-TEE and secure debug check the machine name against a list
-  of validated machines and stop the build otherwise.
+  of validated machines (`HWS_OPTEE_SUPPORTED_MACHINES`,
+  `HWS_SECURE_DEBUG_SUPPORTED_MACHINES`) and stop the build otherwise. A new machine can
+  be added to the list from a configuration file, after providing its settings.
 - **Toradex defaults**: some defaults assume Toradex BSP images (e.g. the default
   `DM_VERITY_IMAGE`, the boot script amendments of the U-Boot hardening, the data
   partition support which requires Toradex Easy Installer images).
