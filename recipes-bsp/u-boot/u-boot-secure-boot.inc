@@ -46,7 +46,7 @@ require ${@oe.utils.conditional('UBOOT_SIGN_ENABLE', '1', 'u-boot-fit-signature.
 require ${@oe.utils.conditional('HWS_IMX_HAB_ENABLE', '1', 'u-boot-hab.inc', '', d)}
 
 # enable TI K3 secure boot support
-require ${@oe.utils.conditional('TDX_K3_SECBOOT_ENABLE', '1', 'u-boot-k3-secboot.inc', '', d)}
+require ${@oe.utils.conditional('HWS_K3_SECBOOT_ENABLE', '1', 'u-boot-k3-secboot.inc', '', d)}
 
 # enable U-Boot hardening
 require ${@oe.utils.conditional('TDX_UBOOT_HARDENING_ENABLE', '1', 'u-boot-harden.inc', '', d)}

@@ -5,7 +5,7 @@ update_signing_keys() {
     else
         echo "Updating signing keys directory '${S}/arch/arm/mach-k3/keys'"
         rm -Rf "${S}/arch/arm/mach-k3/keys"
-        cp -rv "${TDX_K3_SECBOOT_KEY_DIR}" "${S}/arch/arm/mach-k3/keys"
+        cp -rv "${HWS_K3_SECBOOT_KEY_DIR}" "${S}/arch/arm/mach-k3/keys"
     fi
 }
 
@@ -17,4 +17,4 @@ do_unpack:append() {
 require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'u-boot-k3-secboot-hsm.inc', '', d)}
 
 # enable reproducible certificate generation for the K3 boot container
-require ${@oe.utils.conditional('TDX_K3_SECBOOT_REPRODUCIBLE', '1', 'u-boot-k3-secboot-reproducible.inc', '', d)}
+require ${@oe.utils.conditional('HWS_K3_SECBOOT_REPRODUCIBLE', '1', 'u-boot-k3-secboot-reproducible.inc', '', d)}
