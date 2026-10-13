@@ -25,7 +25,7 @@ Before enabling this feature, make sure you have:
 HSM-backed image signing can be enabled by setting:
 
 ```
-TDX_SIGNED_HSM = "1"
+HWS_SIGNED_HSM = "1"
 ```
 
 When enabled, the build system uses the HSM through PKCS#11 to sign the images instead of relying on private keys stored on the filesystem. The variables described below can then be used to configure this behavior.
@@ -36,16 +36,16 @@ The following variables are available to configure HSM-backed signing of secure 
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_SIGNED_HSM` | Enable HSM-backed image signing. Allowed values are `0` and `1`. | `0` |
-| `TDX_SIGNED_HSM_TOKEN_PIN` | PIN used to access the token during signing. Avoid hardcoding this value in configuration files. It is recommended to provide it through an environment variable instead. See the following sections of this document for more details. | `""` |
-| `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` | Native package that provides the PKCS#11 implementation for the HSM. It is added as a dependency to recipes that need to access the token during signing. | `""` |
-| `TDX_SIGNED_HSM_PKCS11_MODULE_PATH` | Path to the PKCS#11 shared library, relative to the recipe native sysroot. | `""` |
-| `TDX_SIGNED_HSM_PKCS11_SOFTHSM_CONF` | Path to the SoftHSM configuration file. This is required when using SoftHSM, a software implementation of a PKCS#11 token commonly used for development and testing. | `${TOPDIR}/keys/softhsm/conf/softhsm2.conf` |
-| `TDX_SIGNED_HSM_K3_BINMAN_KEY_URL` | PKCS#11 URI of the private key used by binman to sign the TI K3 boot container. Only relevant when targeting a TI K3 SoM. | `""` |
-| `TDX_SIGNED_HSM_K3_OPENSSL_CONF` | Path to an OpenSSL configuration file activating the `pkcs11` provider, used when signing the TI K3 boot container. If empty, one is generated automatically at build time. | `""` |
-| `TDX_SIGNED_HSM_FIT_TOKEN_URL` | PKCS#11 URI identifying the token that contains the FIT signing key. | `""` |
-| `TDX_SIGNED_HSM_FIT_TOKEN_LABEL` | Label of the private key object used to sign the FIT image. | `""` |
-| `TDX_SIGNED_HSM_SUPPRESS_WARNINGS` | Suppress sanity-check warnings emitted when HSM variables are missing. Allowed values are `0` and `1`. | `0` |
+| `HWS_SIGNED_HSM` | Enable HSM-backed image signing. Allowed values are `0` and `1`. | `0` |
+| `HWS_SIGNED_HSM_TOKEN_PIN` | PIN used to access the token during signing. Avoid hardcoding this value in configuration files. It is recommended to provide it through an environment variable instead. See the following sections of this document for more details. | `""` |
+| `HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER` | Native package that provides the PKCS#11 implementation for the HSM. It is added as a dependency to recipes that need to access the token during signing. | `""` |
+| `HWS_SIGNED_HSM_PKCS11_MODULE_PATH` | Path to the PKCS#11 shared library, relative to the recipe native sysroot. | `""` |
+| `HWS_SIGNED_HSM_PKCS11_SOFTHSM_CONF` | Path to the SoftHSM configuration file. This is required when using SoftHSM, a software implementation of a PKCS#11 token commonly used for development and testing. | `${TOPDIR}/keys/softhsm/conf/softhsm2.conf` |
+| `HWS_SIGNED_HSM_K3_BINMAN_KEY_URL` | PKCS#11 URI of the private key used by binman to sign the TI K3 boot container. Only relevant when targeting a TI K3 SoM. | `""` |
+| `HWS_SIGNED_HSM_K3_OPENSSL_CONF` | Path to an OpenSSL configuration file activating the `pkcs11` provider, used when signing the TI K3 boot container. If empty, one is generated automatically at build time. | `""` |
+| `HWS_SIGNED_HSM_FIT_TOKEN_URL` | PKCS#11 URI identifying the token that contains the FIT signing key. | `""` |
+| `HWS_SIGNED_HSM_FIT_TOKEN_LABEL` | Label of the private key object used to sign the FIT image. | `""` |
+| `HWS_SIGNED_HSM_SUPPRESS_WARNINGS` | Suppress sanity-check warnings emitted when HSM variables are missing. Allowed values are `0` and `1`. | `0` |
 
 The following sections provide more details on how these variables are used.
 
@@ -55,7 +55,7 @@ A PKCS#11 provider is the shared library that implements the PKCS#11 API for a g
 
 Configuring the PKCS#11 provider is one of the first steps when enabling HSM-backed image signing.
 
-The most important variables for configuring the PKCS#11 provider are `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` and `TDX_SIGNED_HSM_PKCS11_MODULE_PATH`. The first ensures that the PKCS#11 module is built and installed into the native sysroot, and the second tells the signing tools which shared library to load.
+The most important variables for configuring the PKCS#11 provider are `HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER` and `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`. The first ensures that the PKCS#11 module is built and installed into the native sysroot, and the second tells the signing tools which shared library to load.
 
 The HSM signing flow in `meta-hardware-security` is designed to be provider-agnostic, as long as the HSM is accessible through a PKCS#11-compatible shared library available in the native sysroot. At the moment, the layer has been validated with the following providers:
 
@@ -65,24 +65,24 @@ The HSM signing flow in `meta-hardware-security` is designed to be provider-agno
 SoftHSM is useful for development, testing, and CI because it provides a PKCS#11-compatible software token without requiring dedicated hardware. Example configuration:
 
 ```
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
-TDX_SIGNED_HSM_PKCS11_SOFTHSM_CONF = "${TOPDIR}/keys/softhsm/conf/softhsm2.conf"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
+HWS_SIGNED_HSM_PKCS11_SOFTHSM_CONF = "${TOPDIR}/keys/softhsm/conf/softhsm2.conf"
 ```
 
 YubiKey is a widely used hardware-backed signing device and can be enabled with the following configuration:
 
 ```
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
 ```
 
 To use a different PKCS#11 provider, the layer does not usually require code changes, as long as the provider can be made available in the native sysroot and is compatible with the signing tools. In general, the following steps are required:
 
 - Make sure the HSM or token exposes a standard PKCS#11 shared library.
 - Add or reuse a native OpenEmbedded recipe that installs that shared library into the native sysroot.
-- Set `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` to the native recipe that provides the PKCS#11 module.
-- Set `TDX_SIGNED_HSM_PKCS11_MODULE_PATH` to the path of the shared library inside the native sysroot.
+- Set `HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER` to the native recipe that provides the PKCS#11 module.
+- Set `HWS_SIGNED_HSM_PKCS11_MODULE_PATH` to the path of the shared library inside the native sysroot.
 
 > **Note:** If the provider requires additional environment variables or runtime initialization, the build logic may need to be extended accordingly. For a reference, see `classes/hws-signed-hsm-env.bbclass`.
 
@@ -101,16 +101,16 @@ This is the key idea behind the HAB/AHAB HSM integration: the signing flow keeps
 For example, in a HAB configuration the certificate variables may be set as follows:
 
 ```
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 ```
 
 In an AHAB configuration, the corresponding variables are typically:
 
 ```
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=.%2FSRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=cst-hsm;object=.%2FSGK1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=.%2FSRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=cst-hsm;object=.%2FSGK1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 ```
 
 In these examples:
@@ -132,16 +132,16 @@ On TI K3 platforms, the boot container is signed during the U-Boot build by U-Bo
 
 Two variables control this:
 
-- `TDX_SIGNED_HSM_K3_BINMAN_KEY_URL` — the PKCS#11 URI of the SMPK private key object, forwarded to `binman` as the `keyfile` entry argument
-- `TDX_SIGNED_HSM_K3_OPENSSL_CONF` — optional path to an OpenSSL configuration file activating the `pkcs11` provider; when empty, one is generated automatically at build time using `TDX_SIGNED_HSM_PKCS11_MODULE_PATH`
+- `HWS_SIGNED_HSM_K3_BINMAN_KEY_URL` — the PKCS#11 URI of the SMPK private key object, forwarded to `binman` as the `keyfile` entry argument
+- `HWS_SIGNED_HSM_K3_OPENSSL_CONF` — optional path to an OpenSSL configuration file activating the `pkcs11` provider; when empty, one is generated automatically at build time using `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`
 
 A typical configuration looks like:
 
 ```
-TDX_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=boot-hsm;object=custMpk;type=private"
+HWS_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=boot-hsm;object=custMpk;type=private"
 ```
 
-If you want to provide your own OpenSSL configuration file instead of relying on the one generated by the build system, point `TDX_SIGNED_HSM_K3_OPENSSL_CONF` at it. The file must activate the `pkcs11` provider and configure it to load the PKCS#11 module corresponding to your HSM. A minimal example:
+If you want to provide your own OpenSSL configuration file instead of relying on the one generated by the build system, point `HWS_SIGNED_HSM_K3_OPENSSL_CONF` at it. The file must activate the `pkcs11` provider and configure it to load the PKCS#11 module corresponding to your HSM. A minimal example:
 
 ```
 openssl_conf = openssl_init
@@ -168,13 +168,13 @@ FIT image signing is handled by U-Boot's `mkimage` tool, which signs the FIT ima
 
 The main idea is similar to the HAB/AHAB configuration described in the previous section: instead of referring to local key files, the build is configured to reference key material stored in the HSM.
 
-In this case, however, the configuration is split into two variables: `TDX_SIGNED_HSM_FIT_TOKEN_URL` identifies the **token** and `TDX_SIGNED_HSM_FIT_TOKEN_LABEL` defines the **private key object inside that token**. The build system uses them to configure the U-Boot signing flow accordingly.
+In this case, however, the configuration is split into two variables: `HWS_SIGNED_HSM_FIT_TOKEN_URL` identifies the **token** and `HWS_SIGNED_HSM_FIT_TOKEN_LABEL` defines the **private key object inside that token**. The build system uses them to configure the U-Boot signing flow accordingly.
 
 The example below demonstrates the use of these variables:
 
 ```conf
-TDX_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
-TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
+HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
+HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 ```
 
 > **Note:** The exact token URL format depends on the PKCS#11 provider and the token being used. Attributes such as `model`, `manufacturer`, `serial`, and `token` may vary depending on the device and on how the token was provisioned.
@@ -184,80 +184,80 @@ TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 The following example shows a development setup using SoftHSM for image signing on iMX HAB based SoMs:
 
 ```
-TDX_SIGNED_HSM = "1"
+HWS_SIGNED_HSM = "1"
 
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
 
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
-TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=cst-hsm;object=SRK1_sha256_2048_65537_v3_ca;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_CSF_CERT = "pkcs11:token=cst-hsm;object=CSF1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_IMG_CERT = "pkcs11:token=cst-hsm;object=IMG1_1_sha256_2048_65537_v3_usr;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 
-TDX_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
-TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
+HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
+HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 ```
 
 The following example shows the configuration using Yubikey for image signing on iMX AHAB based SoMs:
 
 ```
-TDX_SIGNED_HSM = "1"
+HWS_SIGNED_HSM = "1"
 
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
 
-TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%06;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}" 
-TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%07;type=cert;pin-value=${TDX_SIGNED_HSM_TOKEN_PIN}"
+TDX_IMX_HAB_CST_SRK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%06;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}" 
+TDX_IMX_HAB_CST_SGK_CERT = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%07;type=cert;pin-value=${HWS_SIGNED_HSM_TOKEN_PIN}"
 
-TDX_SIGNED_HSM_FIT_TOKEN_URL = "model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=22863375;token=YubiKey%20PIV%20%2322863375;id=%12"
-TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"
+HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=YubiKey%20YK5;manufacturer=Yubico%20%28www.yubico.com%29;serial=22863375;token=YubiKey%20PIV%20%2322863375;id=%12"
+HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"
 ```
 
 The following example shows a development setup using SoftHSM for image signing on TI K3 based SoMs:
 
 ```
-TDX_SIGNED_HSM = "1"
+HWS_SIGNED_HSM = "1"
 
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "softhsm-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/softhsm/libsofthsm2.so"
 
-TDX_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=boot-hsm;object=custMpk;type=private"
+HWS_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=boot-hsm;object=custMpk;type=private"
 
-TDX_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
-TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
+HWS_SIGNED_HSM_FIT_TOKEN_URL = "model=SoftHSM%20v2;manufacturer=SoftHSM%20project;serial=984ed1d2002d1c09;token=fit-hsm"
+HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "fit-sign-key"
 ```
 
 The following example shows the configuration using YubiKey for image signing on TI K3 based SoMs:
 
 ```
-TDX_SIGNED_HSM = "1"
+HWS_SIGNED_HSM = "1"
 
-TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
-TDX_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
+HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER = "yubico-piv-tool-native"
+HWS_SIGNED_HSM_PKCS11_MODULE_PATH = "/usr/lib/libykcs11.so"
 
-TDX_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%05;type=private"
+HWS_SIGNED_HSM_K3_BINMAN_KEY_URL = "pkcs11:token=YubiKey%20PIV%20%2322863375;id=%05;type=private"
 
-TDX_SIGNED_HSM_FIT_TOKEN_URL = "token=YubiKey%20PIV%20%2322863375;id=%06"
-TDX_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"
+HWS_SIGNED_HSM_FIT_TOKEN_URL = "token=YubiKey%20PIV%20%2322863375;id=%06"
+HWS_SIGNED_HSM_FIT_TOKEN_LABEL = "yk-dev-key"
 ```
 
 ### Building the image
 
 When generating an image signed by HSM-backed keys, a critical step is providing the token PIN to the build system.
 
-Although `TDX_SIGNED_HSM_TOKEN_PIN` can be set like any other configuration variable, it is **not recommended** to hardcode the PIN in configuration files such as `local.conf`, machine configuration files, or layer metadata. Doing so would store sensitive information in plain text on disk, which is undesirable from a security perspective and makes it easier to leak the PIN value.
+Although `HWS_SIGNED_HSM_TOKEN_PIN` can be set like any other configuration variable, it is **not recommended** to hardcode the PIN in configuration files such as `local.conf`, machine configuration files, or layer metadata. Doing so would store sensitive information in plain text on disk, which is undesirable from a security perspective and makes it easier to leak the PIN value.
 
 A better approach is to pass the PIN through the environment only for the build that needs it. This reduces the exposure of the secret and keeps it out of the static build configuration.
 
 To allow BitBake to import the variable from the environment, first extend `BB_ENV_PASSTHROUGH_ADDITIONS`:
 
 ```
-$ export BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS TDX_SIGNED_HSM_TOKEN_PIN"
+$ export BB_ENV_PASSTHROUGH_ADDITIONS="$BB_ENV_PASSTHROUGH_ADDITIONS HWS_SIGNED_HSM_TOKEN_PIN"
 ```
 
 Then run `bitbake`, providing the PIN as an environment variable:
 
 ```
-$ TDX_SIGNED_HSM_TOKEN_PIN=123456 bitbake tdx-reference-minimal-image
+$ HWS_SIGNED_HSM_TOKEN_PIN=123456 bitbake tdx-reference-minimal-image
 ```
 
 With this approach, the PIN is available to the build system only at build time and does not need to be stored in configuration files.

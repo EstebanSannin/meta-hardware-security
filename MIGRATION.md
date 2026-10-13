@@ -69,3 +69,14 @@ and whether the compatibility shim covers it.
 | `tdx-optee` | `hws-optee` | class | yes (legacy wrapper class) |
 | `tdx-secure-debug` | `hws-secure-debug` | class | yes (legacy wrapper class) |
 | `:tdx-secure-debug` | `:hws-secure-debug` | override | yes (added to `DISTROOVERRIDES` when `hws-secure-debug` is inherited) |
+| `TDX_SIGNED_HSM` | `HWS_SIGNED_HSM` | variable | yes |
+| `TDX_SIGNED_HSM_TOKEN_PIN` | `HWS_SIGNED_HSM_TOKEN_PIN` | variable | yes |
+| `TDX_SIGNED_HSM_PKCS11_MODULE_PROVIDER` | `HWS_SIGNED_HSM_PKCS11_MODULE_PROVIDER` | variable | yes |
+| `TDX_SIGNED_HSM_PKCS11_MODULE_PATH` | `HWS_SIGNED_HSM_PKCS11_MODULE_PATH` | variable | yes |
+| `TDX_SIGNED_HSM_PKCS11_SOFTHSM_CONF` | `HWS_SIGNED_HSM_PKCS11_SOFTHSM_CONF` | variable | yes |
+| `TDX_SIGNED_HSM_FIT_TOKEN_URL` | `HWS_SIGNED_HSM_FIT_TOKEN_URL` | variable | yes |
+| `TDX_SIGNED_HSM_FIT_TOKEN_LABEL` | `HWS_SIGNED_HSM_FIT_TOKEN_LABEL` | variable | yes |
+| `TDX_SIGNED_HSM_K3_BINMAN_KEY_URL` | `HWS_SIGNED_HSM_K3_BINMAN_KEY_URL` | variable | yes |
+| `TDX_SIGNED_HSM_K3_OPENSSL_CONF` | `HWS_SIGNED_HSM_K3_OPENSSL_CONF` | variable | yes |
+| `TDX_SIGNED_HSM_SUPPRESS_WARNINGS` | `HWS_SIGNED_HSM_SUPPRESS_WARNINGS` | variable | yes |
+| `TDX_SIGNING_CLASS` | `HWS_SIGNING_CLASS` | variable | partly (the legacy wrapper classes set `TDX_SIGNING_CLASS` to the legacy class name) |

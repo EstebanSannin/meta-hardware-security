@@ -18,7 +18,7 @@ TDX_SECURE_DEBUG_ELE_AUTH_INTERNAL = "${@ '1' if d.getVar('TDX_SECURE_DEBUG_ENAB
 def tdx_secure_debug_srk_signer(d):
     import os
     import urllib.parse
-    if d.getVar('TDX_SIGNED_HSM') != '1':
+    if d.getVar('HWS_SIGNED_HSM') != '1':
         name = os.path.basename(make_srk_cert_name(d, '')).replace('_crt.pem', '_key.pem')
         return os.path.join(d.getVar('TDX_IMX_HAB_CST_DIR'), 'keys', name)
     uri = d.getVar('TDX_IMX_HAB_CST_SRK_CERT') or ''
@@ -26,14 +26,14 @@ def tdx_secure_debug_srk_signer(d):
     if not uri.startswith('pkcs11:') or 'token' not in attrs or \
             ('object' not in attrs and 'id' not in attrs):
         bb.fatal("TDX_IMX_HAB_CST_SRK_CERT must be a PKCS#11 URI with a 'token' attribute "
-                 "and an 'object' or 'id' attribute when TDX_SIGNED_HSM=1 (got '%s')." % uri)
+                 "and an 'object' or 'id' attribute when HWS_SIGNED_HSM=1 (got '%s')." % uri)
     # the SPSDK PKCS#11 signer selects the key by label or by hexadecimal ID
     if 'object' in attrs:
         key = 'key_label=%s' % urllib.parse.unquote(attrs['object'])
     else:
         key = 'key_id=%s' % urllib.parse.unquote_to_bytes(attrs['id']).hex()
     return 'type=pkcs11;so_path=%s;user_pin=$SPSDK_HSM_PIN;token_label=%s;%s' % (
-        d.getVar('TDX_SIGNED_HSM_PKCS11_MODULE_PATH'),
+        d.getVar('HWS_SIGNED_HSM_PKCS11_MODULE_PATH'),
         urllib.parse.unquote(attrs['token']), key)
 
 # generate the SPSDK configuration files (dc.yaml and dat.yaml) for authenticated debug

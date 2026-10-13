@@ -5,4 +5,4 @@ inherit hws-signed
 inherit hws-signed-dmverity
 
 # override signing class name (informational, may be displayed to users)
-TDX_SIGNING_CLASS = "hws-signed-verity"
+HWS_SIGNING_CLASS = "hws-signed-verity"

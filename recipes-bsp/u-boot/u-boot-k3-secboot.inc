@@ -1,5 +1,5 @@
 update_signing_keys() {
-    if [ "${TDX_SIGNED_HSM}" = "1" ]; then
+    if [ "${HWS_SIGNED_HSM}" = "1" ]; then
         echo "HSM-backed signing: skipping copy of on-disk signing keys"
         return 0
     else
@@ -14,7 +14,7 @@ do_unpack:append() {
 }
 
 # enable HSM-backed signing for the K3 boot container
-require ${@oe.utils.conditional('TDX_SIGNED_HSM', '1', 'u-boot-k3-secboot-hsm.inc', '', d)}
+require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'u-boot-k3-secboot-hsm.inc', '', d)}
 
 # enable reproducible certificate generation for the K3 boot container
 require ${@oe.utils.conditional('TDX_K3_SECBOOT_REPRODUCIBLE', '1', 'u-boot-k3-secboot-reproducible.inc', '', d)}

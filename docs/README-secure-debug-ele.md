@@ -68,7 +68,7 @@ In authenticated mode, no debug secret is programmed into the device, and the bu
 - `dc.yaml`, used to create the debug credential. It references the SRK certificate and private key of the secure boot PKI (`TDX_IMX_HAB_CST_DIR`, `TDX_IMX_HAB_CST_SRK_INDEX`), the DCK set in `TDX_SECURE_DEBUG_ELE_DCK_KEY`, the debug domains and the device UUID.
 - `dat.yaml`, used to authenticate a debug session with that credential. It references the DCK and the SRK table of the secure boot PKI.
 
-The templates contain paths, not keys. When the secure boot keys are stored in an HSM (`TDX_SIGNED_HSM = "1"`), `dc.yaml` accesses the SRK private key through the SPSDK PKCS#11 plugin instead, using the token and object of `TDX_IMX_HAB_CST_SRK_CERT` and the module set in `TDX_SIGNED_HSM_PKCS11_MODULE_PATH`. See [Creating the credential with an HSM](#creating-the-credential-with-an-hsm).
+The templates contain paths, not keys. When the secure boot keys are stored in an HSM (`HWS_SIGNED_HSM = "1"`), `dc.yaml` accesses the SRK private key through the SPSDK PKCS#11 plugin instead, using the token and object of `TDX_IMX_HAB_CST_SRK_CERT` and the module set in `HWS_SIGNED_HSM_PKCS11_MODULE_PATH`. See [Creating the credential with an HSM](#creating-the-credential-with-an-hsm).
 
 Authenticated debug on the iMX95 requires a secure boot PKI with **ECC keys and without the CA flag** on the SRKs (for example, created with `ahab_pki_tree.sh -kt ecc -kl p384 -da sha384 -srk-ca n`), and a DCK of the **same key type** as the SRKs. See [Limitations](#limitations).
 

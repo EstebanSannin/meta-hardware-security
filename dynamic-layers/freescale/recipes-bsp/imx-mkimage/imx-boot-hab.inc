@@ -52,7 +52,7 @@ sign_ahab_image() {
     TDX_IMX_HAB_CST_SGK_CERT="${TDX_IMX_HAB_CST_SGK_CERT}" \
     TDX_IMX_HAB_CST_SGK_SUPP="${TDX_IMX_HAB_CST_SGK_SUPP}" \
     TDX_IMX_HAB_CST_TEMPLATE="${TDX_IMX_HAB_CST_TEMPLATE}" \
-    TDX_IMX_HAB_CST_HSM="${TDX_SIGNED_HSM}" \
+    TDX_IMX_HAB_CST_HSM="${HWS_SIGNED_HSM}" \
     TDX_IMX_HAB_CST_SRK_CA="${TDX_IMX_HAB_CST_SRK_CA}" \
     TDX_IMX_HAB_CST_SRK_INDEX="${TDX_IMX_HAB_CST_SRK_INDEX}" \
     UNSIGNED_IMAGE="${orig_image}" \
@@ -124,7 +124,7 @@ sign_common() {
     # cannot be used to check if the CA flag is enabled, so in this case we use the
     # TDX_IMX_HAB_CST_SRK_CA variable to check if CA is enabled
     local ca_flag_warn=0
-    if [ "${TDX_SIGNED_HSM}" = "1" ]; then
+    if [ "${HWS_SIGNED_HSM}" = "1" ]; then
         if [ "${TDX_IMX_HAB_CST_SRK_CA}" = "1" ] && [ "${TDX_IMX_HAB_CST_SGK_SUPP}" = "0" ]; then
             ca_flag_warn=1
         fi
@@ -215,4 +215,4 @@ do_deploy:append() {
     fi
 }
 
-require ${@oe.utils.conditional('TDX_SIGNED_HSM', '1', 'imx-boot-hab-hsm.inc', '', d)}
+require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'imx-boot-hab-hsm.inc', '', d)}

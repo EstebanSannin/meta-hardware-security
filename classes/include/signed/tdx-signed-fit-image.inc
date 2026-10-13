@@ -44,7 +44,7 @@ python validate_fit_signing_keys() {
         return
 
     # In HSM mode, UBOOT_SIGN_KEYDIR holds a PKCS#11 URI, not a filesystem path
-    if e.data.getVar("TDX_SIGNED_HSM") == "1":
+    if e.data.getVar("HWS_SIGNED_HSM") == "1":
         return
 
     # When auto-generation is enabled, the keys are produced at build time

@@ -16,12 +16,12 @@ require ${@ 'include/signed/tdx-signed-k3-secboot.inc' if 'k3' in d.getVar('OVER
 require include/signed/tdx-signed-harden.inc
 
 # HSM configuration
-TDX_SIGNED_HSM ?= "0"
-require ${@oe.utils.conditional('TDX_SIGNED_HSM', '1', 'include/signed/tdx-signed-hsm.inc', '', d)}
+HWS_SIGNED_HSM ?= "0"
+require ${@oe.utils.conditional('HWS_SIGNED_HSM', '1', 'include/signed/tdx-signed-hsm.inc', '', d)}
 
 # machine-specific fixups for the signed image
 include include/signed/machine/${MACHINE}.inc
 
 # signing class name (informational, may be displayed to users);
 # derived classes should override this
-TDX_SIGNING_CLASS = "hws-signed"
+HWS_SIGNING_CLASS = "hws-signed"
