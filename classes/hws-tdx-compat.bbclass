@@ -18,8 +18,9 @@
 #   assignments such as TDX_X:tdx-signed) is moved to the new name, and a
 #   deprecation warning is shown once per legacy variable actually used. If the
 #   new variable is also set, the new one wins and the legacy one is ignored.
-#   Afterwards the legacy name is kept as an alias of the new one
-#   (LEGACY = "${NEW}"), so code that reads the legacy name keeps working.
+#   Afterwards the legacy name is kept as an alias of the new one, so code
+#   that reads the legacy name keeps working (it reads an empty string when
+#   the new variable is unset).
 #   Only the variables listed in the table are touched; other TDX_* variables
 #   (e.g. defined by other layers) are left alone.
 #
@@ -67,7 +68,9 @@ def hws_tdx_compat_is_used(d, var):
     return bool(d.overridedata.get(var))
 
 def hws_tdx_compat_move(d, old, new, prefer_legacy):
-    alias = '${%s}' % new
+    # Expands to the value of the new variable, or to an empty string when it
+    # is unset (a plain "${NEW}" would expand to that literal text instead).
+    alias = "${@d.getVar('%s') or ''}" % new
 
     if hws_tdx_compat_is_used(d, old):
         if not prefer_legacy and hws_tdx_compat_is_used(d, new):

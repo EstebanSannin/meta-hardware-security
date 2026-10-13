@@ -37,9 +37,9 @@ What it does:
   - a deprecation warning is printed for each legacy variable actually used;
   - if both the legacy and the new name are set in configuration files, the new name wins
     and a warning is printed;
-  - the legacy name stays readable: it becomes an alias of the new one
-    (`TDX_X = "${HWS_X}"`), so code reading `d.getVar('TDX_X')` or `${TDX_X}` keeps
-    working;
+  - the legacy name stays readable: it becomes an alias of the new one, so code
+    reading `d.getVar('TDX_X')` or `${TDX_X}` keeps working (when the new variable is
+    unset the legacy name reads as an empty string rather than `None`);
   - legacy assignments made in configuration files and in classes inherited before the
     compat class are applied at parse time, so they also drive parse-time conditionals
     (`require ${@...}`). Legacy assignments made in recipes or bbappends are applied
