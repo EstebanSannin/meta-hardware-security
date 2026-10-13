@@ -51,9 +51,13 @@ hardware yet; they are tracked as follow-up work:
   kernel recipe that merges `.cfg` fragments from `SRC_URI` (e.g. `linux-yocto`); this
   is not yet validated on a non-NXP kernel. Some fragments are SoC-specific (e.g. the
   `caam` key backend) and only make sense on the matching SoC.
-- **U-Boot integration**: the U-Boot changes (FIT signature enforcement, hardening,
-  bootloader signing) are only attached to `u-boot-imx` and the Toradex U-Boot recipes.
-  The OpenEmbedded Core `u-boot` recipe is not covered.
+- **U-Boot integration** (partly addressed): the U-Boot side of the layer is attached to
+  `u-boot-toradex`, `u-boot-toradex-ti` and `u-boot-imx` with the Toradex U-Boot patch
+  set (`HWS_UBOOT_FLAVOR = "toradex"`), and to the OpenEmbedded Core `u-boot` and TI
+  `u-boot-ti-staging` recipes with the generic parts only (`HWS_UBOOT_FLAVOR =
+  "generic"`: FIT signature enforcement, key embedding and SoC bootloader signing, no
+  U-Boot hardening). The generic flavor is not yet validated on hardware. Other U-Boot
+  recipes need a one-line bbappend (a build warning explains it).
 - **Machine allowlists**: OP-TEE and secure debug check the machine name against a list
   of validated machines (`HWS_OPTEE_SUPPORTED_MACHINES`,
   `HWS_SECURE_DEBUG_SUPPORTED_MACHINES`) and stop the build otherwise. A new machine can

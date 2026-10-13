@@ -92,6 +92,25 @@ HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG = "CMD_CAT_ALL_SAFE CMD_CAT_GPIO_CONTROL"
 
 - On TI K3 SoCs (e.g. AM62x, AM69), the hardening does not cover the bootloader running on the R5 processor (the boot master); we have plans to evaluate the need for such a protection and implementing it if actually needed.
 
+## U-Boot recipes
+
+The U-Boot side of the layer is attached to the following U-Boot recipes:
+
+| Recipe | `HWS_UBOOT_FLAVOR` | What is applied |
+| :----- | :----------------- | :-------------- |
+| `u-boot-toradex`, `u-boot-toradex-ti`, `u-boot-imx` | `toradex` | FIT signature enforcement, SoC bootloader signing and the Toradex U-Boot patch set (secure boot module, `hab_status` exit codes, U-Boot hardening) |
+| `u-boot` (OpenEmbedded Core), `u-boot-ti-staging` (meta-ti) | `generic` | FIT signature enforcement and SoC bootloader signing only; U-Boot hardening is not available |
+
+The Toradex U-Boot patches are written for the Toradex U-Boot recipes and do not apply to other U-Boot versions, hence the two flavors. `HWS_UBOOT_FLAVOR` can be set per recipe (e.g. `HWS_UBOOT_FLAVOR:pn-my-u-boot = "toradex"` for a U-Boot recipe derived from the Toradex one).
+
+To use the layer with another U-Boot recipe, add a bbappend for it containing:
+
+```
+require recipes-bsp/u-boot/u-boot-sec-features.inc
+```
+
+and append the recipe to `HWS_UBOOT_HOOKED_RECIPES`; otherwise a warning reminds you that the machine's bootloader (`PREFERRED_PROVIDER_virtual/bootloader`) is not covered.
+
 ## Configuring FIT image signing
 
 When the `hws-signed` or `hws-signed-verity` class is inherited, generating and signing a FIT image is enabled by default. Set `UBOOT_SIGN_ENABLE` to `0` to disable it.
