@@ -1,5 +1,5 @@
 [Unit]
-Description=Encryption handler for Toradex modules
+Description=Data-at-rest encryption handler
 DefaultDependencies=no
 @@DEPENDENCIES@@
 RequiresMountsFor=/tmp /var

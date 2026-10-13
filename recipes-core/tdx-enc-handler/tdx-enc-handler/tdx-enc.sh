@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Toradex encryption handler
+# Data-at-rest encryption handler
 
 # backend used to manage the encryption key
 TDX_ENC_KEY_BACKEND="@@HWS_ENC_KEY_BACKEND@@"

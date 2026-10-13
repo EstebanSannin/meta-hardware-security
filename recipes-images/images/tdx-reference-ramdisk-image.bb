@@ -1,4 +1,4 @@
-SUMMARY = "Toradex Embedded Linux Reference Ramdisk Image"
+SUMMARY = "Ramdisk image to boot a dm-verity protected root filesystem"
 DESCRIPTION = "Minimal ramdisk image to boot a dm-verity based rootfs"
 
 LICENSE = "MIT"
