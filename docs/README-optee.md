@@ -25,10 +25,10 @@ This layer provides support for running OP-TEE on the following SoMs:
 
 ## Enabling OP-TEE
 
-To enable OP-TEE on the supported hardware platforms, one needs to globally inherit the `tdx-optee` class by adding the following line to an OE configuration file (e.g. `local.conf`):
+To enable OP-TEE on the supported hardware platforms, one needs to globally inherit the `hws-optee` class by adding the following line to an OE configuration file (e.g. `local.conf`):
 
 ```
-INHERIT += "tdx-optee"
+INHERIT += "hws-optee"
 ```
 
 A few variables can be used to customize the behavior of this feature:
