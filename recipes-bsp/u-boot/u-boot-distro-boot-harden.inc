@@ -9,12 +9,12 @@
 # for Toradex BSP Reference images, this is done by the u-boot-distro-boot
 # recipe provided by layer meta-toradex-bsp-common.
 #
-FITCONF_FDT_OVERLAYS .= "${@oe.utils.conditional('TDX_UBOOT_HARDENING_ENABLE', '1', '#conf-${TDX_SECBOOT_KARGS_OVERLAY}.dtbo', '', d)}"
+FITCONF_FDT_OVERLAYS .= "${@oe.utils.conditional('HWS_UBOOT_HARDENING_ENABLE', '1', '#conf-${HWS_SECBOOT_KARGS_OVERLAY}.dtbo', '', d)}"
 
 # Whether or not to amend the boot script (this only works with the Toradex-
 # provided boot script for BSP images); users utilizing a custom boot script
 # would likely set this variable to "0".
-TDX_AMEND_BOOT_SCRIPT ?= "${TDX_UBOOT_HARDENING_ENABLE}"
+TDX_AMEND_BOOT_SCRIPT ?= "${HWS_UBOOT_HARDENING_ENABLE}"
 
 # Variables controlling the individual amendments:
 TDX_AMEND_CONSOLE_ARGUMENT ?= "${TDX_AMEND_BOOT_SCRIPT}"

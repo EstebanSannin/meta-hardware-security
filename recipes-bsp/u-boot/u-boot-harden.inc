@@ -1,12 +1,12 @@
-TDX_UBOOT_HARDENING_PATCHES_COMMON = "\
+HWS_UBOOT_HARDENING_PATCHES_COMMON = "\
     file://0001-toradex-common-add-shared-hardening-modules.patch \
     file://0002-toradex-dts-add-fragment-file-to-configure-secure-bo.patch \
 "
 
 # TODO: Add "cp" protection to NXP downstream U-Boot.
 # TODO: Add "fastboot" protection to NXP downstream U-Boot.
-TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM = "\
-    ${TDX_UBOOT_HARDENING_PATCHES_COMMON} \
+HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM = "\
+    ${HWS_UBOOT_HARDENING_PATCHES_COMMON} \
     file://0001-toradex-integrate-command-whitelisting-downstream.patch \
     file://0002-toradex-integrate-bootm-protection-downstream.patch \
     file://0003-toradex-integrate-CLI-access-protection-downstream.patch \
@@ -19,8 +19,8 @@ TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM = "\
 
 # TODO: Add "cp" protection to TI downstream U-Boot.
 # TODO: Add "fastboot" protection to TI downstream U-Boot.
-TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM_K3 = "\
-    ${TDX_UBOOT_HARDENING_PATCHES_COMMON} \
+HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM_K3 = "\
+    ${HWS_UBOOT_HARDENING_PATCHES_COMMON} \
     file://0001-toradex-integrate-command-whitelisting-k3.patch \
     file://0002-toradex-integrate-bootm-protection-downstream.patch \
     file://0003-toradex-integrate-CLI-access-protection-downstream.patch \
@@ -31,8 +31,8 @@ TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM_K3 = "\
     file://0008-toradex-cmd-setexpr-integrate-protections-downstream.patch \
 "
 
-TDX_UBOOT_HARDENING_PATCHES_UPSTREAM = "\
-    ${TDX_UBOOT_HARDENING_PATCHES_COMMON} \
+HWS_UBOOT_HARDENING_PATCHES_UPSTREAM = "\
+    ${HWS_UBOOT_HARDENING_PATCHES_COMMON} \
     file://0001-toradex-integrate-command-whitelisting-upstream.patch \
     file://0002-toradex-integrate-bootm-protection-upstream.patch \
     file://0003-toradex-integrate-CLI-access-protection-upstream.patch \
@@ -45,51 +45,51 @@ TDX_UBOOT_HARDENING_PATCHES_UPSTREAM = "\
     file://0010-toradex-cmd-setexpr-integrate-protections-upstream.patch \
 "
 
-TDX_UBOOT_HARDENING_PATCHES = "${TDX_UBOOT_HARDENING_PATCHES_UPSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:apalis-imx8 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:colibri-imx8x = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:toradex-smarc-imx95 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:verdin-imx95 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:aquila-imx95 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:lino-imx93 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:toradex-osm-imx93 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
-TDX_UBOOT_HARDENING_PATCHES:k3 = "${TDX_UBOOT_HARDENING_PATCHES_DOWNSTREAM_K3}"
-TDX_UBOOT_HARDENING_PATCHES:k3r5 = ""
+HWS_UBOOT_HARDENING_PATCHES = "${HWS_UBOOT_HARDENING_PATCHES_UPSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:apalis-imx8 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:colibri-imx8x = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:toradex-smarc-imx95 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:verdin-imx95 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:aquila-imx95 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:lino-imx93 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:toradex-osm-imx93 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM}"
+HWS_UBOOT_HARDENING_PATCHES:k3 = "${HWS_UBOOT_HARDENING_PATCHES_DOWNSTREAM_K3}"
+HWS_UBOOT_HARDENING_PATCHES:k3r5 = ""
 
 SRC_URI:append = "\
     file://u-boot-harden.cfg \
-    ${@oe.utils.conditional('TDX_UBOOT_HARDENING_ENABLE_DBG', '1', 'file://u-boot-harden-dbg.cfg', '', d)} \
-    ${@oe.utils.conditional('TDX_UBOOT_HARDENING_ENABLE_CP_PROT', '1', 'file://u-boot-harden-cp-prot.cfg', '', d)} \
-    ${@oe.utils.conditional('TDX_UBOOT_HARDENING_ENABLE_FB_PROT', '1', 'file://u-boot-harden-fb-prot.cfg', '', d)} \
-    ${TDX_UBOOT_HARDENING_PATCHES} \
+    ${@oe.utils.conditional('HWS_UBOOT_HARDENING_ENABLE_DBG', '1', 'file://u-boot-harden-dbg.cfg', '', d)} \
+    ${@oe.utils.conditional('HWS_UBOOT_HARDENING_ENABLE_CP_PROT', '1', 'file://u-boot-harden-cp-prot.cfg', '', d)} \
+    ${@oe.utils.conditional('HWS_UBOOT_HARDENING_ENABLE_FB_PROT', '1', 'file://u-boot-harden-fb-prot.cfg', '', d)} \
+    ${HWS_UBOOT_HARDENING_PATCHES} \
 "
 
 # Default values for the various whitelist categories; these can be overriden by
 # other layers without impacting the final user-overridable variables below.
-TDX_SECBOOT_WL_ALLOW_OPEN_CATEG_DEFAULT ?= ""
-TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG_DEFAULT ?= ""
-TDX_SECBOOT_WL_DENY_OPEN_CATEG_DEFAULT ?= ""
-TDX_SECBOOT_WL_DENY_CLOSED_CATEG_DEFAULT ?= ""
-TDX_SECBOOT_WL_NEEDED_CATEG_DEFAULT ?= ""
+HWS_SECBOOT_WL_ALLOW_OPEN_CATEG_DEFAULT ?= ""
+HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG_DEFAULT ?= ""
+HWS_SECBOOT_WL_DENY_OPEN_CATEG_DEFAULT ?= ""
+HWS_SECBOOT_WL_DENY_CLOSED_CATEG_DEFAULT ?= ""
+HWS_SECBOOT_WL_NEEDED_CATEG_DEFAULT ?= ""
 
 # User-overridable command categories for the whitelist feature; when empty the
 # default set in the code (U-Boot will be used).
-TDX_SECBOOT_WL_ALLOW_OPEN_CATEG ?= "${TDX_SECBOOT_WL_ALLOW_OPEN_CATEG_DEFAULT}"
-TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG ?= "${TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG_DEFAULT}"
-TDX_SECBOOT_WL_DENY_OPEN_CATEG ?= "${TDX_SECBOOT_WL_DENY_OPEN_CATEG_DEFAULT}"
-TDX_SECBOOT_WL_DENY_CLOSED_CATEG ?= "${TDX_SECBOOT_WL_DENY_CLOSED_CATEG_DEFAULT}"
-TDX_SECBOOT_WL_NEEDED_CATEG ?= "${TDX_SECBOOT_WL_NEEDED_CATEG_DEFAULT}"
+HWS_SECBOOT_WL_ALLOW_OPEN_CATEG ?= "${HWS_SECBOOT_WL_ALLOW_OPEN_CATEG_DEFAULT}"
+HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG ?= "${HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG_DEFAULT}"
+HWS_SECBOOT_WL_DENY_OPEN_CATEG ?= "${HWS_SECBOOT_WL_DENY_OPEN_CATEG_DEFAULT}"
+HWS_SECBOOT_WL_DENY_CLOSED_CATEG ?= "${HWS_SECBOOT_WL_DENY_CLOSED_CATEG_DEFAULT}"
+HWS_SECBOOT_WL_NEEDED_CATEG ?= "${HWS_SECBOOT_WL_NEEDED_CATEG_DEFAULT}"
 # TODO: Consider new variable to configure 'enable-cli-when-closed' property.
 
 inherit cml1
 
-TDX_SECBOOT_DEVICE_TREE_INCLUDES = "tdx-secboot.dtsi"
+HWS_SECBOOT_DEVICE_TREE_INCLUDES = "tdx-secboot.dtsi"
 
 do_patch[postfuncs] += "amend_secboot_dtsi"
 amend_secboot_dtsi_cell_prop() {
     prop="$1"
     value="$2"
-    dtsi="${S}/arch/arm/dts/${TDX_SECBOOT_DEVICE_TREE_INCLUDES}"
+    dtsi="${S}/arch/arm/dts/${HWS_SECBOOT_DEVICE_TREE_INCLUDES}"
 
     if ! grep -q "${prop} = <.*>" "${dtsi}"; then
         bbwarn "Property '${prop}' will not be honored because it is not present in '${dtsi}'"
@@ -101,29 +101,29 @@ amend_secboot_dtsi_cell_prop() {
 }
 
 amend_secboot_dtsi() {
-    if [ -n "${TDX_SECBOOT_WL_ALLOW_OPEN_CATEG}" ]; then
+    if [ -n "${HWS_SECBOOT_WL_ALLOW_OPEN_CATEG}" ]; then
         amend_secboot_dtsi_cell_prop \
-	    "allow-open" "${TDX_SECBOOT_WL_ALLOW_OPEN_CATEG}"
+	    "allow-open" "${HWS_SECBOOT_WL_ALLOW_OPEN_CATEG}"
     fi
 
-    if [ -n "${TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG}" ]; then
+    if [ -n "${HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG}" ]; then
         amend_secboot_dtsi_cell_prop \
-	    "allow-closed" "${TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG}"
+	    "allow-closed" "${HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG}"
     fi
 
-    if [ -n "${TDX_SECBOOT_WL_DENY_OPEN_CATEG}" ]; then
+    if [ -n "${HWS_SECBOOT_WL_DENY_OPEN_CATEG}" ]; then
         amend_secboot_dtsi_cell_prop \
-	    "deny-open" "${TDX_SECBOOT_WL_DENY_OPEN_CATEG}"
+	    "deny-open" "${HWS_SECBOOT_WL_DENY_OPEN_CATEG}"
     fi
 
-    if [ -n "${TDX_SECBOOT_WL_DENY_CLOSED_CATEG}" ]; then
+    if [ -n "${HWS_SECBOOT_WL_DENY_CLOSED_CATEG}" ]; then
         amend_secboot_dtsi_cell_prop \
-	    "deny-closed" "${TDX_SECBOOT_WL_DENY_CLOSED_CATEG}"
+	    "deny-closed" "${HWS_SECBOOT_WL_DENY_CLOSED_CATEG}"
     fi
 
-    if [ -n "${TDX_SECBOOT_WL_NEEDED_CATEG}" ]; then
+    if [ -n "${HWS_SECBOOT_WL_NEEDED_CATEG}" ]; then
         amend_secboot_dtsi_cell_prop \
-	    "needed" "${TDX_SECBOOT_WL_NEEDED_CATEG}"
+	    "needed" "${HWS_SECBOOT_WL_NEEDED_CATEG}"
     fi
 }
 
@@ -159,7 +159,7 @@ _make_dt_includes_fragment() {
 
     # Append the desired includes:
     [ -n "${incs}" ] && incs="${incs} "
-    incs="${incs}${TDX_SECBOOT_DEVICE_TREE_INCLUDES}"
+    incs="${incs}${HWS_SECBOOT_DEVICE_TREE_INCLUDES}"
 
     bbdebug 1 "Updated value of CONFIG_DEVICE_TREE_INCLUDES='${incs}'"
     bbdebug 1 "Writing fragment file into '${frag_file}'"
@@ -186,9 +186,9 @@ extend_device_tree_includes() {
     cml1_do_configure
 }
 
-TDX_CHECK_UNSUPP_BOOTMETH ?= "1"
+HWS_CHECK_UNSUPP_BOOTMETH ?= "1"
 do_configure[postfuncs] += "\
-    ${@oe.utils.conditional('TDX_CHECK_UNSUPP_BOOTMETH', '1', 'check_dotconfig_compat_all', '', d)} \
+    ${@oe.utils.conditional('HWS_CHECK_UNSUPP_BOOTMETH', '1', 'check_dotconfig_compat_all', '', d)} \
 "
 check_dotconfig_compat_all() {
     if [ -n "${UBOOT_CONFIG}" ]; then
@@ -228,9 +228,9 @@ check_dotconfig_compat() {
     fi
 }
 
-TDX_DISABLE_UNSUPP_BOOTMETH ?= "1"
+HWS_DISABLE_UNSUPP_BOOTMETH ?= "1"
 SRC_URI:append = "\
-    ${@oe.utils.conditional('TDX_DISABLE_UNSUPP_BOOTMETH', '1', 'file://disable-bootmeths.cfg', '', d)} \
+    ${@oe.utils.conditional('HWS_DISABLE_UNSUPP_BOOTMETH', '1', 'file://disable-bootmeths.cfg', '', d)} \
 "
 
 CP_PROT_SUPPORTED ?= "0"
@@ -254,17 +254,17 @@ FB_PROT_SUPPORTED:verdin-imx8mm ?= "1"
 FB_PROT_SUPPORTED:verdin-imx8mp ?= "1"
 
 do_compile:prepend() {
-    if [ "${TDX_UBOOT_HARDENING_ENABLE_DBG}" != "0" ]; then
+    if [ "${HWS_UBOOT_HARDENING_ENABLE_DBG}" != "0" ]; then
         bbwarn 'Debugging of the hardening feature is enabled; be sure to disable it for production.'
     fi
-    if [ "${TDX_UBOOT_HARDENING_ENABLE_CP_PROT}" != "0" ]; then
+    if [ "${HWS_UBOOT_HARDENING_ENABLE_CP_PROT}" != "0" ]; then
         if [ "${CP_PROT_SUPPORTED}" != "1" ]; then
             bbfatal '"cp" command protection is not supported/tested on the current machine' \
                     '(set CP_PROT_SUPPORTED="1" to bypass this error check at your own risk).'
         fi
         bbwarn 'Hardening of the "cp" command is enabled; do this only when strictly required.'
     fi
-    if [ "${TDX_UBOOT_HARDENING_ENABLE_FB_PROT}" != "0" ]; then
+    if [ "${HWS_UBOOT_HARDENING_ENABLE_FB_PROT}" != "0" ]; then
         if [ "${FB_PROT_SUPPORTED}" != "1" ]; then
             bbfatal 'Fastboot protection is not supported/tested on the current machine' \
                     '(set FB_PROT_SUPPORTED="1" to bypass this error check at your own risk).'
@@ -274,23 +274,23 @@ do_compile:prepend() {
 }
 
 do_compile:prepend:imx-generic-bsp() {
-    if [ "${HWS_IMX_HAB_ENABLE}" = "0" ] && [ "${TDX_UBOOT_HARDENING_ENABLE}" = "1" ]; then
-        bbfatal 'The combination HWS_IMX_HAB_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
+    if [ "${HWS_IMX_HAB_ENABLE}" = "0" ] && [ "${HWS_UBOOT_HARDENING_ENABLE}" = "1" ]; then
+        bbfatal 'The combination HWS_IMX_HAB_ENABLE="0" and HWS_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
                 'the whitelisting feature (part of the hardening) currently relies on HAB/AHAB.'
     fi
 }
 
 do_compile:prepend:k3() {
-    if [ "${HWS_K3_SECBOOT_ENABLE}" = "0" ] && [ "${TDX_UBOOT_HARDENING_ENABLE}" = "1" ]; then
-        bbfatal 'The combination HWS_K3_SECBOOT_ENABLE="0" and TDX_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
+    if [ "${HWS_K3_SECBOOT_ENABLE}" = "0" ] && [ "${HWS_UBOOT_HARDENING_ENABLE}" = "1" ]; then
+        bbfatal 'The combination HWS_K3_SECBOOT_ENABLE="0" and HWS_UBOOT_HARDENING_ENABLE="1" is not allowed:' \
                 'the whitelisting feature (part of the hardening) currently relies on K3.'
     fi
 }
 
 do_compile:prepend:k3r5() {
     # TODO: Consider implementing some kind of hardening for the R5 processor.
-    if [ "${TDX_UBOOT_HARDENING_ENABLE}" = "1" ]; then
+    if [ "${HWS_UBOOT_HARDENING_ENABLE}" = "1" ]; then
         bbfatal 'The hardening cannot be enabled for the R5 processor at the moment;' \
-	        'please review your setting of TDX_UBOOT_HARDENING_ENABLE.'
+	        'please review your setting of HWS_UBOOT_HARDENING_ENABLE.'
     fi
 }

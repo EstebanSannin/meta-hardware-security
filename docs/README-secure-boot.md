@@ -75,16 +75,16 @@ The hardening features are controlled by the variables in the following table pl
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_UBOOT_HARDENING_ENABLE` | Enable hardening features as a whole | `1` if both secure boot support (controlled by variable `HWS_IMX_HAB_ENABLE` (NXP) or `HWS_K3_SECBOOT_ENABLE` (TI)) and FIT signing (controlled by `UBOOT_SIGN_ENABLE`) are enabled; `0` otherwise |
-| `TDX_UBOOT_HARDENING_ENABLE_DBG` | Enable debugging of the hardening features; among other things this adds a command to U-Boot that allows the hardening and the device state (open/closed in terms of secure boot) to be manually set for testing purposes - **never** do this in production | `0` |
-| `TDX_UBOOT_HARDENING_ENABLE_CP_PROT` | Enable the hardening of the "cp" command and allow it to pass the whitelist; this should be enabled only when strictly required by the boot script (standard Toradex boot scripts do not need this) | `0` |
-| `TDX_UBOOT_HARDENING_ENABLE_FB_PROT` | Enable the hardening of the Fastboot protocol and allow the "fastboot" command to pass the whitelist; this should be enabled only when building a bootloader for use via Fastboot (such as the one belonging to the Toradex Easy Installer) | `0` |
-| `TDX_SECBOOT_REQUIRED_BOOTARGS` | Expected value for the fixed part of the kernel command line | Different value for each machine |
-| `TDX_AMEND_BOOT_SCRIPT` | When set to `1` the boot script will be amended to make it suitable for secure boot; this only works with the script provided by Toradex for BSP reference images; users employing a custom script should set this to `0` | Same value as variable `TDX_UBOOT_HARDENING_ENABLE` |
+| `HWS_UBOOT_HARDENING_ENABLE` | Enable hardening features as a whole | `1` if both secure boot support (controlled by variable `HWS_IMX_HAB_ENABLE` (NXP) or `HWS_K3_SECBOOT_ENABLE` (TI)) and FIT signing (controlled by `UBOOT_SIGN_ENABLE`) are enabled; `0` otherwise |
+| `HWS_UBOOT_HARDENING_ENABLE_DBG` | Enable debugging of the hardening features; among other things this adds a command to U-Boot that allows the hardening and the device state (open/closed in terms of secure boot) to be manually set for testing purposes - **never** do this in production | `0` |
+| `HWS_UBOOT_HARDENING_ENABLE_CP_PROT` | Enable the hardening of the "cp" command and allow it to pass the whitelist; this should be enabled only when strictly required by the boot script (standard Toradex boot scripts do not need this) | `0` |
+| `HWS_UBOOT_HARDENING_ENABLE_FB_PROT` | Enable the hardening of the Fastboot protocol and allow the "fastboot" command to pass the whitelist; this should be enabled only when building a bootloader for use via Fastboot (such as the one belonging to the Toradex Easy Installer) | `0` |
+| `HWS_SECBOOT_REQUIRED_BOOTARGS` | Expected value for the fixed part of the kernel command line | Different value for each machine |
+| `TDX_AMEND_BOOT_SCRIPT` | When set to `1` the boot script will be amended to make it suitable for secure boot; this only works with the script provided by Toradex for BSP reference images; users employing a custom script should set this to `0` | Same value as variable `HWS_UBOOT_HARDENING_ENABLE` |
 | `TDX_AMEND_CONSOLE_ARGUMENT` | Granular control of the boot script amendment: whether or not to amend the console argument; this only works with the script provided by Toradex for BSP reference images | Same value as variable `TDX_AMEND_BOOT_SCRIPT` |
 | `TDX_AMEND_ROOT_ARGUMENT` | Granular control of the boot script amendment: whether or not to amend the root argument; this only works with the script provided by Toradex for BSP reference images | Same value as variable `TDX_AMEND_BOOT_SCRIPT` |
-| `TDX_CHECK_UNSUPP_BOOTMETH` | Enable a build-time check to determine if an unsupported [bootmeth](https://docs.u-boot.org/en/stable/develop/bootstd/overview.html#bootmeth) is being enabled in U-Boot (which could become an attack vector). | `1` |
-| `TDX_DISABLE_UNSUPP_BOOTMETH`| Enable a config fragment in U-Boot to disable unsupported bootmeths; relevant only if the machine is using [Standard Boot](https://docs.u-boot.org/en/stable/develop/bootstd/index.html). | `1` |
+| `HWS_CHECK_UNSUPP_BOOTMETH` | Enable a build-time check to determine if an unsupported [bootmeth](https://docs.u-boot.org/en/stable/develop/bootstd/overview.html#bootmeth) is being enabled in U-Boot (which could become an attack vector). | `1` |
+| `HWS_DISABLE_UNSUPP_BOOTMETH`| Enable a config fragment in U-Boot to disable unsupported bootmeths; relevant only if the machine is using [Standard Boot](https://docs.u-boot.org/en/stable/develop/bootstd/index.html). | `1` |
 
 ### U-Boot hardening / whitelist setup
 
@@ -92,18 +92,18 @@ For fine-tuning the command whitelisting feature the following variables are ava
 
 | Variable | Description | Default value |
 | :------- | :---------- | :------------ |
-| `TDX_SECBOOT_WL_ALLOW_OPEN_CATEG` | Command categories to be allowed when the device is open (as a space-separated list). | `""` |
-| `TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG` | Command categories to be allowed when the device is closed (as a space-separated list). | `""` |
-| `TDX_SECBOOT_WL_DENY_OPEN_CATEG`\* | Command categories to be denied when the device is open (as a space-separated list). | `""` |
-| `TDX_SECBOOT_WL_DENY_CLOSED_CATEG`\* | Command categories to be denied when the device is closed (as a space-separated list). | `""` |
-| `TDX_SECBOOT_WL_NEEDED_CATEG`\* | Command categories to be allowed regardless of the device open/closed state. | `""` |
+| `HWS_SECBOOT_WL_ALLOW_OPEN_CATEG` | Command categories to be allowed when the device is open (as a space-separated list). | `""` |
+| `HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG` | Command categories to be allowed when the device is closed (as a space-separated list). | `""` |
+| `HWS_SECBOOT_WL_DENY_OPEN_CATEG`\* | Command categories to be denied when the device is open (as a space-separated list). | `""` |
+| `HWS_SECBOOT_WL_DENY_CLOSED_CATEG`\* | Command categories to be denied when the device is closed (as a space-separated list). | `""` |
+| `HWS_SECBOOT_WL_NEEDED_CATEG`\* | Command categories to be allowed regardless of the device open/closed state. | `""` |
 
 When a variable is empty, the default value encoded in U-Boot is utilized. The command categories are currently only available as part of a [patch](../recipes-bsp/u-boot/files/0001-toradex-common-add-command-whitelisting-modules.patch) in header `cmd-categories.h`. The default configuration is kept in the U-Boot control FDT which is part of another [patch](../recipes-bsp/u-boot/files/0002-toradex-dts-add-fragment-file-to-configure-secure-bo.patch) in file `tdx-secboot.dtsi`.
 
 Overall, setting these variables is discouraged (especially the ones with an \*) since they are critical to security. The main use case where some of these variables might be set is when one has a custom boot script requiring commands not present in the Toradex boot scripts. For example, if someone needs to set a GPIO pin in their boot script even when the device is closed they could set (e.g. in their `local.conf` file):
 
 ```
-TDX_SECBOOT_WL_ALLOW_CLOSED_CATEG = "CMD_CAT_ALL_SAFE CMD_CAT_GPIO_CONTROL"
+HWS_SECBOOT_WL_ALLOW_CLOSED_CATEG = "CMD_CAT_ALL_SAFE CMD_CAT_GPIO_CONTROL"
 ```
 
 ### U-Boot hardening / known issues
