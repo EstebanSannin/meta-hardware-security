@@ -256,5 +256,5 @@ do_deploy:append() {
     fi
 }
 
-# HAB/AHAB status command configuration
-require u-boot-hab-status.inc
+# HAB/AHAB status command configuration (part of the Toradex U-Boot patch set)
+require ${@ 'u-boot-hab-status.inc' if d.getVar('HWS_UBOOT_FLAVOR') == 'toradex' else ''}
